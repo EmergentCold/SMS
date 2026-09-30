@@ -2458,14 +2458,15 @@ var qrcode = function() {
     var cTipo = idx('TipoÚltimoASO'), cGeral = idx('StatusGeral'), cConc = idx('ConclusãoASO');
     var itens = [];
     rows.slice(1).forEach(function(r){ var d = txt(r[cD]); if (d && itens.indexOf(d) < 0) itens.push(d); });
-    var N = itens.length;
+    var cN = idx('NItens'), N = cN >= 0 && rows[1] && +rows[1][cN] > 0 ? +rows[1][cN] : itens.length;   // linhas por colaborador no _Calc
     colabs = [];
     var semValores = 0;
     if (N) for (var i = 1; i + N - 1 < rows.length; i += N) {
       var g = rows.slice(i, i + N), nome = txt(g[0][cB]);
       if (!nome) continue;
       var c = { nome:nome, unidade:txt(g[0][cA]), funcao:txt(g[0][cC]), itens:[] };
-      g.forEach(function(r){ c.itens.push({ item:txt(r[cD]), status:txt(r[cH]), venc:toDate(r[cF]), data:toDate(r[cE]), row:r }); });
+      g.forEach(function(r){ if (!txt(r[cD])) return;   // treinamento extra sem nome (desligado na aba Listas)
+        c.itens.push({ item:txt(r[cD]), status:txt(r[cH]), venc:toDate(r[cF]), data:toDate(r[cE]), row:r }); });
       if (c.itens.every(function(x){ return !x.status; })) semValores++;
       c.geral = cGeral >= 0 ? '' : ''; c.cTipo = cTipo; c.cGeral = cGeral; c.cConc = cConc;
       colabs.push(c);

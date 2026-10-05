@@ -53,9 +53,13 @@
     header, .passos, .msg, details, .noprint{ display:none !important; }
     body{ background:#fff; }
     main{ padding:0; max-width:none; }
-    .grid{ grid-template-columns: repeat(3, 1fr); gap:6mm; }
-    .card{ border:1px solid #999; }
-    @page{ size: A4 portrait; margin: 10mm; }
+    .grid{ grid-template-columns: repeat(3, 1fr); grid-auto-rows: 89mm; gap:4mm; }
+    .card{ border:1px solid #999; height:89mm; border-radius:6px; }
+    .card .qr{ padding:1mm 0 !important; }
+    .card .qr img{ width:52mm !important; height:52mm !important; }
+    .card .nm{ font-size:11pt; } .card .st{ margin:1mm 3mm !important; padding:1mm !important; font-size:9pt; }
+    .card .sub, .card .cap, .card .ft{ font-size:7.5pt; }
+    @page{ size: A4 portrait; margin: 8mm; }
   }
 </style>
 </head>
@@ -2421,13 +2425,15 @@ var qrcode = function() {
 <script>
 (function(){
   'use strict';
-  var BASE_PADRAO = 'https://emergentcold.github.io/SMS/ficha.html';
+  // Online: usa a ficha.html da mesma pasta do Emissor. Arquivo local: QR com o texto da ficha (sem depender de site).
+  var BASE_PUBLICADA = 'https://luantavarez.github.io/sst-vencimentos/sms/ficha.html';
+  var BASE_PADRAO = /^https?:$/.test(location.protocol) ? location.href.replace(/[?#].*$/, '').replace(/[^\/]*$/, '') + 'ficha.html' : '';   // arquivo local: QR em texto, funciona sem internet
   var colabs = [], tipo = '', dataRef = new Date();
   var $ = function(id){ return document.getElementById(id); };
   qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
   var base = $('base');
-  try { base.value = localStorage.getItem('emissorBaseEmergent') || BASE_PADRAO; } catch (e) { base.value = BASE_PADRAO; }
-  base.addEventListener('change', function(){ try { localStorage.setItem('emissorBaseEmergent', base.value.trim()); } catch (e) {} montar(); render(); });
+  try { base.value = localStorage.getItem('emissorBaseEmergent3') || BASE_PADRAO; } catch (e) { base.value = BASE_PADRAO; }
+  base.addEventListener('change', function(){ try { localStorage.setItem('emissorBaseEmergent3', base.value.trim()); } catch (e) {} montar(); render(); });
 
   function pad(n){ return (n < 10 ? '0' : '') + n; }
   function fmt(d){ return d ? pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() : ''; }
@@ -2462,7 +2468,7 @@ var qrcode = function() {
     function rowsOf(n){ var s = wb.Sheets[n]; return s ? XLSX.utils.sheet_to_json(s, { header:1, raw:true, defval:null }) : null; }
     function pessoa(nome){
       var k = norm(nome);
-      if (!pessoas[k]) { pessoas[k] = { nome:txt(nome), unidade:'Guarulhos II', funcao:'', grupos:[], itens:[] }; ordem.push(k); }
+      if (!pessoas[k]) { pessoas[k] = { nome:txt(nome), unidade:'Guarulhos II', funcao:'', cpf:'', empresa:'', grupos:[], itens:[] }; ordem.push(k); }
       var p = pessoas[k];
       if (p.nome === p.nome.toUpperCase() && txt(nome) !== txt(nome).toUpperCase()) p.nome = txt(nome);   // prefere o nome com maiúsc./minúsc.
       return p;
@@ -2475,7 +2481,8 @@ var qrcode = function() {
       var code = d ? stat(v) : 'N', k = txt(r[10]);
       if (/andamento|agendad/i.test(k)) code = 'E';
       if (toDate(r[11])) code = 'D';
-      var p = pessoa(nome); p.itens.push({ item:'ASO', code:code, venc:v, data:d });
+      var p = pessoa(nome); p.itens.push({ item:'ASO', tipo:'', instrutor:'', code:code, venc:v, data:d, obs:(code === 'E' ? 'Exame em andamento / agendado' : code === 'D' ? 'Demissional realizado' : '') });
+      if (!p.cpf && txt(r[1])) p.cpf = txt(r[1]); if (!p.empresa && txt(r[2])) p.empresa = txt(r[2]);
       if (p.grupos.indexOf('ASO') < 0) p.grupos.push('ASO');
       if (!p.funcao && txt(r[3])) p.funcao = txt(r[3]);
     }
@@ -2489,7 +2496,12 @@ var qrcode = function() {
         var d = toDate(r[4]), v = d ? addDays(d, dias) : null, p = pessoa(nome), lab = cfg.item;
         if (cfg.n === 'CIPA' && txt(r[2])) lab = 'CIPA — ' + txt(r[2]);
         if (cfg.n === 'Transpaleteira' && txt(r[3])) lab += ' · ' + txt(r[3]);
-        p.itens.push({ item:lab, code:stat(v), venc:v, data:d });
+        var tipoT = cfg.n === 'Transpaleteira' ? txt(r[3]) : cfg.n === 'Brigada' ? txt(r[3]) : cfg.n === 'CIPA' ? txt(r[1]) : '';
+        var inst = (cfg.n === 'Transpaleteira' || cfg.n === 'Empilhadeira') ? txt(r[7]) : '';
+        if (cfg.n === 'Transpaleteira' || cfg.n === 'Empilhadeira') { if (!p.cpf && txt(r[1])) p.cpf = txt(r[1]); if (!p.empresa && txt(r[2])) p.empresa = txt(r[2]); }
+        if ((cfg.n === 'Brigada') && !p.empresa && txt(r[2])) p.empresa = txt(r[2]);
+        if (cfg.n === 'CIPA' && !p.empresa && txt(r[3])) p.empresa = txt(r[3]);
+        p.itens.push({ item:cfg.n === 'CIPA' ? lab : cfg.item, tipo:tipoT, instrutor:inst, code:stat(v), venc:v, data:d, obs:'' });
         if (p.grupos.indexOf(cfg.n) < 0) p.grupos.push(cfg.n);
         if (cfg.f != null && !p.funcao && txt(r[cfg.f])) p.funcao = txt(r[cfg.f]);
         if (cfg.n === 'Brigada' && !p.funcao) { var m = /Área\/função:\s*([^.]+)/.exec(txt(r[7])); if (m) p.funcao = m[1].trim(); }
@@ -2555,7 +2567,23 @@ var qrcode = function() {
       var p = { t: tipo === 'aso' ? 'a' : 'n', n:c.nome, u:c.unidade, f:c.funcao, e:ymd(dataRef), i:[] };
       var L = ['EMERGENT COLD — ' + (tipo === 'aso' ? 'ASO' : 'NRs E TREINAMENTOS'), 'Nome: ' + c.nome, 'Unidade: ' + c.unidade + ' | Função: ' + c.funcao];
       if (tipo === 'legal') {
-        p.t = 'l'; L[0] = 'EMERGENT COLD — TREINAMENTOS E ASO';
+        p.t = 'l';
+        var SL = { V:'VIGENTE', A:'PRESTES A VENCER', X:'VENCIDO', N:'NÃO INFORMADO', E:'EM ANDAMENTO', D:'DESLIGADO' };
+        var T = ['EMERGENT COLD - SST - ' + c.unidade, 'Nome: ' + c.nome];
+        if (c.cpf) T.push('CPF: ' + c.cpf);
+        if (c.empresa) T.push('Empresa: ' + c.empresa);
+        if (c.funcao) T.push('Função: ' + c.funcao);
+        c.itens.forEach(function(x){
+          T.push('', '[' + x.item.toUpperCase() + ']' + (x.tipo ? ' ' + x.tipo : ''));
+          if (x.data) T.push('Realizado: ' + fmt(x.data) + (x.venc ? ' | Válido até: ' + fmt(x.venc) : ''));
+          else T.push('Sem data lançada');
+          T.push('Status: ' + SL[x.code]);
+          if (x.instrutor) T.push('Instrutor: ' + x.instrutor);
+          if (x.obs) T.push(x.obs);
+        });
+        T.push('', 'Situação em ' + fmt(dataRef) + '. Na dúvida, procure o SESMT.');
+        c.texto = T.join('\n');
+        L[0] = 'EMERGENT COLD — TREINAMENTOS E ASO';
         var q = { V:0, A:0, X:0, E:0, N:0 };
         c.itens.forEach(function(x){
           p.i.push([x.item, x.code, ymd(x.venc), ymd(x.data)]);
@@ -2589,10 +2617,10 @@ var qrcode = function() {
         c.cls = geral === 'APTO' ? 'ok' : geral === 'APTO COM RESTRIÇÕES' ? 'warn' : geral === 'NÃO APTO' ? 'bad' : 'grey';
       }
       L.push('Situação em ' + fmt(dataRef));
-      c.conteudo = url ? url + '#' + b64url(p) : L.join('\n');
+      c.conteudo = tipo === 'legal' ? c.texto : (url ? url + '#' + b64url(p) : L.join('\n'));
     });
   }
-  function qrImg(texto){ var q = qrcode(0, 'L'); q.addData(texto); q.make(); return q.createDataURL(4, 4); }
+  function qrImg(texto){ var q = qrcode(0, tipo === 'legal' ? 'M' : 'L'); q.addData(texto); q.make(); return q.createDataURL(4, 4); }
   function render(){
     var u = $('unidade').value, b = $('busca').value.trim().toLowerCase();
     var lista = colabs.filter(function(c){ return (!u || c.unidade === u || (c.grupos && c.grupos.indexOf(u) >= 0)) && (!b || c.nome.toLowerCase().indexOf(b) >= 0); });
@@ -2605,7 +2633,7 @@ var qrcode = function() {
              '<div class="sub">' + esc(c.funcao) + ' · ' + esc(c.unidade) + '</div>' +
              '<div class="st ' + c.cls + '">' + esc(c.st) + '</div>' +
              '<div class="qr"><img alt="QR Code de ' + esc(c.nome) + '" src="' + qrImg(c.conteudo) + '"></div>' +
-             '<div class="cap">📱 Aponte a câmera do celular</div>' +
+             '<div class="cap">📱 ' + (tipo === 'legal' ? 'Aponte a câmera — funciona sem internet' : 'Aponte a câmera do celular') + '</div>' +
              '<div class="ft">Situação em ' + fmt(dataRef) + '</div></div>';
     }).join('');
   }

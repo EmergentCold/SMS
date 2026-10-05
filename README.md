@@ -8,3 +8,4 @@ Página pública que o celular abre ao escanear o QR Code dos crachás emitidos 
 - Publicado pelo GitHub Pages: `https://emergentcold.github.io/SMS/ficha.html`
 
 - Site: https://emergentcold.github.io/SMS/ (GitHub Pages, branch main, raiz).
+- Publicação automática: a cada envio para a branch main.

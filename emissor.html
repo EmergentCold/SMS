@@ -68,14 +68,14 @@
   <div class="passos">
     <div class="passo ativo" id="p1">
       <h2><span class="num">1</span>Escolha a planilha</h2>
-      <p>A planilha de <b>ASO</b> ou a de <b>NRs e Treinamentos</b>, já salva.</p>
+      <p>A planilha de <b>ASO</b>, a de <b>NRs e Treinamentos</b> ou o <b>Controle de Vencimento</b> (CIPA, Brigada, Empilhadeira, Transpaleteira), já salva.</p>
       <label class="drop" id="drop">📂 Clique aqui ou arraste o arquivo
         <small id="nomeArq">Arquivo .xlsx</small>
         <input type="file" id="arquivo" accept=".xlsx,.xlsm">
       </label>
     </div>
     <div class="passo" id="p2">
-      <h2><span class="num">2</span>Escolha a unidade</h2>
+      <h2><span class="num">2</span>Escolha a unidade ou grupo</h2>
       <p>Aparece um crachá para cada colaborador da unidade.</p>
       <select id="unidade" disabled><option>—</option></select>
       <p style="margin:10px 0 6px">Só uma pessoa? Digite o nome:</p>
@@ -2447,10 +2447,73 @@ var qrcode = function() {
     return s.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 
+
+  // ---------- Planilha "Controle de Vencimento" (CIPA, Brigada, Empilhadeira, Transpaleteira, ASO)
+  function norm(s){ return txt(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/\s+/g, ' '); }
+  function addDays(d, n){ return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  function stat(v){
+    if (!v) return 'N';
+    var h = new Date(dataRef.getFullYear(), dataRef.getMonth(), dataRef.getDate());
+    return v < h ? 'X' : (v < addDays(h, 60) ? 'A' : 'V');
+  }
+  var LBL = { V:'VÁLIDO', A:'A VENCER', X:'VENCIDO', N:'NÃO INFORMADO', E:'EM ANDAMENTO', D:'DESLIGADO' };
+  function lerLegal(wb){
+    var pessoas = {}, ordem = [];
+    function rowsOf(n){ var s = wb.Sheets[n]; return s ? XLSX.utils.sheet_to_json(s, { header:1, raw:true, defval:null }) : null; }
+    function pessoa(nome){
+      var k = norm(nome);
+      if (!pessoas[k]) { pessoas[k] = { nome:txt(nome), unidade:'Guarulhos II', funcao:'', grupos:[], itens:[] }; ordem.push(k); }
+      var p = pessoas[k];
+      if (p.nome === p.nome.toUpperCase() && txt(nome) !== txt(nome).toUpperCase()) p.nome = txt(nome);   // prefere o nome com maiúsc./minúsc.
+      return p;
+    }
+    var A = rowsOf('ASO');
+    if (A) for (var i = 3; i < A.length; i++) {
+      var r = A[i], nome = txt(r[0]); if (!nome) continue;
+      var ds = [toDate(r[5]), toDate(r[6]), toDate(r[7])].filter(Boolean);
+      var d = ds.length ? new Date(Math.max.apply(null, ds)) : null, v = d ? addDays(d, +r[8] || 365) : null;
+      var code = d ? stat(v) : 'N', k = txt(r[10]);
+      if (/andamento|agendad/i.test(k)) code = 'E';
+      if (toDate(r[11])) code = 'D';
+      var p = pessoa(nome); p.itens.push({ item:'ASO', code:code, venc:v, data:d });
+      if (p.grupos.indexOf('ASO') < 0) p.grupos.push('ASO');
+      if (!p.funcao && txt(r[3])) p.funcao = txt(r[3]);
+    }
+    [{ n:'CIPA', h:2, item:'CIPA', dias:365 }, { n:'Brigada', h:3, item:'Brigada de Incêndio' },
+     { n:'Empilhadeira', h:3, item:'Empilhadeira (NR-11)', f:3 }, { n:'Transpaleteira', h:3, item:'Transpaleteira (NR-11)' }].forEach(function(cfg){
+      var R = rowsOf(cfg.n); if (!R) return;
+      var dias = cfg.dias || (+(R[0] || [])[1] || 365);
+      for (var i = cfg.h; i < R.length; i++) {
+        var r = R[i], nome = txt(r[0]);
+        if (!nome || /^\[EXEMPLO\]/i.test(nome)) continue;
+        var d = toDate(r[4]), v = d ? addDays(d, dias) : null, p = pessoa(nome), lab = cfg.item;
+        if (cfg.n === 'CIPA' && txt(r[2])) lab = 'CIPA — ' + txt(r[2]);
+        if (cfg.n === 'Transpaleteira' && txt(r[3])) lab += ' · ' + txt(r[3]);
+        p.itens.push({ item:lab, code:stat(v), venc:v, data:d });
+        if (p.grupos.indexOf(cfg.n) < 0) p.grupos.push(cfg.n);
+        if (cfg.f != null && !p.funcao && txt(r[cfg.f])) p.funcao = txt(r[cfg.f]);
+        if (cfg.n === 'Brigada' && !p.funcao) { var m = /Área\/função:\s*([^.]+)/.exec(txt(r[7])); if (m) p.funcao = m[1].trim(); }
+      }
+    });
+    colabs = ordem.map(function(k){ return pessoas[k]; }).filter(function(p){ return p.itens.length; });
+    if (!colabs.length) { msg('A planilha de controle de vencimento não tem ninguém com nome preenchido.', 'err'); return; }
+    tipo = 'legal';
+    montar();
+    var gs = ['Brigada', 'CIPA', 'Empilhadeira', 'Transpaleteira', 'ASO'];
+    var sel = $('unidade');
+    sel.innerHTML = '<option value="">Todos — Guarulhos II (' + colabs.length + ')</option>' + gs.map(function(g){
+      var n = colabs.filter(function(c){ return c.grupos.indexOf(g) >= 0; }).length;
+      return n ? '<option value="' + g + '">' + g + ' (' + n + ')</option>' : ''; }).join('');
+    sel.disabled = false; $('busca').disabled = false; $('imprimir').disabled = false;
+    $('p1').className = 'passo feito'; $('p2').className = 'passo ativo'; $('p3').className = 'passo ativo';
+    msg('✔ Controle de Vencimento carregado: ' + colabs.length + ' pessoa(s) com CIPA, Brigada, Empilhadeira, Transpaleteira e/ou ASO. Escolha o grupo (passo 2) e clique em IMPRIMIR (passo 3).', 'ok');
+    render();
+  }
   function ler(buf){
     var wb = XLSX.read(buf, { type:'array', cellDates:true });
     var calc = wb.Sheets['_Calc'];
-    if (!calc) { msg('Este arquivo não é a planilha de ASO nem a de NRs. Escolha o arquivo certo.', 'err'); return; }
+    if (!calc && wb.Sheets['Transpaleteira'] && wb.Sheets['Brigada']) { lerLegal(wb); return; }
+    if (!calc) { msg('Este arquivo não é a planilha de ASO, a de NRs nem o Controle de Vencimento. Escolha o arquivo certo.', 'err'); return; }
     tipo = wb.SheetNames.indexOf('Pendências') >= 0 ? 'aso' : 'nr';
     var rows = XLSX.utils.sheet_to_json(calc, { header:1, raw:true, defval:null });
     var head = rows[0].map(txt), idx = function(n){ return head.indexOf(n); };
@@ -2491,7 +2554,19 @@ var qrcode = function() {
     colabs.forEach(function(c){
       var p = { t: tipo === 'aso' ? 'a' : 'n', n:c.nome, u:c.unidade, f:c.funcao, e:ymd(dataRef), i:[] };
       var L = ['EMERGENT COLD — ' + (tipo === 'aso' ? 'ASO' : 'NRs E TREINAMENTOS'), 'Nome: ' + c.nome, 'Unidade: ' + c.unidade + ' | Função: ' + c.funcao];
-      if (tipo === 'nr') {
+      if (tipo === 'legal') {
+        p.t = 'l'; L[0] = 'EMERGENT COLD — TREINAMENTOS E ASO';
+        var q = { V:0, A:0, X:0, E:0, N:0 };
+        c.itens.forEach(function(x){
+          p.i.push([x.item, x.code, ymd(x.venc), ymd(x.data)]);
+          L.push(x.item + ': ' + LBL[x.code] + (x.venc ? ' até ' + fmt(x.venc) : ''));
+          if (x.code in q) q[x.code]++;
+        });
+        if (q.X) { c.st = 'PENDENTE: ' + q.X + ' vencido(s)'; c.cls = 'bad'; }
+        else if (q.A || q.E || q.N) { c.st = 'ATENÇÃO: ' + (q.A ? q.A + ' a vencer ' : '') + (q.E ? q.E + ' em andamento ' : '') + (q.N ? q.N + ' sem data' : ''); c.cls = 'warn'; }
+        else if (q.V) { c.st = 'EM DIA: ' + q.V + ' válido(s)'; c.cls = 'ok'; }
+        else { c.st = 'SEM REGISTRO'; c.cls = 'grey'; }
+      } else if (tipo === 'nr') {
         var n = { 'VÁLIDO':0, 'A VENCER':0, 'VENCIDO':0 };
         c.itens.forEach(function(x){
           p.i.push([x.item, COD[x.status] || '', ymd(x.venc), ymd(x.data)]);
@@ -2520,13 +2595,13 @@ var qrcode = function() {
   function qrImg(texto){ var q = qrcode(0, 'L'); q.addData(texto); q.make(); return q.createDataURL(4, 4); }
   function render(){
     var u = $('unidade').value, b = $('busca').value.trim().toLowerCase();
-    var lista = colabs.filter(function(c){ return (!u || c.unidade === u) && (!b || c.nome.toLowerCase().indexOf(b) >= 0); });
+    var lista = colabs.filter(function(c){ return (!u || c.unidade === u || (c.grupos && c.grupos.indexOf(u) >= 0)) && (!b || c.nome.toLowerCase().indexOf(b) >= 0); });
     var grid = $('grid');
     $('imprimir').textContent = '🖨️ IMPRIMIR ' + lista.length + ' CRACHÁ' + (lista.length === 1 ? '' : 'S');
     $('imprimir').disabled = !lista.length;
     if (!lista.length) { grid.innerHTML = '<div class="vazio">Nenhum colaborador encontrado com esse nome nesta unidade.</div>'; return; }
     grid.innerHTML = lista.map(function(c){
-      return '<div class="card"><div class="emp">EMERGENT COLD · ' + (tipo === 'aso' ? 'ASO' : 'NRs') + '</div><div class="nm">' + esc(c.nome) + '</div>' +
+      return '<div class="card"><div class="emp">EMERGENT COLD · ' + (tipo === 'aso' ? 'ASO' : tipo === 'legal' ? 'TREINAMENTOS' : 'NRs') + '</div><div class="nm">' + esc(c.nome) + '</div>' +
              '<div class="sub">' + esc(c.funcao) + ' · ' + esc(c.unidade) + '</div>' +
              '<div class="st ' + c.cls + '">' + esc(c.st) + '</div>' +
              '<div class="qr"><img alt="QR Code de ' + esc(c.nome) + '" src="' + qrImg(c.conteudo) + '"></div>' +

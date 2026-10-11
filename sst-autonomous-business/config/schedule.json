@@ -1,0 +1,17 @@
+{
+  "_comment": "Expressões cron (minuto hora dia mês dia_semana), no fuso America/Sao_Paulo. dia_semana: 0=domingo ... 6=sábado. misfire_grace_minutes: janela para recuperar execução perdida após reinício.",
+  "tick_seconds": 30,
+  "misfire_grace_minutes": 180,
+  "jobs": [
+    {"name": "research",         "cron": "30 7 * * 1-5",      "command": "research"},
+    {"name": "qualify",          "cron": "15 8 * * 1-5",      "command": "qualify"},
+    {"name": "outreach",         "cron": "0 9-17 * * 1-5",    "command": "outreach"},
+    {"name": "inbound",          "cron": "*/15 7-20 * * *",   "command": "inbound"},
+    {"name": "followups",        "cron": "20 9-17 * * 1-5",   "command": "followups"},
+    {"name": "recover",          "cron": "*/30 * * * *",      "command": "recover"},
+    {"name": "daily_report",     "cron": "30 18 * * 1-5",     "command": "daily_report"},
+    {"name": "weekly_report",    "cron": "0 17 * * 5",        "command": "weekly_report"},
+    {"name": "backup",           "cron": "0 23 * * *",        "command": "backup"},
+    {"name": "retention",        "cron": "0 3 * * 0",         "command": "retention"}
+  ]
+}

@@ -1,0 +1,3 @@
+# Execução: somente biblioteca padrão do Python 3.11+ (sqlite3, zoneinfo, smtplib, imaplib, urllib).
+# Desenvolvimento/testes:
+pytest>=8

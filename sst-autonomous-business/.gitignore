@@ -1,0 +1,16 @@
+# Segredos
+.env
+*.pem
+*credentials*.json
+
+# Dados operacionais (pessoais/comerciais) — nunca versionar
+data/*
+!data/.gitkeep
+reports/*
+!reports/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/

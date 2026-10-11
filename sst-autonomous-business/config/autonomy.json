@@ -1,0 +1,35 @@
+{
+  "_comment": "Nível 1: automático. Nível 2: automático somente se 'enabled': true (senão vai para a fila de aprovação). Nível 3: sempre exige validação humana; 'human_only': o sistema nunca executa, apenas registra a decisão humana. Ação desconhecida = exige aprovação.",
+  "actions": {
+    "research":                {"level": 1, "description": "Pesquisar empresas"},
+    "enrich":                  {"level": 1, "description": "Enriquecer dados empresariais permitidos"},
+    "dedupe":                  {"level": 1, "description": "Deduplicar registros"},
+    "score":                   {"level": 1, "description": "Qualificar leads"},
+    "update_crm":              {"level": 1, "description": "Atualizar CRM"},
+    "draft_message":           {"level": 1, "description": "Preparar mensagens"},
+    "draft_proposal":          {"level": 1, "description": "Preparar propostas preliminares"},
+    "report":                  {"level": 1, "description": "Gerar relatórios"},
+    "schedule_internal_task":  {"level": 1, "description": "Agendar tarefas internas"},
+    "send_followup":           {"level": 1, "description": "Follow-ups de sequência cujo contato inicial já foi autorizado e enviado"},
+    "reply_faq":               {"level": 1, "description": "Responder perguntas frequentes da base aprovada"},
+
+    "send_first_contact":      {"level": 2, "enabled": false, "description": "Enviar prospecção pelos canais autorizados"},
+    "send_reply":              {"level": 2, "enabled": false, "description": "Responder mensagens fora da base de FAQ"},
+    "send_proposal":           {"level": 2, "enabled": false, "description": "Enviar proposta com escopo e preço aprovados"},
+    "schedule_meeting":        {"level": 2, "enabled": false, "description": "Agendar reuniões"},
+    "negotiate_discount":      {"level": 2, "enabled": false, "description": "Negociar dentro dos limites de desconto configurados"},
+    "create_segment":          {"level": 2, "enabled": false, "description": "Criar novos segmentos de prospecção"},
+    "adjust_campaign":         {"level": 2, "enabled": false, "description": "Ajustar campanhas com base em resultados"},
+
+    "sign_contract":                    {"level": 3, "human_only": true, "description": "Assinar contratos"},
+    "assume_technical_responsibility":  {"level": 3, "human_only": true, "description": "Assumir responsabilidade técnica"},
+    "issue_technical_document":         {"level": 3, "human_only": true, "description": "Emitir/assinar laudos e documentos que exigem habilitação"},
+    "declare_compliance":               {"level": 3, "human_only": true, "description": "Declarar conformidade legal"},
+    "confirm_unperformed_service":      {"level": 3, "human_only": true, "description": "Confirmar visita/serviço não realizado"},
+    "payment":                          {"level": 3, "human_only": true, "description": "Pagamentos, dívidas, dados bancários"},
+    "discount_above_limit":             {"level": 3, "description": "Desconto acima do limite"},
+    "accept_unplanned_obligation":      {"level": 3, "description": "Aceitar obrigação contratual não prevista"},
+    "emergency_decision":               {"level": 3, "human_only": true, "description": "Acidentes graves, risco iminente, emergências"},
+    "propose_restricted_service":       {"level": 3, "description": "Propor serviço que exige validação profissional (ex.: serviço H)"}
+  }
+}

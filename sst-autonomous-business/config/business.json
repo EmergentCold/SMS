@@ -1,0 +1,52 @@
+{
+  "_comment": "Identidade e parâmetros gerais do negócio. Campos 'CONFIGURAR' bloqueiam envios externos até serem preenchidos.",
+  "owner": {
+    "name": "CONFIGURAR",
+    "professional_title": "Técnico em Segurança do Trabalho",
+    "registration_number": null,
+    "registration_verified": false,
+    "certifications_verified": [],
+    "city": "Guarulhos",
+    "state": "SP"
+  },
+  "brand": {
+    "trade_name": "CONFIGURAR",
+    "cnpj": null,
+    "website": null,
+    "commercial_email": null,
+    "phone": null
+  },
+  "timezone": "America/Sao_Paulo",
+  "currency": "BRL",
+  "service_area": {
+    "priority_cities": ["Guarulhos", "São Paulo"],
+    "metro_cities": [
+      "Arujá", "Barueri", "Caieiras", "Cajamar", "Carapicuíba", "Cotia", "Diadema",
+      "Embu das Artes", "Ferraz de Vasconcelos", "Francisco Morato", "Franco da Rocha",
+      "Itapecerica da Serra", "Itapevi", "Itaquaquecetuba", "Jandira", "Mairiporã",
+      "Mauá", "Mogi das Cruzes", "Osasco", "Poá", "Ribeirão Pires", "Santana de Parnaíba",
+      "Santo André", "São Bernardo do Campo", "São Caetano do Sul", "Suzano", "Taboão da Serra"
+    ],
+    "state": "SP",
+    "max_travel_km": 60
+  },
+  "capacity": {
+    "_comment": "Capacidade operacional real do proprietário (renda extra). O agente não confirma trabalhos acima disso.",
+    "hours_per_week": 10,
+    "max_active_contracts": 3,
+    "available_days": ["sábado"],
+    "verified": false
+  },
+  "retention": {
+    "_comment": "Prazos em dias (LGPD: necessidade e minimização). Revise com assessoria jurídica.",
+    "lead_without_response_days": 365,
+    "lost_lead_days": 365,
+    "messages_days": 730,
+    "audit_events_days": 1825,
+    "backups_keep": 14
+  },
+  "costs": {
+    "monthly_budget_brl": 100.0,
+    "alert_at_pct": 80
+  }
+}

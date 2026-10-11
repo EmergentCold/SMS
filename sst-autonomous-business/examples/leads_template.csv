@@ -1,0 +1,2 @@
+name,website,segment,city,state,cnpj,contact_email,contact_type,contact_name,contact_role,source_url,source_description,legal_basis,facts,hypotheses,size_estimate,size_source,size_confidence
+EXEMPLO Transportes (fictício),https://transportes-exemplo.test,transportadora,Guarulhos,SP,,contato@transportes-exemplo.test,generic_corporate,,,https://transportes-exemplo.test/contato,página de contato do site oficial,legitimo_interesse,expansao: site oficial menciona nova unidade em Guarulhos,possível necessidade de integração de novos colaboradores,pequena,informação do site,baixa

@@ -1,0 +1,20 @@
+{
+  "_comment": "Preços NÃO são inventados. Enquanto 'status' != 'aprovado' ou 'min_price' for null, a proposta fica como PRECO_PENDENTE e não pode ser enviada. Valores em BRL. Preencha após pesquisa (ver workflows/proposal_generation.md) e mude status para 'aprovado'.",
+  "defaults": {
+    "validity_days": 15,
+    "payment_terms": "CONFIGURAR (ex.: 50% na aprovação e 50% na entrega; mensalidades com vencimento no dia 10)",
+    "max_auto_discount_pct": 0,
+    "visit_travel_note": "Deslocamentos fora da área prioritária podem ter custo adicional, a combinar."
+  },
+  "services": {
+    "A": {"status": "preco_pendente", "unit": "projeto", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
+    "B": {"status": "preco_pendente", "unit": "visita", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
+    "C": {"status": "preco_pendente", "unit": "turma", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
+    "D": {"status": "preco_pendente", "unit": "mensal", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
+    "E": {"status": "preco_pendente", "unit": "projeto", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
+    "F": {"status": "preco_pendente", "unit": "projeto", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
+    "G": {"status": "preco_pendente", "unit": "mensal", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
+    "H": {"status": "preco_pendente", "unit": "documento", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
+    "I": {"status": "preco_pendente", "unit": "mensal", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []}
+  }
+}

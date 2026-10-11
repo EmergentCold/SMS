@@ -1,0 +1,14 @@
+services:
+  sst-agent:
+    build: .
+    container_name: sst-agent
+    env_file: .env
+    environment:
+      TZ: America/Sao_Paulo
+    volumes:
+      - ./data:/app/data          # banco, backups, logs, propostas, convites
+      - ./reports:/app/reports    # relatórios
+      - ./config:/app/config:ro   # configurações editáveis sem rebuild
+      - ./templates:/app/templates:ro
+    restart: unless-stopped
+    stop_grace_period: 60s        # SIGTERM: termina o job atual e libera a trava

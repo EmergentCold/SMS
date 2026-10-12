@@ -43,6 +43,11 @@
   .menu .btn{ padding:20px 14px; font-size:18px; flex-direction:column; }
   .menu .btn span{ font-size:32px; }
   .menu .btn small{ font-weight:500; font-size:13px; opacity:.85; }
+  .alerta-amigo{ display:flex; gap:12px; align-items:center; background:linear-gradient(135deg,#fff4d6,#ffe7b3); border:2px solid var(--gold); border-radius:14px; padding:12px 14px; color:#5a4200; line-height:1.4; text-align:left; }
+  .alerta-amigo .mg{ font-size:34px; flex:none; }
+  .alerta-amigo b.t{ display:block; font-size:17px; color:var(--navy); }
+  .alerta-amigo.mini{ padding:9px 12px; font-size:14px; margin-top:10px; }
+  .alerta-amigo.mini .mg{ font-size:24px; }
   .logo-bar{ background:#fff; border-radius:16px; padding:14px 18px; margin-bottom:12px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.08); }
   .logo-bar img{ display:inline-block; width:100%; max-width:320px; height:auto; }
   .credito{ display:flex; gap:14px; align-items:flex-start; margin-top:14px; border-left:5px solid var(--gold); }
@@ -228,6 +233,10 @@ function hoje(){ return new Date().toISOString(); }
 function dataBR(iso){ if (!iso) return '—'; var d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
 function iniciais(n){ var p = String(n).trim().split(/\s+/); return ((p[0]||'')[0] || '' ) .toUpperCase() + ((p.length > 1 ? p[p.length-1][0] : '') || '').toUpperCase(); }
 var tt;
+function alertaAmigo(mini){
+  if (mini) return '<div class="alerta-amigo mini"><span class="mg">📣</span><div>Viu esse desvio no dia a dia? <b>Relate no Alerta Amigo!</b></div></div>';
+  return '<div class="alerta-amigo"><span class="mg">📣</span><div><b class="t">Viu um desvio? Relate no ALERTA AMIGO!</b>Qualquer desvio — condição insegura, comportamento inseguro ou quase acidente — deve ser relatado no <b>Alerta Amigo</b>. Relatar é cuidar de você e dos seus colegas.</div></div>';
+}
 function toast(t){ var el = document.getElementById('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(tt); tt = setTimeout(function(){ el.classList.remove('on'); }, 2600); }
 function modal(html){ MB.innerHTML = html; M.classList.remove('hidden'); return MB; }
 function closeModal(){ M.classList.add('hidden'); MB.innerHTML = ''; }
@@ -809,7 +818,8 @@ var FASES = [
     etapas:[ { tipo:'labirinto' }, { tipo:'cena', cena:'corredor' }, { tipo:'quiz', perguntas:[
       { p:'Qual é o local correto para o pedestre circular no galpão?', o:['Na faixa de pedestres demarcada','No corredor das empilhadeiras, se estiver vazio','Por dentro das estruturas porta-paletes (atalho)','Por onde for mais curto'], e:'O pedestre deve circular somente pelas faixas demarcadas, longe do trânsito de máquinas.' },
       { p:'Você precisa atravessar o corredor das empilhadeiras. O que fazer?', o:['Atravessar na faixa: parar, olhar e fazer contato visual com o operador','Atravessar correndo para ser rápido','Atravessar olhando o celular','Passar por trás da empilhadeira em manobra'], e:'Pare, olhe para os dois lados, faça contato visual com o operador e só então atravesse pela faixa.' },
-      { p:'Você encontrou óleo derramado na faixa de pedestres. Qual a atitude correta?', o:['Sinalizar o local e comunicar para limpeza imediata','Passar por cima com cuidado','Ignorar, alguém vai ver','Jogar um papelão por cima e seguir'], e:'Sinalize para ninguém escorregar e acione a limpeza. Cobrir sem limpar esconde o risco.' }
+      { p:'Você encontrou óleo derramado na faixa de pedestres. Qual a atitude correta?', o:['Sinalizar o local, pedir limpeza imediata e relatar no Alerta Amigo','Passar por cima com cuidado','Ignorar, alguém vai ver','Jogar um papelão por cima e seguir'], e:'Sinalize para ninguém escorregar, acione a limpeza e relate no Alerta Amigo. Cobrir sem limpar esconde o risco.' },
+      { p:'Você viu um colega cortando caminho por dentro da estrutura porta-paletes. O que fazer?', o:['Orientar o colega com respeito e relatar o desvio no Alerta Amigo','Fazer igual, é mais rápido','Ignorar, não é problema meu','Esperar acontecer um acidente para avisar'], e:'Comportamento inseguro também é desvio: oriente o colega e relate no Alerta Amigo. Cuidar do outro é o espírito do Alerta Amigo.' }
     ] } ] },
   { id:'f2', nome:'Trânsito de Empilhadeiras', ic:'🚜', cor:'#d97706', resumo:'Operação segura, carga baixa, carona proibida e convivência com pedestres.',
     etapas:[ { tipo:'cena', cena:'empilhadeiras' }, { tipo:'cartas', itens:[
@@ -835,12 +845,12 @@ var FASES = [
     ] } ] },
   { id:'f4', nome:'Estruturas Porta-Paletes', ic:'🏗️', cor:'#2e5fa8', resumo:'Inspeção de montantes, longarinas, travas, capacidade de carga e armazenagem correta.',
     etapas:[ { tipo:'cena', cena:'portapaletes' }, { tipo:'cartas', itens:[
-      { ic:'🔍', t:'Notei um montante amassado: comuniquei a liderança e isolei a área até a avaliação.', ok:true, e:'Correto! Danos na estrutura devem ser comunicados na hora e a área isolada.' },
+      { ic:'🔍', t:'Notei um montante amassado: isolei a área, avisei a liderança e relatei no Alerta Amigo.', ok:true, e:'Correto! Danos na estrutura devem ser relatados no Alerta Amigo na hora e a área isolada.' },
       { ic:'🧗', t:'Subir pela estrutura para pegar uma caixa no 3º nível, é rapidinho.', ok:false, e:'Nunca escale a estrutura. Use equipamento adequado e autorizado.' },
       { ic:'⚖️', t:'Respeitar a carga máxima indicada na placa de identificação da estrutura.', ok:true, e:'Correto! Excesso de peso deforma longarinas e pode derrubar a estrutura.' },
       { ic:'📦', t:'Armazenar palete com a carga passando da longarina e sem filme stretch.', ok:false, e:'A carga deve estar estável, envolvida e centralizada sobre as longarinas.' }
     ] }, { tipo:'quiz', perguntas:[
-      { p:'O que fazer ao encontrar um montante (coluna) amassado?', o:['Comunicar a liderança/SST e isolar a área até a avaliação','Desamassar com uma marreta','Continuar usando com cuidado','Colocar mais carga para firmar'], e:'Só um profissional pode avaliar o dano. Até lá, a posição fica isolada e descarregada.' },
+      { p:'O que fazer ao encontrar um montante (coluna) amassado?', o:['Isolar a área, avisar a liderança/SST e relatar no Alerta Amigo','Desamassar com uma marreta','Continuar usando com cuidado','Colocar mais carga para firmar'], e:'Só um profissional pode avaliar o dano. Até lá, a posição fica isolada e descarregada.' },
       { p:'Para que serve a trava de segurança da longarina?', o:['Impedir que a longarina se desencaixe do montante','É apenas um enfeite','Servir de degrau','Aumentar a capacidade de carga'], e:'Sem a trava, uma batida pode soltar a longarina e derrubar a carga.' },
       { p:'Onde está a capacidade máxima de carga da estrutura?', o:['Na placa de identificação de carga fixada na estrutura','Na memória do operador','Não existe limite','Na nota fiscal do produto'], e:'A placa informa o peso máximo por nível/posição. Consulte sempre antes de armazenar.' }
     ] } ] },
@@ -883,7 +893,8 @@ var FASES = [
 var EXTRAS = [
   { p:'O que é uma CONDIÇÃO insegura?', o:['Uma falha no ambiente ou no equipamento que pode causar acidente','Uma atitude errada da pessoa','Um acidente que já aconteceu','Um tipo de EPI'], e:'Exemplos: piso com óleo, montante amassado, extintor obstruído.' },
   { p:'O que é um COMPORTAMENTO inseguro?', o:['Uma atitude da pessoa que a expõe (ou expõe outros) ao risco','Um defeito na máquina','Uma placa de sinalização','Um tipo de treinamento'], e:'Exemplos: correr no galpão, usar celular dirigindo, subir na estrutura.' },
-  { p:'Você viu um risco que não consegue resolver sozinho. O que fazer?', o:['Comunicar imediatamente a liderança/SST e registrar o relato','Esperar alguém resolver','Comentar no grupo e seguir','Nada, não é minha área'], e:'Todo risco relatado é um acidente evitado. Segurança é responsabilidade de todos.' },
+  { p:'Você viu um risco que não consegue resolver sozinho. O que fazer?', o:['Relatar no Alerta Amigo e avisar a liderança/SST','Esperar alguém resolver','Comentar no grupo e seguir','Nada, não é minha área'], e:'Todo desvio relatado no Alerta Amigo é um acidente evitado. Segurança é responsabilidade de todos.' },
+  { p:'Onde relatar qualquer desvio de segurança (condição insegura, comportamento inseguro ou quase acidente)?', o:['No Alerta Amigo','Em lugar nenhum, se ninguém se machucou','Só no grupo de WhatsApp da equipe','Só no fim do mês, na reunião'], e:'Qualquer desvio deve ser relatado no Alerta Amigo, mesmo que ninguém tenha se machucado. O quase acidente de hoje é o acidente de amanhã.' },
   { p:'Quando você pode exercer o direito de recusa?', o:['Quando houver risco grave e iminente à sua vida ou saúde','Quando não gostar da tarefa','Quando estiver cansado','Quando o colega faltar'], e:'A NR-1 garante o direito de interromper a atividade diante de risco grave e iminente, comunicando a liderança.' },
   { p:'Qual a distância segura para o pedestre em relação a uma empilhadeira em operação?', o:['Manter distância (no mínimo cerca de 3 m ou a definida pela empresa) e contato visual','Encostar para ajudar a guiar','1 palmo, se o operador for experiente','Não existe distância segura'], e:'Distância e contato visual com o operador evitam atropelamentos.' }
 ];
@@ -923,6 +934,7 @@ function telaInicio(){
   if (p){
     h += '<div class="card quem"><div class="av">' + esc(iniciais(p.nome)) + '</div><div style="flex:1"><b>' + esc(p.nome) + '</b><div class="muted">Matrícula ' + esc(p.matricula) + ' · ' + fmt(total(p)) + ' pontos · ' + nivel(total(p)).n.ic + ' ' + nivel(total(p)).n.nome + '</div></div><button class="btn sm ghost" data-act="trocar">Trocar</button></div>';
   }
+  h += alertaAmigo() + '<div style="height:14px"></div>';
   h += '<div class="menu">';
   h += '<button class="btn ok" data-act="jogar"><span>▶️</span>' + (p ? 'Continuar jogando' : 'Jogar') + '<small>' + (p ? 'Ir para o mapa de fases' : 'Inscreva-se e comece') + '</small></button>';
   h += '<button class="btn" data-act="inscricao"><span>📝</span>Inscrição<small>Cadastrar ou escolher funcionário</small></button>';
@@ -1024,7 +1036,7 @@ function proximaEtapa(){
 function intro(et, go){
   var I = {
     labirinto: ['🚶','Labirinto do Caminho Seguro','Leve o colaborador 👷 até o 🏁 posto de trabalho.',['Ande somente pela <b>faixa verde de pedestres</b>.','Atravesse os corredores das empilhadeiras <b>só nas faixas zebradas</b>.','Na faixa, <b>pare e olhe</b>: espere a empilhadeira passar.','Pegue os 3 EPIs no caminho: 🦺 🥾 🧤','Use as setas do teclado, os botões na tela ou toque na casa ao lado.']],
-    cena: ['🔍','Caça aos Riscos', CENAS[et.cena] ? CENAS[et.cena].titulo + ': ' + CENAS[et.cena].instr : '', ['Toque no risco que você encontrar na cena.','Diga se é <span class="tag c">CONDIÇÃO INSEGURA</span> (ambiente/equipamento) ou <span class="tag b">COMPORTAMENTO INSEGURO</span> (atitude da pessoa).','Acertou a classificação: <b>+100</b>. Toque errado na cena: <b>−10</b>.','Achou tudo antes do tempo acabar? Ganha bônus de tempo!']],
+    cena: ['🔍','Caça aos Riscos', CENAS[et.cena] ? CENAS[et.cena].titulo + ': ' + CENAS[et.cena].instr : '', ['Toque no risco que você encontrar na cena.','Diga se é <span class="tag c">CONDIÇÃO INSEGURA</span> (ambiente/equipamento) ou <span class="tag b">COMPORTAMENTO INSEGURO</span> (atitude da pessoa).','Acertou a classificação: <b>+100</b>. Toque errado na cena: <b>−10</b>.','Achou tudo antes do tempo acabar? Ganha bônus de tempo!','📣 Na vida real, qualquer desvio que você encontrar deve ser relatado no <b>Alerta Amigo</b>.']],
     cartas: ['👍','Seguro ou Inseguro?','Leia cada situação e decida se ela é segura ou insegura.',['Cada acerto vale <b>+50</b> pontos.','Leia a explicação para aprender o porquê.']],
     quiz: ['❓', RUN.f.id === 'f8' ? 'Desafio Final' : 'Quiz', RUN.f.id === 'f8' ? 'Perguntas de todas as fases. Você tem ' + (et.tempo||20) + ' segundos por pergunta.' : 'Responda às perguntas sobre o tema da fase.',['Cada acerto vale <b>+100</b> pontos.'].concat(et.tempo ? ['Responda rápido: bônus de até <b>+50</b> por pergunta!'] : [])]
   }[et.tipo];
@@ -1074,7 +1086,7 @@ ETAPAS.cena = function(et, done){
       var ok = b.getAttribute('data-c') === r.tipo, g = ok ? 100 : 40;
       found[hit] = { ok:ok, n:++nF }; pts += g; upd(); marca(r, nF); ok ? SND.ok() : SND.bad();
       modal('<div class="fb ' + (ok ? 'ok' : 'bad') + '"><b class="h">' + (ok ? '✅ Correto! +100' : '⚠️ Quase! +40') + '</b>' + (ok ? '' : 'Este é um <b>' + (r.tipo === 'c' ? 'CONDIÇÃO INSEGURA' : 'COMPORTAMENTO INSEGURO') + '</b>.<br>') +
-        '<b>' + r.t + '</b><br>' + r.e + '</div><div class="opts"><button class="btn ok" id="contC">Continuar ▶</button></div>');
+        '<b>' + r.t + '</b><br>' + r.e + '</div>' + alertaAmigo(true) + '<div class="opts"><button class="btn ok" id="contC">Continuar ▶</button></div>');
       document.getElementById('contC').onclick = function(){ closeModal(); if (nF >= total) fim(true); else paused = false; };
     }; });
   });
@@ -1101,7 +1113,7 @@ ETAPAS.cena = function(et, done){
       var num = o.f ? o.f.n : ++k, col = o.f ? (o.r.tipo === 'c' ? 'var(--cond)' : 'var(--comp)') : '#9aa3ad';
       h += '<div class="rz"><div class="n" style="background:' + col + '">' + num + '</div><div><div class="tt">' + o.r.t + ' <span class="tag ' + o.r.tipo + '">' + (o.r.tipo === 'c' ? 'CONDIÇÃO' : 'COMPORTAMENTO') + '</span>' + (o.f ? (o.f.ok ? ' ✅' : ' ⚠️ classificação errada') : ' <span class="tag miss">NÃO ENCONTRADO</span>') + '</div><div class="ex">' + o.r.e + '</div></div></div>';
     });
-    h += '<button class="btn ok big" id="cenaOk" style="margin-top:10px">Próxima etapa ▶</button></div>';
+    h += alertaAmigo() + '<button class="btn ok big" id="cenaOk" style="margin-top:12px">Próxima etapa ▶</button></div>';
     document.getElementById('cenaFim').innerHTML = h;
     document.getElementById('cenaOk').onclick = function(){ done(pts, total * 100, bonus); };
     TIMERS.push(setTimeout(function(){ var el = document.getElementById('cenaFim'); if (el) el.scrollIntoView({ behavior:'smooth' }); }, todos ? 900 : 300));
@@ -1291,7 +1303,7 @@ function finalizarFase(){
   var msgs = ['Não desanime! Revise as explicações e tente de novo.', 'Bom começo! Dá para melhorar.', 'Muito bem! Você está atento aos riscos.', 'Excelente! Você é exemplo de segurança!'];
   var h = '<div class="card res"><div class="stars">' + stars(st) + '</div><h1>' + (st >= 1 ? 'Fase concluída!' : 'Fase não concluída') + '</h1><p class="muted">' + f.ic + ' ' + f.nome + '</p>' +
     '<div class="pp">' + fmt(RUN.pts) + '</div><div class="muted">pontos · aproveitamento de ' + Math.round(pct*100) + '%' + (RUN.bonus ? ' + ' + fmt(RUN.bonus) + ' de bônus de tempo' : '') + (recorde ? ' · <b style="color:var(--ok)">Novo recorde! 🎉</b>' : ' · Recorde: ' + fmt(r.best)) + '</div>' +
-    '<p style="font-size:18px">' + msgs[st] + '</p>' + (st < 1 ? '<p class="muted">Faça pelo menos 40% de aproveitamento para ganhar ★ e liberar a próxima fase.</p>' : '') +
+    '<p style="font-size:18px">' + msgs[st] + '</p>' + '<div style="max-width:620px;margin:0 auto 12px">' + alertaAmigo() + '</div>' + (st < 1 ? '<p class="muted">Faça pelo menos 40% de aproveitamento para ganhar ★ e liberar a próxima fase.</p>' : '') +
     '<div class="row" style="justify-content:center;margin-top:10px">' + (prox !== null ? '<button class="btn ok" data-act="fase" data-i="' + prox + '">▶ Próxima fase: ' + FASES[prox].nome + '</button>' : '') +
     '<button class="btn ghost" data-act="fase" data-i="' + RUN.idx + '">🔁 Jogar de novo</button><button class="btn" data-act="mapa">🗺️ Mapa de fases</button></div>' +
     (concluidas(p) === FASES.length ? '<p style="margin-top:16px"><button class="btn gold" data-act="certificado" data-id="' + esc(p.id) + '">🎓 Ver meu certificado</button></p>' : '') +

@@ -101,3 +101,13 @@ def test_database_persists_between_sessions(tmp_path):
     backup = b.db.backup(tmp_path / "bk", keep=2)
     assert backup.exists()
     b.close()
+
+
+def test_simulation_runs_end_to_end():
+    """Regressão: a simulação ponta a ponta precisa continuar funcionando com a configuração real."""
+    from src import simulation
+    result = simulation.run()
+    finals = result["estados_finais"]
+    assert finals["EXEMPLO CD Logística Simulada"] == "GANHO"
+    assert finals["EXEMPLO Transportes Fictícios"] == "DESCADASTRADO"
+    assert any("bloqueado" in p for p in result["passos"])  # proposta sem preço não sai

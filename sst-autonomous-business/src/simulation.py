@@ -49,6 +49,9 @@ def run(base_dir=None, fresh: bool = True) -> dict:
     s.pricing["services"]["A"] = {"status": "aprovado", "unit": "projeto", "list_price": 1000.0, "min_price": 900.0,
                                   "max_discount_pct": 5, "operational_cost": 200.0}
     s.pricing["defaults"]["payment_terms"] = "(fictício) 50% no aceite e 50% na entrega"
+    # Cenário próprio da simulação: B sem preço aprovado, independente da tabela real.
+    s.pricing["services"]["B"] = {"status": "preco_pendente", "unit": "visita", "list_price": None,
+                                  "min_price": None, "max_discount_pct": 0}
     log: list[str] = []
 
     clock.set(datetime(2026, 10, 13, 9, 30, tzinfo=TZ))  # terça-feira, horário comercial
@@ -114,7 +117,8 @@ def run(base_dir=None, fresh: bool = True) -> dict:
         except generator.ProposalError as exc:
             log.append(f"Envio da proposta pendente bloqueado: {exc}")
         q = generator.queue_send(app, prop["proposal_id"])
-        appr = app.db.scalar("SELECT id FROM approvals WHERE status='PENDENTE' AND action='send_proposal'")
+        appr = app.db.scalar("SELECT id FROM approvals WHERE status='PENDENTE' AND action='send_proposal' "
+                             "AND subject_type='message' AND subject_id=?", (q["message_id"],))
         if appr:
             permissions.decide(app, appr, True, by="proprietario(simulado)")
             q = sender.dispatch(app, q["message_id"]).__dict__

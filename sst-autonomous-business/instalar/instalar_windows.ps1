@@ -215,7 +215,7 @@ if ((-not $SimParaTudo) -and (Perguntar 'Usar um Gmail GRATUITO para enviar e re
     } else {
         $seguro = Read-Host '    Senha de app (16 letras)' -AsSecureString
         $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($seguro)
-        try { $senha = ([Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)) -replace '\s', '' }
+        try { $senha = ([Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)) -replace '\s', '' }
         finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr) }
         $valores = [ordered]@{
             'EMAIL_CHANNEL' = 'smtp'; 'SMTP_HOST' = 'smtp.gmail.com'; 'SMTP_PORT' = '587'; 'SMTP_SECURITY' = 'starttls'
@@ -254,7 +254,7 @@ if ((-not $SimParaTudo) -and (Perguntar 'Preencher agora nome, marca e e-mail co
     if ($contratos -match '^\d+$') { $argsId += @('--contratos-max', $contratos) }
     Rodar-Python $argsId
 }
-Aviso 'preços continuam "pendentes": defina-os em config\pricing.json antes de enviar propostas.'
+Aviso 'revise a tabela de preços (knowledge\tabela_precos.md / config\pricing.json) antes de enviar propostas.'
 
 # 6. Verificação ----------------------------------------------------------------------------------
 Passo '6/9 Verificação (testes, simulação sem envio e primeira exportação)'

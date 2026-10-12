@@ -18,8 +18,12 @@ Página pública que o celular abre ao escanear o QR Code dos crachás emitidos 
 
 Projeto independente dos crachás: não aparece na página inicial do site (que é só dos crachás) e é acessado pelo link direto ou pelo QR Code da pasta `qr/`. Não usa nem lê dados dos crachás.
 
-- `jogos.html` — **Galpão Seguro**, jogos de segurança do trabalho para o armazém (`https://emergentcold.github.io/SMS/jogos.html`): 8 fases (caminho seguro, empilhadeiras, transpaleteiras/paleteiras, porta-paletes, picking, logística reversa, docas e desafio final) com caça a condições e comportamentos inseguros, "seguro ou inseguro", quiz e labirinto. O funcionário só se cadastra (ou entra pela matrícula) e joga; ranking, Painel SST, exportação CSV, backup e certificados dos outros ficam na **Área do SST**, protegida por PIN (link discreto no rodapé da tela inicial; o PIN é criado no primeiro acesso em cada aparelho). Os dados ficam só no navegador do aparelho usado. Ao concluir as 8 fases, o funcionário recebe o certificado em PDF.
-  Criado por **Luan Tavarez — Técnico em Segurança do Trabalho**.
+- `jogos.html` — **link do jogador** do **Galpão Seguro** (`https://emergentcold.github.io/SMS/jogos.html`), jogos de segurança do trabalho para o armazém: 8 fases (caminho seguro, empilhadeiras, transpaleteiras/paleteiras, porta-paletes, picking, logística reversa, docas e desafio final) com caça a condições e comportamentos inseguros, "seguro ou inseguro", quiz e labirinto. O funcionário só se cadastra (ou entra pela matrícula) e joga; não há nenhuma função de administração nesta página. Ao concluir as 8 fases, recebe o certificado em PDF.
+- `jogos-admin.html` — **link do administrador** (`https://emergentcold.github.io/SMS/jogos-admin.html`): abre só com o PIN de administrador (criado no primeiro acesso em cada aparelho) e reúne Painel SST, ranking, exportação CSV, backup/importação, exclusão e certificados dos funcionários. Os dados ficam no navegador do aparelho onde se joga: abra este link no mesmo tablet/computador do jogo, ou junte os backups de vários aparelhos.
+- `galpao.js` e `galpao.css` — código e visual compartilhados pelas duas páginas acima.
+
+Criado por **Luan Tavarez — Técnico em Segurança do Trabalho**.
+
 - `qr/` — QR Code do link do jogo e cartaz A4 (PDF/PNG) para divulgação.
 
 ---

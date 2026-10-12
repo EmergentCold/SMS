@@ -23,8 +23,8 @@
 [CmdletBinding()]
 param(
     [string]$Destino = (Join-Path $env:USERPROFILE 'sst-agent'),
-    [string]$Branch = 'claude/sst-autonomous-agent-scmmqs',
-    [string]$Repositorio = 'https://github.com/EmergentCold/SMS.git',
+    [string]$Branch = 'main',
+    [string]$Repositorio = 'https://github.com/EmergentCold/tavarez-sst.git',
     [switch]$SimParaTudo,
     [switch]$Remover
 )
@@ -171,7 +171,9 @@ if (Test-Path (Join-Path $Destino '.git')) {
     & git clone --branch $Branch $Repositorio $Destino
     if ($LASTEXITCODE -ne 0) { throw 'git clone falhou (repositório privado? faça login quando o Git pedir).' }
 }
-$Projeto = Join-Path $Destino 'sst-autonomous-business'
+# Repositório próprio (tavarez-sst): projeto na raiz. Cópias antigas (SMS): projeto na subpasta.
+$Projeto = $Destino
+if (Test-Path (Join-Path $Destino 'sst-autonomous-business/src')) { $Projeto = Join-Path $Destino 'sst-autonomous-business' }
 Set-Location $Projeto
 Ok "projeto em $Projeto"
 
@@ -309,7 +311,7 @@ if (-not $Origem) {
     if ($suspeitos) {
         Aviso "$($suspeitos.Count) arquivo(s) com nome que sugere dados pessoais (ex.: $($suspeitos[0].Name))."
     }
-    Aviso 'o repositório pode ser público (GitHub Pages). Não envie dados pessoais de colaboradores.'
+    Aviso 'não envie dados pessoais de colaboradores (ASO, CPF, fichas) ao GitHub, mesmo em repositório privado.'
     if (Perguntar 'Copiar a pasta para o repositório (seguranca-do-trabalho-em-projetos)?' $false) {
         $Alvo = Join-Path $Destino 'seguranca-do-trabalho-em-projetos'
         Copy-Item -Path $Origem.FullName -Destination $Alvo -Recurse -Force

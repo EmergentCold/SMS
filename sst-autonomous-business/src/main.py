@@ -1,6 +1,6 @@
 """CLI do SST Autonomous Business Agent.
 
-Uso: python -m src.main <comando> [opções]   (execute na pasta sst-autonomous-business)
+Uso: python -m src.main <comando> [opções]   (execute na pasta do projeto)
 Ajuda: python -m src.main --help
 """
 from __future__ import annotations

@@ -1,7 +1,7 @@
 # Roteiro para a sessão do Claude no computador do proprietário
 
 > Cole na sessão local (Claude Desktop ou `claude remote-control`, aberta na pasta do repositório):
-> **"Leia sst-autonomous-business/PROXIMA_SESSAO.md e execute o roteiro comigo."**
+> **"Leia PROXIMA_SESSAO.md e execute o roteiro comigo."** (repositório `EmergentCold/tavarez-sst`)
 
 Contexto: o SST Autonomous Business Agent já está implementado e testado (ver `STATUS.md`). A sessão na nuvem
 não alcança o computador, a conta Microsoft nem os sites das empresas; esta sessão local alcança. O proprietário
@@ -21,8 +21,9 @@ escolheu: **operar a partir do PC** e **e-mail de domínio próprio**.
 
 ### 1. Instalação (10–15 min)
 1. Se o repositório ainda não estiver no PC: rodar o instalador
-   `powershell -NoProfile -ExecutionPolicy Bypass -File sst-autonomous-business\instalar\instalar_windows.ps1`
-   (ou o comando `irm ... | instalar_sst.ps1` do README). Responder **sim** a "Microsoft 365 / Power Automate".
+   `powershell -NoProfile -ExecutionPolicy Bypass -File instalar\instalar_windows.ps1`
+   (ou o comando de uma linha do README). Plano gratuito: responder **Gmail** no passo do e-mail e **não** a
+   "Microsoft 365 / Power Automate".
 2. Conferir: `python -m src.main status` e `python -m src.main integrations --offline`.
    Esperado: agendador ativo (tarefa "SST Agent"), `identidade_remetente` ok, ponte no OneDrive criada.
 
@@ -54,8 +55,9 @@ de teste para o próprio e-mail do proprietário (importar um lead de teste com 
 `legal_basis=consentimento`) e confirmar a chegada + arquivo em `envios/confirmados/`.
 
 ### 4. Primeiros leads reais
-1. Importar o CSV entregue na sessão da nuvem (`leads_pesquisa_2026-10-12.csv`: Condottalog, TriMais,
-   Speed Cargas, BBM, Rodovisa, JMS, Comfrio — **sem contatos**) ou refazer a pesquisa.
+1. Importar `leads/pesquisa_2026-10-12.csv` (12 empresas de SP com fonte pública: Condottalog, TriMais,
+   Speed Cargas, BBM, Rodovisa, JMS, Comfrio, Xandô, Antilhas, Hiperplas, Patrus, Monfredini — **sem contatos**):
+   `python -m src.main leads import leads/pesquisa_2026-10-12.csv` — ou refazer a pesquisa.
 2. Para cada empresa: abrir o **site oficial**, confirmar que é a empresa certa, e registrar **apenas** canal
    comercial genérico publicado (contato@, comercial@, formulário) com a URL da página:
    reimportar uma linha com `website`, `contact_email`, `contact_type=generic_corporate`, `source_url`.

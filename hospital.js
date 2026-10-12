@@ -982,7 +982,7 @@ function heroSvg(){
 function telaInicio(){
   clearAll();
   var p = atual();
-  var h = '<div class="hero"><div class="txt"><div class="hlogo"><img src="' + document.getElementById('logoImg').src + '" alt="Hospital Beneficência Portuguesa — São José do Rio Preto"></div><h1>Hospital Seguro</h1><p>Um plantão inteiro de segurança do trabalho: UTI e internação, centro cirúrgico, farmácia, almoxarifado e administrativo. Descarte certo de agulhas, ampolas e dados de pacientes, kit de derramamento e muito mais. <span class="tag-mud">Os riscos mudam a cada partida!</span></p></div>' + heroSvg() + '</div>';
+  var h = '<div class="hero"><div class="txt"><div class="hlogo"><img src="' + document.getElementById('logoImg').src + '" alt="Hospital Beneficência Portuguesa"></div><h1>Hospital Seguro</h1><p>Um plantão inteiro de segurança do trabalho: UTI e internação, centro cirúrgico, farmácia, almoxarifado e administrativo. Descarte certo de agulhas, ampolas e dados de pacientes, kit de derramamento e muito mais. <span class="tag-mud">Os riscos mudam a cada partida!</span></p></div>' + heroSvg() + '</div>';
   if (p){
     h += '<div class="card quem"><div class="av">' + esc(iniciais(p.nome)) + '</div><div style="flex:1"><b>' + esc(p.nome) + '</b><div class="muted">Matrícula ' + esc(p.matricula) + ' · ' + fmt(total(p)) + ' pontos · ' + nivel(total(p)).n.ic + ' ' + nivel(total(p)).n.nome + '</div></div><button class="btn sm ghost" data-act="trocar">Trocar</button></div>';
   }
@@ -1006,8 +1006,8 @@ function telaInicio(){
        '</div><div class="defs"><div class="dc"><span class="tag c">CONDIÇÃO INSEGURA</span> falha no ambiente ou equipamento. Ex.: caixa de perfurocortante cheia demais.</div><div class="db"><span class="tag b">COMPORTAMENTO INSEGURO</span> atitude da pessoa. Ex.: reencapar agulha.</div></div></div>';
   h += '<div class="card"><h2>🗑️ Onde descartar no hospital</h2><div class="lixleg">' + Object.keys(LIX).map(function(k){ return '<div><span class="li">' + iconeLix(k) + '</span><div><b>' + LIX[k].n + '</b><small>' + LIX[k].s + '</small></div></div>'; }).join('') + '</div>' +
        '<p class="muted" style="margin:10px 0 0;font-size:14px">🧪 Derramamento de produto químico: use o <b>kit de derramamento nível I</b> (bolsa com barreiras, mantas, EPIs e saco para resíduo) para fazer a contenção.</p></div>';
-  h += '<div class="card credito"><div class="cav">LT</div><div><small>Idealização, conteúdo e criação</small><b>Luan Tavarez</b><span>Técnico em Segurança do Trabalho</span><p>Jogo criado para o treinamento de Segurança e Saúde do Trabalho do Hospital Beneficência Portuguesa de São José do Rio Preto, com a rotina real dos setores: UTI e internação, centro cirúrgico, farmácia, almoxarifado e administrativo.</p></div></div>';
-  h += '<div class="foot"><b>Hospital Beneficência Portuguesa</b> · São José do Rio Preto · Segurança e Saúde do Trabalho<br>Criado por Luan Tavarez · Técnico em Segurança do Trabalho<br>Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador.</div>';
+  h += '<div class="card credito"><div class="cav">LT</div><div><small>Idealização, conteúdo e criação</small><b>Luan Tavarez</b><span>Técnico em Segurança do Trabalho</span><p>Jogo criado para o treinamento de Segurança e Saúde do Trabalho do Hospital Beneficência Portuguesa, com a rotina real dos setores: UTI e internação, centro cirúrgico, farmácia, almoxarifado e administrativo.</p></div></div>';
+  h += '<div class="foot"><b>Hospital Beneficência Portuguesa</b> · Segurança e Saúde do Trabalho<br>Criado por Luan Tavarez · Técnico em Segurança do Trabalho<br>Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador.</div>';
   app.innerHTML = h; scrollTo(0,0);
 }
 
@@ -1897,7 +1897,7 @@ function telaPainel(){
     '<div class="card"><h2>📋 Colaboradores e gestão</h2>' +
     '<div class="row" style="margin-bottom:12px"><button class="btn ok" data-act="csv">⬇️ Exportar planilha (CSV)</button><button class="btn" data-act="backup">💾 Salvar backup</button><label class="btn ghost" style="cursor:pointer">📂 Importar backup<input type="file" id="impBk" accept=".json,application/json" hidden></label><button class="btn ghost" data-act="trocarPin">🔑 Trocar PIN</button><button class="btn bad" data-act="zerar">🗑️ Apagar tudo</button></div>' +
     '<p class="muted" style="font-size:14px;margin-top:0">Os dados ficam somente neste aparelho. Para juntar resultados de vários tablets/computadores, salve o backup em cada um e importe aqui (o maior recorde de cada fase é mantido).</p>' +
-    '<label class="f" style="max-width:520px">Nome da instituição (aparece no certificado)<input id="inst" maxlength="80" placeholder="Hospital Beneficência Portuguesa · São José do Rio Preto" value="' + esc(DB.inst || '') + '"></label>';
+    '<label class="f" style="max-width:520px">Nome da instituição (aparece no certificado)<input id="inst" maxlength="80" placeholder="Hospital Beneficência Portuguesa" value="' + esc(DB.inst || '') + '"></label>';
   if (tot){
     h += '<div class="tabwrap"><table><thead><tr><th>Nome</th><th>Matrícula</th><th>Setor / Turno</th>' + FASES.map(function(f, i){ return '<th class="num" title="' + f.nome + '">F' + (i+1) + '</th>'; }).join('') + '<th class="num">Total</th><th>Última atividade</th><th></th></tr></thead><tbody>';
     lista.forEach(function(p){
@@ -1988,7 +1988,7 @@ function desenharCert(p){
   pal.forEach(function(w){ var tst = linha ? linha + ' ' + w : w; if (x.measureText(tst).width > maxW){ x.fillText(linha, W / 2, y); y += 46; linha = w; } else linha = tst; });
   if (linha) { x.fillText(linha, W / 2, y); y += 46; }
   t('Pontuação: ' + fmt(total(p)) + ' pontos  ·  Nível ' + nivel(total(p)).n.nome + '  ·  ' + estrelasTot(p) + ' de ' + (FASES.length * 3) + ' estrelas', y + 24, '700 28px ' + F1, VERDE2);
-  t('São José do Rio Preto, ' + dataExtenso(p.concluido) + '.', y + 84, '30px ' + F2, CINZA);
+  t(dataExtenso(p.concluido).replace(/^./, function(c){ return c.toUpperCase(); }) + '.', y + 84, '30px ' + F2, CINZA);
   x.fillStyle = '#e5e7eb'; x.fillRect(W / 2 - 300, H - 186, 600, 2);
   t('Programa criado por Luan Tavarez — Técnico em Segurança do Trabalho', H - 140, '600 26px ' + F1, CINZA);
   t('Código de verificação: ' + codigoCert(p), H - 96, '600 22px ' + F1, '#9ca3af');
@@ -2082,7 +2082,7 @@ document.addEventListener('click', function(ev){
   ev.preventDefault(); a({ id:b.getAttribute('data-id'), i:b.getAttribute('data-i') });
 });
 
-if (DEBUG) window.__G = { ACT:ACT, DB:function(){ return DB; }, FASES:FASES, CENAS:CENAS, iniciarFase:iniciarFase, sortear:sortearCena, ITENS:ITENS, EXTRAS:EXTRAS, svgItem:svgItem };
+if (DEBUG) window.__G = { ACT:ACT, DB:function(){ return DB; }, FASES:FASES, CENAS:CENAS, iniciarFase:iniciarFase, sortear:sortearCena, ITENS:ITENS, EXTRAS:EXTRAS, svgItem:svgItem, pularPara:function(i, k){ iniciarFase(i); RUN.e = k; proximaEtapa(); } };
 telaInicio();
 if (location.hash === '#admin') sstGate(telaPainel);
 })();

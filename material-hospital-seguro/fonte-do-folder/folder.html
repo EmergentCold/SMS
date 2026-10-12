@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Folder — Hospital Seguro</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: 297mm 210mm; margin: 0; }
+  :root { --verde:#00983A; --verde2:#007A2F; --verde3:#00592A; --verm:#E1251B; --cinza:#3f4446; --soft:#5f6669; --linha:#e3e7e5; --fundo:#f3f6f4; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 297mm; }
+  body { font-family: "Inter", "Segoe UI", Arial, sans-serif; color: var(--cinza); font-size: 8.6pt; line-height: 1.42; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pagina { width: 297mm; height: 210mm; display: grid; grid-template-columns: 99mm 99mm 99mm; page-break-after: always; overflow: hidden; position: relative; }
+  .pagina:last-child { page-break-after: auto; }
+  .painel { height: 210mm; padding: 9mm 8mm 8mm; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .painel + .painel { border-left: 0.2mm dashed #d5dad8; }
+  h1, h2, h3, .barlow { font-family: "Barlow", Arial, sans-serif; }
+  h2 { font-size: 17pt; font-weight: 800; color: var(--verde2); line-height: 1.1; margin-bottom: 1.5mm; }
+  h2 .sub { display: block; font-size: 8.5pt; font-weight: 700; color: var(--verm); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1mm; }
+  h3 { font-size: 10.5pt; font-weight: 800; color: var(--cinza); margin-bottom: 1mm; }
+  p { margin-bottom: 2.2mm; }
+  .faixa { position: absolute; left: 0; right: 0; bottom: 0; height: 2.2mm; background: linear-gradient(90deg, var(--verm) 0 50%, var(--verde) 50% 100%); }
+  .faixa.topo { top: 0; bottom: auto; }
+
+  /* CAPA */
+  .capa { background: radial-gradient(120% 90% at 0% 0%, #0bb04a 0%, var(--verde) 38%, var(--verde3) 100%); color: #fff; padding: 10mm 8mm 9mm; }
+  .capa .logo { background: #fff; border-radius: 4mm; padding: 3.5mm 4.5mm; align-self: flex-start; box-shadow: 0 1.5mm 4mm rgba(0,0,0,.18); }
+  .capa .logo img { height: 15mm; display: block; }
+  .capa .kicker { margin-top: 8mm; font-family: "Barlow"; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 8pt; opacity: .9; }
+  .capa h1 { font-size: 34pt; font-weight: 900; line-height: .95; margin-top: 1.5mm; letter-spacing: -.01em; }
+  .capa .lead { font-size: 10.5pt; line-height: 1.35; margin-top: 3mm; opacity: .95; }
+  .capa .celular { margin: 5mm auto 0; width: 44mm; border-radius: 6mm; border: 2.2mm solid #0d1b14; overflow: hidden; box-shadow: 0 3mm 7mm rgba(0,0,0,.35); background: #0d1b14; height: 78mm; }
+  .capa .celular img { width: 100%; display: block; }
+  .capa .tag { margin-top: auto; align-self: center; background: var(--verm); color: #fff; font-family: "Barlow"; font-weight: 800; font-size: 9.5pt; border-radius: 2mm; padding: 1.6mm 3.5mm; text-align: center; }
+
+  /* VERSO / ACESSO */
+  .acesso { background: #fff; align-items: center; text-align: center; }
+  .acesso h2 { margin-top: 2mm; }
+  .acesso .qr { width: 58mm; height: 58mm; margin: 4mm auto 2mm; border: 0.6mm solid var(--linha); border-radius: 4mm; padding: 2mm; background: #fff; }
+  .acesso .qr img { width: 100%; height: 100%; display: block; }
+  .acesso .url { font-family: "Barlow"; font-weight: 800; font-size: 14pt; color: var(--verde3); background: var(--fundo); border-radius: 2.5mm; padding: 1.6mm 3mm; margin: 1mm 0 3mm; }
+  .aparelhos { display: flex; gap: 3mm; justify-content: center; margin: 1mm 0 4mm; }
+  .aparelhos div { background: var(--fundo); border-radius: 2.5mm; padding: 2mm 2.5mm; font-weight: 700; font-size: 8pt; }
+  .aparelhos div span { display: block; font-size: 13pt; }
+  .credito { margin-top: auto; width: 100%; text-align: left; display: flex; gap: 3mm; align-items: center; border-left: 1.4mm solid var(--verde); background: var(--fundo); border-radius: 2.5mm; padding: 3mm; }
+  .credito .av { width: 12mm; height: 12mm; flex: none; border-radius: 50%; background: linear-gradient(135deg, var(--verm) 0 50%, var(--verde) 50% 100%); color: #fff; font-family: "Barlow"; font-weight: 900; font-size: 12pt; display: flex; align-items: center; justify-content: center; }
+  .credito small { display: block; font-size: 6.5pt; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+  .credito b { display: block; font-family: "Barlow"; font-size: 12pt; color: var(--verde2); line-height: 1.1; }
+  .credito span { font-size: 8pt; font-weight: 600; }
+  .nota { font-size: 7pt; color: var(--soft); margin-top: 3mm; }
+
+  /* POR QUE */
+  .porque { background: var(--fundo); }
+  .lista { list-style: none; display: grid; gap: 2.4mm; margin: 2mm 0 4mm; }
+  .lista li { display: grid; grid-template-columns: 8mm 1fr; gap: 2mm; align-items: start; background: #fff; border-radius: 2.5mm; padding: 2.2mm 2.5mm; }
+  .lista li .i { font-size: 13pt; line-height: 1; text-align: center; }
+  .lista li b { display: block; font-family: "Barlow"; font-size: 9.6pt; color: var(--cinza); }
+  .lixeiras { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5mm; margin-top: 1.5mm; }
+  .lixeiras div { border-radius: 1.8mm; padding: 1.6mm 1mm; text-align: center; font-size: 6.6pt; font-weight: 700; line-height: 1.15; }
+
+  /* FASES */
+  .tl { list-style: none; display: grid; gap: 2.2mm; margin-top: 2mm; }
+  .tl li { display: grid; grid-template-columns: 11.5mm 1fr; gap: 2.5mm; align-items: start; }
+  .tl .h { background: var(--verde); color: #fff; border-radius: 2mm; text-align: center; font-family: "Barlow"; font-weight: 800; padding: 1.4mm 0 1.2mm; font-size: 8pt; line-height: 1.1; }
+  .tl .h span { display: block; font-size: 12pt; }
+  .tl li:nth-child(2n) .h { background: var(--verm); }
+  .tl li:last-child .h { background: #b7800b; }
+  .tl b { font-family: "Barlow"; font-size: 10pt; color: var(--cinza); display: block; line-height: 1.15; }
+  .tl small { display: block; font-size: 7.6pt; color: var(--soft); line-height: 1.32; }
+  .tl .jogo { display: inline-block; margin-top: .8mm; font-size: 7pt; font-weight: 700; background: var(--fundo); color: var(--verde3); border-radius: 1.5mm; padding: .5mm 1.6mm; }
+  .estrelas { margin-top: auto; background: var(--fundo); border-radius: 2.5mm; padding: 2.5mm 3mm; font-size: 7.8pt; }
+
+  /* COMO SE JOGA */
+  .cena { border-radius: 2.5mm; overflow: hidden; border: 0.4mm solid var(--linha); margin: 2mm 0 2.5mm; }
+  .cena img { width: 100%; display: block; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin-bottom: 2.5mm; }
+  .duo figure { border-radius: 3mm; overflow: hidden; height: 56mm; background: #04241a; display: flex; align-items: flex-start; }
+  .duo img { width: 100%; display: block; }
+  .duo figcaption, .legenda { font-size: 7pt; font-weight: 700; text-align: center; color: var(--soft); margin-top: 1mm; }
+  .mec { list-style: none; display: grid; gap: 1.4mm; }
+  .mec li { font-size: 7.9pt; line-height: 1.32; }
+  .mec li b { font-family: "Barlow"; font-size: 9.3pt; color: var(--verde2); }
+
+  /* COLABORADOR / SST */
+  .bloco { background: var(--fundo); border-radius: 3mm; padding: 3mm; margin-bottom: 3mm; }
+  .bloco.sst { border-left: 1.4mm solid var(--verm); }
+  .bloco.colab { border-left: 1.4mm solid var(--verde); }
+  .bloco ul { padding-left: 4mm; font-size: 7.9pt; line-height: 1.38; }
+  .cert { border-radius: 2mm; overflow: hidden; box-shadow: 0 1mm 3mm rgba(0,0,0,.18); }
+  .cert img { width: 100%; display: block; }
+  .rodape { margin-top: auto; font-size: 7pt; color: var(--soft); text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- ===================== LADO DE FORA ===================== -->
+<section class="pagina">
+  <!-- aba interna (dobra) -->
+  <div class="painel porque">
+    <h2><span class="sub">Treinamento que engaja</span>Por que um jogo?</h2>
+    <p>Em vez de slides, o colaborador <b>vive a rotina de um plantão</b> e aprende fazendo: encontra riscos, descarta resíduos, monta procedimentos e responde perguntas — com explicação em cada resposta.</p>
+    <ul class="lista">
+      <li><span class="i">🎯</span><div><b>Riscos reais do hospital</b>Perfurocortantes, ampolas, medicamentos, produtos químicos e dados de pacientes.</div></li>
+      <li><span class="i">🔄</span><div><b>Cada partida é diferente</b>Os riscos mudam de lugar: vale jogar de novo.</div></li>
+      <li><span class="i">✅</span><div><b>Mostra o jeito certo</b>Cada erro vem com a forma correta de fazer.</div></li>
+      <li><span class="i">⚖️</span><div><b>Alinhado às normas</b>NR-32, NR-17, NR-1 e LGPD.</div></li>
+      <li><span class="i">🎓</span><div><b>Certificado em PDF</b>No nome do colaborador, ao concluir as 6 fases.</div></li>
+    </ul>
+    <h3>Onde descartar no hospital</h3>
+    <div class="lixeiras">
+      <div style="background:#facc15;color:#111">Perfuro-<br>cortante</div>
+      <div style="background:#f97316;color:#fff">Caixa<br>laranja</div>
+      <div style="background:#fff;color:#111;border:0.3mm solid #cbd5e1">Infec-<br>tante</div>
+      <div style="background:#6b7280;color:#fff">Lixo<br>comum</div>
+      <div style="background:#2563eb;color:#fff">Papel</div>
+      <div style="background:#dc2626;color:#fff">Plástico</div>
+      <div style="background:#1e293b;color:#fde047;grid-column:span 2">Dados sensíveis</div>
+    </div>
+    <p class="nota" style="margin-top:3mm">🧪 Derramamento químico: <b>kit de derramamento nível I</b> para a contenção.</p>
+  </div>
+
+  <!-- verso (meio) -->
+  <div class="painel acesso">
+    <h2><span class="sub">Acesse e jogue</span>Aponte a câmera</h2>
+    <p style="font-size:8.4pt">Abra a câmera do celular e aponte para o QR Code — ou digite o endereço no navegador.</p>
+    <div class="qr"><img src="qr.png" alt="QR Code do Hospital Seguro"></div>
+    <div class="url">hospitalseguro.github.io</div>
+    <div class="aparelhos"><div><span>📱</span>Celular</div><div><span>📲</span>Tablet</div><div><span>💻</span>Notebook</div></div>
+    <p style="font-size:8pt">Sem instalar nada. Cadastre-se com <b>nome completo e matrícula</b> e comece o plantão.</p>
+    <div class="bloco sst" style="width:100%;text-align:left;margin:0 0 3mm"><h3 style="font-size:9.5pt">🛠️ Equipe de SST</h3><p style="margin:0;font-size:7.8pt">Na tela inicial, toque em <b>Entrar como administrador</b> e use o PIN para ver indicadores, ranking, planilha e certificados.</p></div>
+    <div class="credito"><div class="av">LT</div><div><small>Idealização, conteúdo e criação</small><b>Luan Tavarez</b><span>Técnico em Segurança do Trabalho</span></div></div>
+    <p class="nota">Os dados de inscrição e pontuação ficam salvos no próprio aparelho.</p>
+  </div>
+
+  <!-- capa -->
+  <div class="painel capa">
+    <div class="logo"><img src="logo.png" alt="Hospital Beneficência Portuguesa"></div>
+    <div class="kicker">Segurança e Saúde do Trabalho</div>
+    <h1>Hospital<br>Seguro</h1>
+    <div class="lead">Jogos de segurança do trabalho para a rotina do hospital.</div>
+    <div class="celular"><img src="m-home.png" alt="Tela inicial do jogo"></div>
+    <div class="tag">Aprenda jogando · os riscos mudam a cada partida!</div>
+  </div>
+  <div class="faixa"></div>
+</section>
+
+<!-- ===================== LADO DE DENTRO ===================== -->
+<section class="pagina">
+  <!-- fases -->
+  <div class="painel">
+    <h2><span class="sub">6 fases</span>A rotina de um plantão</h2>
+    <ul class="tl">
+      <li><div class="h"><span>🛏️</span>07:00</div><div><b>UTI e Internação</b><small>Agulhas e ampolas, caixa de perfurocortante e acidente com material biológico.</small><span class="jogo">🗑️ Descarte em Movimento</span></div></li>
+      <li><div class="h"><span>🩺</span>10:30</div><div><b>Centro Cirúrgico</b><small>Bisturis e agulhas esquecidos na mesa e embaixo da maca na limpeza da sala.</small><span class="jogo">⚡ Risco Ninja</span></div></li>
+      <li><div class="h"><span>💊</span>13:00</div><div><b>Farmácia</b><small>Medicamento quebrado ou extraviado vai para a caixa laranja.</small><span class="jogo">🗑️ Descarte em Movimento</span></div></li>
+      <li><div class="h"><span>📦</span>15:00</div><div><b>Almoxarifado</b><small>Produtos químicos, peso e kit de derramamento nível I.</small><span class="jogo">⚡ Risco Ninja</span></div></li>
+      <li><div class="h"><span>🗂️</span>17:00</div><div><b>Administrativo</b><small>Dados sensíveis de pacientes (LGPD), papel e plástico, ergonomia.</small><span class="jogo">🗑️ Descarte em Movimento</span></div></li>
+      <li><div class="h"><span>🏆</span>19:00</div><div><b>Ronda Final do Plantão</b><small>Desafio com tudo misturado e perguntas contra o relógio.</small><span class="jogo">⚡ + 🗑️ + ❓</span></div></li>
+    </ul>
+    <div class="estrelas">⭐ Cada fase vale até <b>3 estrelas</b>. Com 1 estrela, a próxima fase é liberada. Ao concluir as 6, o certificado sai na hora.</div>
+  </div>
+
+  <!-- como se joga -->
+  <div class="painel">
+    <h2><span class="sub">Interativo de verdade</span>Como se joga</h2>
+    <div class="cena"><img src="d-cena.png" alt="Caça aos Riscos na UTI"></div>
+    <div class="duo">
+      <div><figure><img src="m-ninja-jogo.png" alt="Risco Ninja"></figure><div class="legenda">⚡ Risco Ninja</div></div>
+      <div><figure><img src="m-mov-jogo.png" alt="Descarte em Movimento"></figure><div class="legenda">🗑️ Descarte em Movimento</div></div>
+    </div>
+    <ul class="mec">
+      <li><b>🔍 Caça aos Riscos</b> — toque no que está errado e diga se é condição ou comportamento inseguro.</li>
+      <li><b>⚡ Risco Ninja</b> — deslize o dedo para cortar os riscos sem cortar as proteções.</li>
+      <li><b>🗑️ Descarte em Movimento</b> — arraste cada resíduo para a lixeira certa.</li>
+      <li><b>🔢 Passo a Passo</b> — monte o procedimento correto (acidente com agulha, kit de derramamento…).</li>
+      <li><b>❓ Quiz e Seguro ou Inseguro</b> — com a explicação de cada resposta.</li>
+    </ul>
+  </div>
+
+  <!-- colaborador e SST -->
+  <div class="painel">
+    <h2><span class="sub">Acompanhamento</span>Para todos</h2>
+    <div class="bloco colab">
+      <h3>👤 Área do colaborador</h3>
+      <ul><li>Cadastro com nome e matrícula; entra de novo pela matrícula.</li><li><b>Meu painel</b>: pontos, nível, estrelas, posição no ranking e próximos passos.</li><li>Certificado em PDF no celular, tablet ou notebook.</li></ul>
+    </div>
+    <div class="bloco sst">
+      <h3>🛠️ Área do administrador (SST)</h3>
+      <ul><li>Acesso protegido por <b>PIN</b>.</li><li>Indicadores, desempenho por fase (mostra onde a equipe mais erra) e participação por setor.</li><li>Ranking, planilha (CSV), backup e certificados de todos.</li></ul>
+    </div>
+    <div class="cert"><img src="cert.png" alt="Certificado de conclusão"></div>
+    <div class="legenda">Certificado de conclusão com código de verificação</div>
+    <div class="rodape"><b style="color:var(--verde2)">Hospital Seguro</b> · Hospital Beneficência Portuguesa<br>Criado por Luan Tavarez · Técnico em Segurança do Trabalho</div>
+  </div>
+  <div class="faixa"></div>
+</section>
+</body>
+</html>

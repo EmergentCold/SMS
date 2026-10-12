@@ -26,6 +26,11 @@ escolheu: **operar a partir do PC** e **e-mail de domínio próprio**.
 2. Conferir: `python -m src.main status` e `python -m src.main integrations --offline`.
    Esperado: agendador ativo (tarefa "SST Agent"), `identidade_remetente` ok, ponte no OneDrive criada.
 
+### 1a. Plano gratuito (decisão do proprietário em 12/10/2026)
+Sem gastos por enquanto: e-mail pelo **Gmail gratuito** com senha de app (instalador, passo 4), aprovações pelo
+**painel web**, **Power BI Desktop** com pasta local. Power Automate/Apps/Teams ficam para depois.
+Guia: `knowledge/plano_gratuito.md`. Domínio desejado: **tavarezsst.com.br** (registrar quando houver receita).
+
 ### 1b. Domínio e e-mail
 Se o domínio ainda não estiver pronto, seguir `knowledge/dominio_e_email.md` com o proprietário (Registro.br +
 Microsoft 365 Business Basic **no tenant dele**, SPF/DKIM/DMARC). O aquecimento de envios já está configurado.
@@ -38,7 +43,7 @@ Microsoft 365 Business Basic **no tenant dele**, SPF/DKIM/DMARC). O aquecimento 
    `min_price`, `max_discount_pct`, `status: "aprovado"` — e `defaults.payment_terms`. Valores do proprietário.
 4. Revisar com ele `templates/first_contact.md` e `config/outreach.json → segment_hooks` (tom e texto).
 
-### 3. Microsoft 365 (com o proprietário logado no navegador)
+### 3. Microsoft 365 (somente quando houver assinatura — pular no plano gratuito)
 Seguir `powerplatform/power-automate/FLUXOS.md`, nesta ordem:
 1. **Fluxo 9 – Enviar e-mails** (Outlook da caixa comercial).
 2. **Fluxo 4 – Respostas do Outlook** (substitui IMAP).

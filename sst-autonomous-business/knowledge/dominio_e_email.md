@@ -1,5 +1,8 @@
 # Domínio e e-mail profissional — passo a passo
 
+> **Agora:** operando no plano gratuito com Gmail (`knowledge/plano_gratuito.md`). Este guia é para quando
+> houver orçamento: domínio escolhido **tavarezsst.com.br**.
+
 Para: Luan Souza Tavarez · Tavarez Segurança do Trabalho, Saúde e Meio Ambiente.
 Tempo total: ~1 h (mais até 24 h de propagação do DNS). Custos de referência no fim.
 

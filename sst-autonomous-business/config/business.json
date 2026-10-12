@@ -14,7 +14,8 @@
     "cnpj": null,
     "website": null,
     "commercial_email": null,
-    "phone": null
+    "phone": null,
+    "planned_domain": "tavarezsst.com.br"
   },
   "timezone": "America/Sao_Paulo",
   "currency": "BRL",
@@ -92,5 +93,10 @@
       "cliente_pode_ser_citado": true,
       "codigo_reutilizavel_confirmado": true
     }
-  ]
+  ],
+  "plan": {
+    "mode": "gratuito",
+    "since": "2026-10-12",
+    "note": "Gmail gratuito + painel web + Power BI Desktop; domínio quando houver receita"
+  }
 }

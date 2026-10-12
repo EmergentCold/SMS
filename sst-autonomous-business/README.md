@@ -13,11 +13,10 @@ contratual.
 
 ## Instalação automática no Windows
 
-Repositório: **github.com/EmergentCold/tavarez-sst** (privado). Abra o **PowerShell** (não precisa ser
-administrador) e cole — na primeira vez o Git abre uma janela para você entrar na sua conta do GitHub:
+Abra o **PowerShell** do Windows (não precisa ser administrador) e cole:
 
 ```powershell
-winget install --id Git.Git -e; git clone https://github.com/EmergentCold/tavarez-sst.git $env:USERPROFILE\sst-agent; powershell -NoProfile -ExecutionPolicy Bypass -File $env:USERPROFILE\sst-agent\instalar\instalar_windows.ps1
+winget install --id Git.Git -e; git clone --branch claude/sst-autonomous-agent-scmmqs https://github.com/EmergentCold/SMS.git $env:USERPROFILE\sst-agent; powershell -NoProfile -ExecutionPolicy Bypass -File $env:USERPROFILE\sst-agent\sst-autonomous-business\instalar\instalar_windows.ps1
 ```
 
 O instalador ([`instalar/instalar_windows.ps1`](instalar/instalar_windows.ps1)) **pede confirmação em cada etapa**:
@@ -25,7 +24,7 @@ instala Git, Python, Power BI Desktop e (opcional) Node.js via `winget`; baixa o
 `OneDrive/SST-Agent` da ponte; gera o `.env` com tokens aleatórios e restringe o acesso a ele; pergunta sua
 identidade comercial; roda testes, simulação e a primeira exportação; registra o agente (e, se quiser, a
 API/painel) como tarefa agendada que inicia com o Windows; oferece copiar a pasta
-"Segurança do Trabalho em Projetos" da Área de Trabalho (com alerta de dados pessoais); e abre os guias e os sites do Power Automate e do Power Apps. Depois de clonado, também dá para rodar
+"Segurança do Trabalho em Projetos" da Área de Trabalho (com alerta de dados pessoais, pois o repositório é público); e abre os guias e os sites do Power Automate e do Power Apps. Depois de clonado, também dá para rodar
 `instalar\INSTALAR.cmd` com duplo clique. Para desfazer as tarefas: `instalar_windows.ps1 -Remover`.
 
 O envio externo continua desligado: nenhum e-mail sai até você configurar o SMTP e habilitar
@@ -34,7 +33,7 @@ O envio externo continua desligado: nenhum e-mail sai até você configurar o SM
 ## Início rápido
 
 ```bash
-cd sst-agent        # pasta do repositório tavarez-sst
+cd sst-agent/sst-autonomous-business
 python3 -m pip install -r requirements.txt   # só para rodar os testes
 cp .env.example .env                          # credenciais (opcional no início)
 python3 -m src.main init                      # cria banco e pastas
@@ -72,7 +71,7 @@ python3 -m src.main daemon            # processo contínuo (Ctrl+C ou SIGTERM en
 # ou, em contêiner:
 docker compose up -d --build
 # ou via cron do sistema (sem processo contínuo), a cada 5 minutos:
-# */5 * * * * cd /caminho/sst-agent && python3 -m src.main run-once >> data/logs/cron.log 2>&1
+# */5 * * * * cd /caminho/sst-agent/sst-autonomous-business && python3 -m src.main run-once >> data/logs/cron.log 2>&1
 ```
 O agendador usa uma trava com heartbeat: só uma instância opera por vez. Após reinício, executa uma vez o
 disparo perdido mais recente de cada job (janela `misfire_grace_minutes`), marca jobs interrompidos como

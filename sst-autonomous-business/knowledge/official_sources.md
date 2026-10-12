@@ -10,6 +10,7 @@ coluna "verificado em". Fontes secundárias (consultorias, imprensa) servem apen
 | CLT — Capítulo V (arts. 154 a 201, SST) | https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm | — | consultar |
 | Normas Regulamentadoras (MTE) | https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho | 2026-10-11 | seção oficial de SST do MTE; localizar a lista "NRs vigentes" |
 | NR-1 — GRO/PGR com riscos psicossociais (Portaria MTE nº 1.419/2024; vigência adiada pela Portaria MTE nº 765/2025 para 26/05/2026) | DOU + portal do MTE | 2026-10-11 | confirmado em fontes secundárias; conferir texto no DOU |
+| NR-35 — treinamentos inicial, periódico e eventual devem ser presenciais (Portaria MTE nº 1.259/2026, DOU 16/07/2026; cursos híbridos têm 1 ano para adequação) | DOU + portal do MTE | 2026-10-12 | confirmado em fonte secundária (COAD); conferir no DOU |
 | Manual de Interpretação do Capítulo 1.5 da NR-1 (MTE, mar/2026) | portal do MTE | 2026-10-11 | citado por fontes secundárias; baixar do portal do MTE |
 | Profissão de Técnico de Segurança do Trabalho — Lei nº 7.410/1985 e Decreto nº 92.530/1986 | https://www.planalto.gov.br/ccivil_03/leis/l7410.htm | — | confirmar requisitos de registro |
 | Código de Defesa do Consumidor — Lei nº 8.078/1990 | https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm | — | consultar |

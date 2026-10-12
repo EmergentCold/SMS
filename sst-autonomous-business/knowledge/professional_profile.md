@@ -3,6 +3,12 @@
 > Fonte: informações declaradas pelo proprietário. Itens marcados "a comprovar" **não podem** ser citados em
 > mensagens, propostas ou materiais até que o comprovante seja registrado em `config/business.json`.
 
+## Identidade comercial
+
+- Nome: **Luan Souza Tavarez** · Marca: **Tavarez Segurança do Trabalho, Saúde e Meio Ambiente** (informados em 12/10/2026).
+- O nome da marca cita Saúde e Meio Ambiente, mas o agente só oferta serviços de SST compatíveis com a habilitação
+  comprovada. PCMSO/ASO (médico do trabalho) e licenciamento ambiental não são oferecidos sem parceiro formal.
+
 ## Formação e função declaradas
 
 - Técnico em Segurança do Trabalho (declarado).

@@ -72,6 +72,16 @@ def base_variables(app, lead: dict, contact: dict | None) -> dict:
     if brand.get("phone"):
         signature_lines.append(brand["phone"])
     source = (contact or {}).get("source_description") or (contact or {}).get("source_url") or "fonte registrada no CRM"
+    catalog = s.services.get("services", {})
+    services = lead.get("services") or []
+    remote_only = bool(services) and all(catalog.get(c, {}).get("delivery") in ("remoto", "hibrido") for c in services)
+    if remote_only:
+        oferta = ("por exemplo, a gestão documental de SST dos prestadores de serviço ou um painel mensal de "
+                  "indicadores de segurança, feitos de forma remota")
+        abrangencia = "atendo empresas de todo o Brasil de forma remota (e presencialmente em Guarulhos, São Paulo e região)"
+    else:
+        oferta = "por exemplo, um diagnóstico preliminar com plano de ação priorizado"
+        abrangencia = "atendo empresas de Guarulhos, São Paulo e região"
     return {
         "greeting": greeting,
         "company_name": lead.get("company_name"),
@@ -81,6 +91,8 @@ def base_variables(app, lead: dict, contact: dict | None) -> dict:
         "segment_hook": hook,
         "segment_hook_lower": hook[:1].lower() + hook[1:] if hook else hook,
         "source_description": source,
+        "oferta": oferta,
+        "abrangencia": abrangencia,
         "commercial_email": commercial_email,
         "signature": "\n".join(x for x in signature_lines if x),
         "optout_line": "Se não quiser receber novas mensagens, responda \"descadastrar\" e removo seu contato imediatamente.",

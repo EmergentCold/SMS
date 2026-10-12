@@ -82,16 +82,24 @@ def compute_score(settings, data: ScoreInput) -> ScoreResult:
 
     area = settings.business.get("service_area", {})
     city = _fold(data.city)
+    in_area = False
     if city and city in {_fold(c) for c in area.get("priority_cities", [])}:
-        geografia = 10
+        geografia, in_area = 10, True
     elif city and city in {_fold(c) for c in area.get("metro_cities", [])}:
-        geografia = 8
+        geografia, in_area = 8, True
     elif _fold(data.state) == _fold(area.get("state")):
         geografia = 5
     elif data.state:
         geografia = 2
     else:
         geografia = 0
+    if not in_area and area.get("remote_national"):
+        # Fora da área presencial: só serviços remotos/híbridos são ofertáveis; a distância pesa menos.
+        remote = [c for c in offerable if catalog.get(c, {}).get("delivery") in ("remoto", "hibrido")]
+        if remote:
+            offerable = remote
+            geografia = max(geografia, 6)
+            notes.append("fora da área presencial: ofertar apenas serviços remotos/híbridos")
 
     breakdown = {"setor": setor, "recorrencia": recorrencia, "demanda": demanda,
                  "competencias": competencias, "canal": canal, "geografia": geografia}

@@ -34,6 +34,11 @@ def test_geography_and_channel_points(app):
     interior = compute_score(app.settings, ScoreInput(**base, city="Campinas", state="SP"))
     other = compute_score(app.settings, ScoreInput(**base, city="Curitiba", state="PR"))
     assert gru.breakdown["geografia"] == 10 and metro.breakdown["geografia"] == 8
+    # com atendimento remoto nacional, fora da área presencial vale 6 (só serviços remotos/híbridos)
+    assert interior.breakdown["geografia"] == 6 and other.breakdown["geografia"] == 6
+    app.settings.business["service_area"]["remote_national"] = False
+    interior = compute_score(app.settings, ScoreInput(**base, city="Campinas", state="SP"))
+    other = compute_score(app.settings, ScoreInput(**base, city="Curitiba", state="PR"))
     assert interior.breakdown["geografia"] == 5 and other.breakdown["geografia"] == 2
     none = compute_score(app.settings, ScoreInput(**{**base, "best_channel": None}, city="Guarulhos", state="SP"))
     assert none.breakdown["canal"] == 0 and "sem canal comercial legítimo" in none.notes
@@ -92,3 +97,29 @@ def test_csv_import_requires_traceable_source(app, tmp_path):
     assert "sem origem" in stats["erros"][0]
     row = app.db.one("SELECT ds.url FROM contacts c JOIN data_sources ds ON ds.id = c.source_id")
     assert row["url"] == "https://a-empresa.test/contato"
+
+
+def test_out_of_area_leads_get_only_remote_services(app):
+    far = compute_score(app.settings, ScoreInput(segment="centro_distribuicao", size="media", demand_facts=1,
+                                                 best_channel="generic_corporate", city="Ribeirão Preto", state="SP"))
+    assert far.breakdown["geografia"] == 6
+    catalog = app.settings.services["services"]
+    assert far.services and all(catalog[c]["delivery"] in ("remoto", "hibrido") for c in far.services)
+    near = compute_score(app.settings, ScoreInput(segment="centro_distribuicao", size="media", demand_facts=1,
+                                                  best_channel="generic_corporate", city="Guarulhos", state="SP"))
+    assert "A" in near.services and near.breakdown["geografia"] == 10
+
+
+def test_message_pitch_adapts_to_remote_leads(app):
+    from src.outreach import composer
+    from src.crm import repository
+    near = make_lead(app, authorize=False)
+    far = make_lead(app, name="Longe SA", website="https://longe.test", city="Ribeirão Preto",
+                    email="contato@longe.test", authorize=False)
+    scoring.qualify_pending(app)
+    v_near = composer.base_variables(app, repository.lead_view(app, near), {})
+    v_far = composer.base_variables(app, repository.lead_view(app, far), {})
+    assert "diagnóstico preliminar" in v_near["oferta"] and "Guarulhos" in v_near["abrangencia"]
+    assert "remota" in v_far["oferta"] and "todo o Brasil" in v_far["abrangencia"]
+    msg = composer.render_message(app.settings.templates_dir, "first_contact", "default", v_far)
+    assert "de forma remota" in msg.body and "em o " not in msg.body

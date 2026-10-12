@@ -1,7 +1,7 @@
 {
   "_comment": "Identidade e parâmetros gerais do negócio. Campos 'CONFIGURAR' bloqueiam envios externos até serem preenchidos.",
   "owner": {
-    "name": "CONFIGURAR",
+    "name": "Luan Souza Tavarez",
     "professional_title": "Técnico em Segurança do Trabalho",
     "registration_number": null,
     "registration_verified": false,
@@ -10,7 +10,7 @@
     "state": "SP"
   },
   "brand": {
-    "trade_name": "CONFIGURAR",
+    "trade_name": "Tavarez Segurança do Trabalho, Saúde e Meio Ambiente",
     "cnpj": null,
     "website": null,
     "commercial_email": null,
@@ -19,22 +19,51 @@
   "timezone": "America/Sao_Paulo",
   "currency": "BRL",
   "service_area": {
-    "priority_cities": ["Guarulhos", "São Paulo"],
+    "priority_cities": [
+      "Guarulhos",
+      "São Paulo"
+    ],
     "metro_cities": [
-      "Arujá", "Barueri", "Caieiras", "Cajamar", "Carapicuíba", "Cotia", "Diadema",
-      "Embu das Artes", "Ferraz de Vasconcelos", "Francisco Morato", "Franco da Rocha",
-      "Itapecerica da Serra", "Itapevi", "Itaquaquecetuba", "Jandira", "Mairiporã",
-      "Mauá", "Mogi das Cruzes", "Osasco", "Poá", "Ribeirão Pires", "Santana de Parnaíba",
-      "Santo André", "São Bernardo do Campo", "São Caetano do Sul", "Suzano", "Taboão da Serra"
+      "Arujá",
+      "Barueri",
+      "Caieiras",
+      "Cajamar",
+      "Carapicuíba",
+      "Cotia",
+      "Diadema",
+      "Embu das Artes",
+      "Ferraz de Vasconcelos",
+      "Francisco Morato",
+      "Franco da Rocha",
+      "Itapecerica da Serra",
+      "Itapevi",
+      "Itaquaquecetuba",
+      "Jandira",
+      "Mairiporã",
+      "Mauá",
+      "Mogi das Cruzes",
+      "Osasco",
+      "Poá",
+      "Ribeirão Pires",
+      "Santana de Parnaíba",
+      "Santo André",
+      "São Bernardo do Campo",
+      "São Caetano do Sul",
+      "Suzano",
+      "Taboão da Serra"
     ],
     "state": "SP",
-    "max_travel_km": 60
+    "max_travel_km": 60,
+    "remote_national": true,
+    "_comment": "Serviços presenciais: Guarulhos, capital e RMSP (interior de SP sob consulta). Serviços remotos: todo o Brasil."
   },
   "capacity": {
     "_comment": "Capacidade operacional real do proprietário (renda extra). O agente não confirma trabalhos acima disso.",
     "hours_per_week": 10,
     "max_active_contracts": 3,
-    "available_days": ["sábado"],
+    "available_days": [
+      "sábado"
+    ],
     "verified": false
   },
   "retention": {

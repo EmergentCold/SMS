@@ -1,159 +1,403 @@
 {
-  "_comment": "Catálogo de serviços. 'available' indica se o proprietário pode ofertar hoje. Serviços com 'requires_professional_validation' passam por aprovação humana (Nível 3).",
+  "_comment": "Catálogo de serviços. 'available' indica se o proprietário pode ofertar hoje. Serviços com 'requires_professional_validation' passam por aprovação humana (Nível 3). 'delivery': presencial (SP/RMSP), remoto (Brasil) ou hibrido (visita inicial + acompanhamento remoto).",
   "services": {
     "A": {
       "name": "Diagnóstico preliminar de SST",
       "ideal_client": "PME de logística, indústria ou serviços sem SESMT próprio ou com gestão de SST informal.",
       "problem": "A empresa não sabe em que ponto está em relação às NRs aplicáveis e não tem um plano priorizado.",
-      "deliverables": ["Visita de levantamento (até 4 h)", "Relatório de observações com fotos", "Lista de NRs potencialmente aplicáveis", "Plano de ação priorizado (curto/médio prazo)"],
-      "exclusions": ["Medições ambientais e laudos (LTCAT, insalubridade, periculosidade)", "Assinatura de PGR/PCMSO", "Declaração de conformidade legal"],
+      "deliverables": [
+        "Visita de levantamento (até 4 h)",
+        "Relatório de observações com fotos",
+        "Lista de NRs potencialmente aplicáveis",
+        "Plano de ação priorizado (curto/médio prazo)"
+      ],
+      "exclusions": [
+        "Medições ambientais e laudos (LTCAT, insalubridade, periculosidade)",
+        "Assinatura de PGR/PCMSO",
+        "Declaração de conformidade legal"
+      ],
       "lead_time_days": 10,
-      "required_inputs": ["Atividades e número aproximado de trabalhadores", "Documentos de SST existentes (PGR, treinamentos, ordens de serviço)", "Acesso às áreas operacionais"],
+      "required_inputs": [
+        "Atividades e número aproximado de trabalhadores",
+        "Documentos de SST existentes (PGR, treinamentos, ordens de serviço)",
+        "Acesso às áreas operacionais"
+      ],
       "professional_requirements": "Técnico em Segurança do Trabalho. Observações não substituem avaliação formal com responsabilidade técnica.",
       "recurring": false,
-      "upsell": ["I", "E", "C"],
+      "upsell": [
+        "I",
+        "E",
+        "C"
+      ],
       "acceptance_criteria": "Relatório entregue em PDF e plano de ação revisado em reunião com o cliente.",
       "available": true,
-      "requires_professional_validation": false
+      "requires_professional_validation": false,
+      "delivery": "presencial"
     },
     "B": {
       "name": "Inspeções e relatórios de segurança",
       "ideal_client": "Galpões, CDs, condomínios empresariais e obras que precisam de inspeções periódicas documentadas.",
       "problem": "Inspeções não são feitas com regularidade ou não geram registro e acompanhamento de ações.",
-      "deliverables": ["Checklist de inspeção por área", "Relatório com fotos e classificação de prioridade", "Acompanhamento das ações da inspeção anterior"],
-      "exclusions": ["Inspeção de equipamentos que exija profissional legalmente habilitado (ex.: vasos de pressão NR-13, ancoragens NR-35 certificadas)", "Laudos"],
+      "deliverables": [
+        "Checklist de inspeção por área",
+        "Relatório com fotos e classificação de prioridade",
+        "Acompanhamento das ações da inspeção anterior"
+      ],
+      "exclusions": [
+        "Inspeção de equipamentos que exija profissional legalmente habilitado (ex.: vasos de pressão NR-13, ancoragens NR-35 certificadas)",
+        "Laudos"
+      ],
       "lead_time_days": 5,
-      "required_inputs": ["Áreas e frequência desejada", "Inspeções e ocorrências anteriores"],
+      "required_inputs": [
+        "Áreas e frequência desejada",
+        "Inspeções e ocorrências anteriores"
+      ],
       "professional_requirements": "Técnico em Segurança do Trabalho.",
       "recurring": true,
-      "upsell": ["I", "G"],
+      "upsell": [
+        "I",
+        "G"
+      ],
       "acceptance_criteria": "Relatório entregue até 3 dias úteis após a visita.",
       "available": true,
-      "requires_professional_validation": false
+      "requires_professional_validation": false,
+      "delivery": "presencial"
     },
     "C": {
       "name": "DDS, integrações e treinamentos",
       "ideal_client": "Transportadoras, CDs e prestadores com rotatividade alta de equipe e terceiros.",
       "problem": "Integrações e DDS sem padrão, sem registro e sem conteúdo adequado aos riscos da operação.",
-      "deliverables": ["Roteiro de integração de segurança", "Pacote de temas de DDS com registro de presença", "Treinamentos informativos com lista de presença"],
-      "exclusions": ["Treinamentos normativos com certificação que exija instrutor/responsável técnico específico não comprovado (ex.: NR-10, NR-33 supervisor) — somente após validação humana", "Emissão de certificados em nome de terceiros"],
+      "deliverables": [
+        "Roteiro de integração de segurança",
+        "Pacote de temas de DDS com registro de presença",
+        "Treinamentos informativos com lista de presença"
+      ],
+      "exclusions": [
+        "Treinamentos normativos com certificação que exija instrutor/responsável técnico específico não comprovado (ex.: NR-10, NR-33 supervisor) — somente após validação humana",
+        "Emissão de certificados em nome de terceiros"
+      ],
       "lead_time_days": 7,
-      "required_inputs": ["Público e quantidade", "Riscos e atividades", "Local e equipamentos disponíveis"],
+      "required_inputs": [
+        "Público e quantidade",
+        "Riscos e atividades",
+        "Local e equipamentos disponíveis"
+      ],
       "professional_requirements": "Técnico em Segurança do Trabalho; treinamentos normativos dependem de requisitos de cada NR.",
       "recurring": true,
-      "upsell": ["I"],
+      "upsell": [
+        "I"
+      ],
       "acceptance_criteria": "Material entregue e turma realizada com lista de presença assinada.",
       "available": true,
-      "requires_professional_validation": false
+      "requires_professional_validation": false,
+      "delivery": "presencial"
     },
     "D": {
       "name": "Gestão documental de terceiros",
-      "ideal_client": "Indústrias, condomínios empresariais e CDs que recebem muitos prestadores de serviço.",
+      "ideal_client": "Indústrias, condomínios empresariais e CDs que recebem muitos prestadores de serviço. Atendimento remoto em todo o Brasil.",
       "problem": "Prestadores entram sem documentação de SST conferida (ASO, treinamentos, ordens de serviço, APR).",
-      "deliverables": ["Lista de requisitos documentais por tipo de serviço", "Conferência periódica da documentação", "Relatório de pendências por prestador"],
-      "exclusions": ["Validação jurídica de contratos", "Responsabilidade pela execução do serviço do terceiro"],
+      "deliverables": [
+        "Lista de requisitos documentais por tipo de serviço",
+        "Conferência periódica da documentação",
+        "Relatório de pendências por prestador"
+      ],
+      "exclusions": [
+        "Validação jurídica de contratos",
+        "Responsabilidade pela execução do serviço do terceiro"
+      ],
       "lead_time_days": 7,
-      "required_inputs": ["Lista de prestadores e atividades", "Requisitos internos existentes"],
+      "required_inputs": [
+        "Lista de prestadores e atividades",
+        "Requisitos internos existentes"
+      ],
       "professional_requirements": "Técnico em Segurança do Trabalho.",
       "recurring": true,
-      "upsell": ["I", "B"],
+      "upsell": [
+        "I",
+        "B"
+      ],
       "acceptance_criteria": "Relatório mensal de pendências entregue no prazo combinado.",
       "available": true,
-      "requires_professional_validation": false
+      "requires_professional_validation": false,
+      "delivery": "remoto"
     },
     "E": {
       "name": "Auditorias internas e planos de ação",
       "ideal_client": "Empresas que querem verificar a própria gestão de SST antes de auditorias de clientes ou certificações.",
       "problem": "Não há verificação sistemática nem acompanhamento das ações corretivas.",
-      "deliverables": ["Protocolo de auditoria interna", "Relatório de constatações", "Plano de ação 5W2H com responsáveis e prazos"],
-      "exclusions": ["Auditoria de certificação (organismo acreditado)", "Declaração de conformidade legal"],
+      "deliverables": [
+        "Protocolo de auditoria interna",
+        "Relatório de constatações",
+        "Plano de ação 5W2H com responsáveis e prazos"
+      ],
+      "exclusions": [
+        "Auditoria de certificação (organismo acreditado)",
+        "Declaração de conformidade legal"
+      ],
       "lead_time_days": 15,
-      "required_inputs": ["Escopo e critérios", "Documentos e registros"],
+      "required_inputs": [
+        "Escopo e critérios",
+        "Documentos e registros"
+      ],
       "professional_requirements": "Técnico em Segurança do Trabalho; resultados são internos e não certificam conformidade.",
       "recurring": false,
-      "upsell": ["G", "I"],
+      "upsell": [
+        "G",
+        "I"
+      ],
       "acceptance_criteria": "Relatório e plano de ação apresentados e aceitos pelo cliente.",
       "available": true,
-      "requires_professional_validation": false
+      "requires_professional_validation": false,
+      "delivery": "hibrido"
     },
     "F": {
       "name": "Consultoria para adequação às NRs",
       "ideal_client": "PMEs com atividades de risco (NR-35, NR-12, NR-33, NR-11) e gestão informal.",
       "problem": "A empresa precisa organizar procedimentos, permissões de trabalho e controles para atividades críticas.",
-      "deliverables": ["Procedimentos operacionais de segurança", "Modelos de APR/AST e permissão de trabalho", "Plano de adequação com cronograma"],
-      "exclusions": ["Projetos e laudos que exigem engenheiro (ex.: linha de vida, adequação de máquinas NR-12 com ART)", "Execução de obras e instalações"],
+      "deliverables": [
+        "Procedimentos operacionais de segurança",
+        "Modelos de APR/AST e permissão de trabalho",
+        "Plano de adequação com cronograma"
+      ],
+      "exclusions": [
+        "Projetos e laudos que exigem engenheiro (ex.: linha de vida, adequação de máquinas NR-12 com ART)",
+        "Execução de obras e instalações"
+      ],
       "lead_time_days": 30,
-      "required_inputs": ["Atividades críticas", "Equipamentos e máquinas", "Documentos existentes"],
+      "required_inputs": [
+        "Atividades críticas",
+        "Equipamentos e máquinas",
+        "Documentos existentes"
+      ],
       "professional_requirements": "Técnico em Segurança do Trabalho; itens com ART exigem engenheiro parceiro formalmente contratado.",
       "recurring": false,
-      "upsell": ["I", "C"],
+      "upsell": [
+        "I",
+        "C"
+      ],
       "acceptance_criteria": "Documentos entregues e implantados conforme cronograma acordado.",
       "available": true,
-      "requires_professional_validation": false
+      "requires_professional_validation": false,
+      "delivery": "hibrido"
     },
     "G": {
       "name": "Gestão de indicadores e planos de prevenção",
-      "ideal_client": "Empresas que precisam reportar SST para clientes, matriz ou diretoria.",
+      "ideal_client": "Empresas que precisam reportar SST para clientes, matriz ou diretoria. Atendimento remoto em todo o Brasil.",
       "problem": "Indicadores de SST (acidentes, inspeções, treinamentos, ações) não são medidos nem acompanhados.",
-      "deliverables": ["Painel mensal de indicadores", "Análise de tendências", "Plano de prevenção atualizado"],
-      "exclusions": ["Comunicação oficial de acidentes (CAT) em nome da empresa"],
+      "deliverables": [
+        "Painel mensal de indicadores",
+        "Análise de tendências",
+        "Plano de prevenção atualizado"
+      ],
+      "exclusions": [
+        "Comunicação oficial de acidentes (CAT) em nome da empresa"
+      ],
       "lead_time_days": 10,
-      "required_inputs": ["Registros de ocorrências, treinamentos e inspeções"],
+      "required_inputs": [
+        "Registros de ocorrências, treinamentos e inspeções"
+      ],
       "professional_requirements": "Técnico em Segurança do Trabalho.",
       "recurring": true,
-      "upsell": ["I"],
+      "upsell": [
+        "I"
+      ],
       "acceptance_criteria": "Painel entregue mensalmente até o 5º dia útil.",
       "available": true,
-      "requires_professional_validation": false
+      "requires_professional_validation": false,
+      "delivery": "remoto"
     },
     "H": {
       "name": "Elaboração ou revisão de documentos técnicos",
       "ideal_client": "Empresas que precisam de PGR, ordens de serviço, procedimentos e análises de risco formais.",
       "problem": "Documentos técnicos inexistentes, desatualizados ou genéricos.",
-      "deliverables": ["Documento técnico conforme escopo aprovado"],
-      "exclusions": ["Qualquer documento cuja assinatura exija habilitação não comprovada pelo proprietário"],
+      "deliverables": [
+        "Documento técnico conforme escopo aprovado"
+      ],
+      "exclusions": [
+        "Qualquer documento cuja assinatura exija habilitação não comprovada pelo proprietário"
+      ],
       "lead_time_days": 20,
-      "required_inputs": ["Levantamento de campo", "Inventário de riscos", "Informações da empresa"],
+      "required_inputs": [
+        "Levantamento de campo",
+        "Inventário de riscos",
+        "Informações da empresa"
+      ],
       "professional_requirements": "Depende do documento. Exige confirmação humana de habilitação e responsabilidade técnica antes de qualquer proposta.",
       "recurring": false,
-      "upsell": ["I"],
+      "upsell": [
+        "I"
+      ],
       "acceptance_criteria": "Documento revisado e aceito pelo cliente; assinatura somente pelo profissional habilitado.",
       "available": true,
-      "requires_professional_validation": true
+      "requires_professional_validation": true,
+      "delivery": "hibrido"
     },
     "I": {
       "name": "Programa mensal de suporte consultivo",
       "ideal_client": "PMEs sem técnico próprio que precisam de acompanhamento contínuo de SST.",
       "problem": "SST tratada só quando surge fiscalização, acidente ou exigência de cliente.",
-      "deliverables": ["Visita mensal programada", "Inspeção e DDS na visita", "Acompanhamento do plano de ação", "Suporte remoto em horário combinado", "Relatório mensal"],
-      "exclusions": ["Atendimento presencial emergencial", "Laudos e documentos com responsabilidade técnica fora do escopo"],
+      "deliverables": [
+        "Visita mensal programada",
+        "Inspeção e DDS na visita",
+        "Acompanhamento do plano de ação",
+        "Suporte remoto em horário combinado",
+        "Relatório mensal"
+      ],
+      "exclusions": [
+        "Atendimento presencial emergencial",
+        "Laudos e documentos com responsabilidade técnica fora do escopo"
+      ],
       "lead_time_days": 7,
-      "required_inputs": ["Escopo de horas mensais", "Contato responsável na empresa"],
+      "required_inputs": [
+        "Escopo de horas mensais",
+        "Contato responsável na empresa"
+      ],
       "professional_requirements": "Técnico em Segurança do Trabalho.",
       "recurring": true,
       "upsell": [],
       "acceptance_criteria": "Relatório mensal entregue e visita realizada conforme calendário.",
       "available": true,
-      "requires_professional_validation": false
+      "requires_professional_validation": false,
+      "delivery": "presencial"
     }
   },
   "segments": {
     "_comment": "fit: adequação do setor (0-25). recurring: potencial base de recorrência (0-20). services: serviços prioritários.",
-    "transportadora": {"label": "Transportadoras", "fit": 25, "recurring": 16, "services": ["A", "C", "I", "G"]},
-    "centro_distribuicao": {"label": "Centros de distribuição", "fit": 25, "recurring": 18, "services": ["A", "B", "C", "D", "I"]},
-    "operador_logistico": {"label": "Operadores logísticos", "fit": 25, "recurring": 18, "services": ["A", "B", "C", "D", "I"]},
-    "armazem_galpao": {"label": "Armazéns e galpões", "fit": 22, "recurring": 15, "services": ["A", "B", "D", "I"]},
-    "industria": {"label": "Indústrias", "fit": 22, "recurring": 16, "services": ["A", "E", "F", "C", "I"]},
-    "manutencao": {"label": "Empresas de manutenção", "fit": 22, "recurring": 14, "services": ["C", "F", "D", "I"]},
-    "construcao": {"label": "Empresas de construção", "fit": 20, "recurring": 12, "services": ["B", "C", "F", "D"]},
-    "condominio_empresarial": {"label": "Condomínios empresariais", "fit": 18, "recurring": 16, "services": ["D", "B", "I"]},
-    "terceirizada": {"label": "Empresas terceirizadas", "fit": 20, "recurring": 14, "services": ["C", "D", "I"]},
-    "servicos_industriais": {"label": "Prestadores de serviços industriais", "fit": 22, "recurring": 14, "services": ["C", "F", "D", "I"]},
-    "pme_geral": {"label": "PMEs sem estrutura robusta de SST", "fit": 15, "recurring": 12, "services": ["A", "I"]},
-    "desconhecido": {"label": "Segmento não identificado", "fit": 5, "recurring": 5, "services": ["A"]}
+    "transportadora": {
+      "label": "Transportadoras",
+      "fit": 25,
+      "recurring": 16,
+      "services": [
+        "A",
+        "C",
+        "I",
+        "G"
+      ]
+    },
+    "centro_distribuicao": {
+      "label": "Centros de distribuição",
+      "fit": 25,
+      "recurring": 18,
+      "services": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "I"
+      ]
+    },
+    "operador_logistico": {
+      "label": "Operadores logísticos",
+      "fit": 25,
+      "recurring": 18,
+      "services": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "I"
+      ]
+    },
+    "armazem_galpao": {
+      "label": "Armazéns e galpões",
+      "fit": 22,
+      "recurring": 15,
+      "services": [
+        "A",
+        "B",
+        "D",
+        "I"
+      ]
+    },
+    "industria": {
+      "label": "Indústrias",
+      "fit": 22,
+      "recurring": 16,
+      "services": [
+        "A",
+        "E",
+        "F",
+        "C",
+        "I"
+      ]
+    },
+    "manutencao": {
+      "label": "Empresas de manutenção",
+      "fit": 22,
+      "recurring": 14,
+      "services": [
+        "C",
+        "F",
+        "D",
+        "I"
+      ]
+    },
+    "construcao": {
+      "label": "Empresas de construção",
+      "fit": 20,
+      "recurring": 12,
+      "services": [
+        "B",
+        "C",
+        "F",
+        "D"
+      ]
+    },
+    "condominio_empresarial": {
+      "label": "Condomínios empresariais",
+      "fit": 18,
+      "recurring": 16,
+      "services": [
+        "D",
+        "B",
+        "I"
+      ]
+    },
+    "terceirizada": {
+      "label": "Empresas terceirizadas",
+      "fit": 20,
+      "recurring": 14,
+      "services": [
+        "C",
+        "D",
+        "I"
+      ]
+    },
+    "servicos_industriais": {
+      "label": "Prestadores de serviços industriais",
+      "fit": 22,
+      "recurring": 14,
+      "services": [
+        "C",
+        "F",
+        "D",
+        "I"
+      ]
+    },
+    "pme_geral": {
+      "label": "PMEs sem estrutura robusta de SST",
+      "fit": 15,
+      "recurring": 12,
+      "services": [
+        "A",
+        "I"
+      ]
+    },
+    "desconhecido": {
+      "label": "Segmento não identificado",
+      "fit": 5,
+      "recurring": 5,
+      "services": [
+        "A"
+      ]
+    }
   },
   "size_recurring_adjust": {
     "_comment": "Ajuste somado ao potencial de recorrência conforme porte (empresas grandes costumam ter SESMT próprio).",
-    "micro": -6, "pequena": 2, "media": 2, "grande": -6, "desconhecido": -3
+    "micro": -6,
+    "pequena": 2,
+    "media": 2,
+    "grande": -6,
+    "desconhecido": -3
   }
 }

@@ -23,6 +23,7 @@ def _approve_price(app, code="A", list_price=1500.0, min_price=1200.0, max_disco
 
 
 def test_pending_price_creates_draft_that_cannot_be_sent(sending):
+    sending.settings.pricing["services"]["A"].update(status="preco_pendente", list_price=None, min_price=None)
     lead_id = _interested_lead(sending)
     result = generator.create_proposal(sending, lead_id, "A")
     assert result["status"] == "PRECO_PENDENTE"

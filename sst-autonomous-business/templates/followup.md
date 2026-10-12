@@ -8,7 +8,7 @@ Assunto: Re: Apoio em segurança do trabalho para a {{company_name}}
 ---
 {{greeting}}
 
-Retomando minha mensagem de alguns dias atrás. Se houver interesse, posso apresentar em 20 minutos como funciona o diagnóstico preliminar de SST — sem compromisso.
+Retomando minha mensagem de alguns dias atrás. Se houver interesse, posso apresentar em 20 minutos como funcionaria o apoio — {{oferta}}, sem compromisso.
 
 Se este não for o contato certo, agradeço se puder me indicar o responsável.
 

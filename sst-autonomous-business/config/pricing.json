@@ -1,20 +1,164 @@
 {
-  "_comment": "Preços NÃO são inventados. Enquanto 'status' != 'aprovado' ou 'min_price' for null, a proposta fica como PRECO_PENDENTE e não pode ser enviada. Valores em BRL. Preencha após pesquisa (ver workflows/proposal_generation.md) e mude status para 'aprovado'.",
+  "_comment": "Tabela definida a pedido do proprietário (Luan Souza Tavarez) em 2026-10-12 a partir de referências públicas (ver reference_sources e knowledge/tabela_precos.md). Base: valor-hora de referência R$ 120 (piso R$ 90). Preços de lançamento, revisar após os 3 primeiros contratos. Toda proposta ainda passa por aprovação antes do envio.",
   "defaults": {
     "validity_days": 15,
-    "payment_terms": "CONFIGURAR (ex.: 50% na aprovação e 50% na entrega; mensalidades com vencimento no dia 10)",
+    "payment_terms": "Projetos: 50% no aceite e 50% na entrega, via Pix ou boleto. Mensalidades: vencimento todo dia 10, contrato mínimo de 3 meses e cancelamento com 30 dias de aviso.",
     "max_auto_discount_pct": 0,
-    "visit_travel_note": "Deslocamentos fora da área prioritária podem ter custo adicional, a combinar."
+    "visit_travel_note": "Valores válidos para Guarulhos, São Paulo e região metropolitana. Fora dessa área: atendimento remoto ou deslocamento cobrado à parte, combinado antes.",
+    "hourly_reference": 120,
+    "hourly_floor": 90
   },
   "services": {
-    "A": {"status": "preco_pendente", "unit": "projeto", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
-    "B": {"status": "preco_pendente", "unit": "visita", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
-    "C": {"status": "preco_pendente", "unit": "turma", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
-    "D": {"status": "preco_pendente", "unit": "mensal", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
-    "E": {"status": "preco_pendente", "unit": "projeto", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
-    "F": {"status": "preco_pendente", "unit": "projeto", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
-    "G": {"status": "preco_pendente", "unit": "mensal", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
-    "H": {"status": "preco_pendente", "unit": "documento", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []},
-    "I": {"status": "preco_pendente", "unit": "mensal", "list_price": null, "min_price": null, "operational_cost": null, "max_discount_pct": 0, "reference_sources": []}
+    "A": {
+      "status": "aprovado",
+      "unit": "projeto",
+      "list_price": 990.0,
+      "min_price": 850.0,
+      "operational_cost": 80.0,
+      "max_discount_pct": 10,
+      "scope_basis": "~10 h (visita até 4 h + relatório + plano de ação)",
+      "reference_sources": [
+        "https://www.salario.com.br/profissao/tecnico-em-seguranca-no-trabalho-cbo-351605/sao-paulo-sp/",
+        "https://crcmg.org.br/wp-content/uploads/2025/05/Portal-16.pdf"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 10,
+      "net_per_hour_list": 91,
+      "net_per_hour_min": 77
+    },
+    "B": {
+      "status": "aprovado",
+      "unit": "visita",
+      "list_price": 450.0,
+      "min_price": 380.0,
+      "operational_cost": 40.0,
+      "max_discount_pct": 10,
+      "scope_basis": "~4 h por visita com relatório",
+      "reference_sources": [
+        "https://www.salario.com.br/profissao/tecnico-em-seguranca-no-trabalho-cbo-351605/sao-paulo-sp/",
+        "https://crcmg.org.br/wp-content/uploads/2025/05/Portal-16.pdf"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 4,
+      "net_per_hour_list": 102,
+      "net_per_hour_min": 85
+    },
+    "C": {
+      "status": "aprovado",
+      "unit": "turma",
+      "list_price": 590.0,
+      "min_price": 490.0,
+      "operational_cost": 60.0,
+      "max_discount_pct": 10,
+      "scope_basis": "turma até 20 pessoas, até 4 h; treinamentos normativos com certificação fora do escopo",
+      "reference_sources": [
+        "https://www.salario.com.br/profissao/tecnico-em-seguranca-no-trabalho-cbo-351605/sao-paulo-sp/",
+        "https://guiadoscursos.com/curso-empilhadeira-senai-2026-nr11-valor-duracao-mercado/"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 5,
+      "net_per_hour_list": 106,
+      "net_per_hour_min": 86
+    },
+    "D": {
+      "status": "aprovado",
+      "unit": "mensal",
+      "list_price": 690.0,
+      "min_price": 590.0,
+      "operational_cost": 20.0,
+      "max_discount_pct": 10,
+      "scope_basis": "até 15 prestadores/mês, remoto",
+      "reference_sources": [
+        "https://www.salario.com.br/profissao/tecnico-em-seguranca-no-trabalho-cbo-351605/sao-paulo-sp/"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 6,
+      "net_per_hour_list": 112,
+      "net_per_hour_min": 95
+    },
+    "E": {
+      "status": "aprovado",
+      "unit": "projeto",
+      "list_price": 1890.0,
+      "min_price": 1590.0,
+      "operational_cost": 120.0,
+      "max_discount_pct": 10,
+      "scope_basis": "~16 h",
+      "reference_sources": [
+        "https://www.salario.com.br/profissao/tecnico-em-seguranca-no-trabalho-cbo-351605/sao-paulo-sp/",
+        "https://rondonia.ro.gov.br/wp-content/uploads/2024/04/Estudo-Tecnico-Preliminar-seguranca-do-trb-2024.pdf"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 16,
+      "net_per_hour_list": 111,
+      "net_per_hour_min": 92
+    },
+    "F": {
+      "status": "aprovado",
+      "unit": "projeto",
+      "list_price": 3490.0,
+      "min_price": 2900.0,
+      "operational_cost": 200.0,
+      "max_discount_pct": 10,
+      "scope_basis": "a partir de; ~30 h, conforme atividades críticas",
+      "reference_sources": [
+        "https://www.salario.com.br/profissao/tecnico-em-seguranca-no-trabalho-cbo-351605/sao-paulo-sp/",
+        "https://rondonia.ro.gov.br/wp-content/uploads/2024/04/Estudo-Tecnico-Preliminar-seguranca-do-trb-2024.pdf"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 30,
+      "net_per_hour_list": 110,
+      "net_per_hour_min": 90
+    },
+    "G": {
+      "status": "aprovado",
+      "unit": "mensal",
+      "list_price": 490.0,
+      "min_price": 420.0,
+      "operational_cost": 10.0,
+      "max_discount_pct": 10,
+      "scope_basis": "painel mensal, remoto",
+      "reference_sources": [
+        "https://www.salario.com.br/profissao/tecnico-em-seguranca-no-trabalho-cbo-351605/sao-paulo-sp/"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 4,
+      "net_per_hour_list": 120,
+      "net_per_hour_min": 102
+    },
+    "H": {
+      "status": "aprovado",
+      "unit": "documento",
+      "list_price": 990.0,
+      "min_price": 790.0,
+      "operational_cost": 60.0,
+      "max_discount_pct": 10,
+      "scope_basis": "a partir de; exige confirmação de habilitação por documento",
+      "reference_sources": [
+        "https://faq.blackpilado.com.br/2024/07/como-funciona-o-pgr.html",
+        "https://www.tre-ma.jus.br/transparencia-e-prestacao-de-contas/licitacoes/licitacoes-em-andamento/arquivos/tre-ma-pregao-eletronico-45-2022-mapa-de-precos"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 8,
+      "net_per_hour_list": 116,
+      "net_per_hour_min": 91
+    },
+    "I": {
+      "status": "aprovado",
+      "unit": "mensal",
+      "list_price": 1290.0,
+      "min_price": 1090.0,
+      "operational_cost": 120.0,
+      "max_discount_pct": 10,
+      "scope_basis": "1 visita/mês até 4 h + DDS na visita + até 3 h remoto + relatório",
+      "reference_sources": [
+        "https://www.salario.com.br/profissao/tecnico-em-seguranca-no-trabalho-cbo-351605/sao-paulo-sp/",
+        "https://crcmg.org.br/wp-content/uploads/2025/05/Portal-16.pdf"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 8,
+      "net_per_hour_list": 146,
+      "net_per_hour_min": 121
+    }
   }
 }

@@ -148,3 +148,25 @@ def test_powerbi_queries_and_measures_match_exported_columns(app):
         if table in exported:
             assert column in set(exported[table]) | added.get(table, set()), (table, column)
     json.loads((root / "tema-sst.json").read_text(encoding="utf-8"))
+
+
+def test_installer_identity_helper(tmp_path):
+    import shutil
+    import subprocess
+    import sys
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    cfg = tmp_path / "business.json"
+    shutil.copy(root / "config" / "business.json", cfg)
+    script = root / "instalar" / "configurar_identidade.py"
+    bad = subprocess.run([sys.executable, str(script), "--config", str(cfg), "--email", "invalido"],
+                         capture_output=True, text=True)
+    assert bad.returncode == 2
+    ok = subprocess.run([sys.executable, str(script), "--config", str(cfg), "--nome", "Fulano de Tal",
+                         "--email", "Contato@Fulano.test", "--horas-semana", "10", "--contratos-max", "3"],
+                        capture_output=True, text=True)
+    assert ok.returncode == 0 and "identidade configurada" in ok.stdout
+    data = json.loads(cfg.read_text(encoding="utf-8"))
+    assert data["owner"]["name"] == "Fulano de Tal" and data["brand"]["commercial_email"] == "contato@fulano.test"
+    assert data["owner"]["registration_verified"] is False  # nunca inventa registro
+    assert data["capacity"]["verified"] is True

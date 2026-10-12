@@ -10,6 +10,7 @@ import logging
 import logging.handlers
 import os
 import re
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -207,10 +208,11 @@ def setup_logging(settings: Settings, level: str | None = None) -> logging.Logge
     fmt = logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s")
     redactor = RedactingFilter()
 
-    console = logging.StreamHandler()
-    console.setFormatter(fmt)
-    console.addFilter(redactor)
-    logger.addHandler(console)
+    if sys.stderr is not None:  # pythonw (tarefa agendada no Windows) não tem console
+        console = logging.StreamHandler()
+        console.setFormatter(fmt)
+        console.addFilter(redactor)
+        logger.addHandler(console)
 
     app = logging.handlers.RotatingFileHandler(settings.logs_dir / "app.log", maxBytes=2_000_000,
                                                backupCount=5, encoding="utf-8")

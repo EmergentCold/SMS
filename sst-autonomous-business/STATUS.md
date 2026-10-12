@@ -32,7 +32,7 @@ desenvolvimento (contêiner Linux, Python 3.13, **sem acesso de rede às APIs ex
 | Painel JavaScript: funções e cliente da API | `cd web && npm test` (4 testes) |
 | Painel JavaScript no navegador (login, KPIs, funil, filtro, aprovação, kill switch, registro de resposta) | `npm run e2e` (Playwright/Chromium) |
 
-Resultado: **100 testes Python aprovados** (`python3 -m pytest -q`), **4 testes JavaScript aprovados**
+Resultado: **101 testes Python aprovados** (`python3 -m pytest -q`), **4 testes JavaScript aprovados**
 (`node --test`) e **teste ponta a ponta no Chromium aprovado**.
 
 ## Implementado, mas não verificado contra o serviço real (sem credencial/rede neste ambiente)
@@ -55,6 +55,12 @@ Resultado: **100 testes Python aprovados** (`python3 -m pytest -q`), **4 testes 
 | App do Power Apps (`powerplatform/power-apps/APP.md`) | fórmulas Power Fx por controle; montar no Power Apps Studio |
 | Relatório Power BI (`powerplatform/power-bi/`) | consultas M, medidas DAX e tema prontos; montar no Power BI Desktop |
 | Conector personalizado (`powerplatform/custom-connector/apiDefinition.swagger.json`) | importar; exige licença Premium e API publicada por HTTPS |
+
+## Instalador do Windows
+
+`instalar/instalar_windows.ps1`: sintaxe validada com PowerShell 7.4 e funções de `.env`/token/Python testadas
+neste ambiente Linux; **não executado em um Windows real** (winget, tarefas agendadas e OneDrive dependem do
+seu computador). O configurador de identidade tem teste automatizado.
 
 ## Somente interface (adaptador específico não implementado)
 Provedor B2B licenciado, CRM externo, agenda Google/Microsoft (os convites `.ics` locais funcionam),

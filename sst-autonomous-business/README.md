@@ -11,6 +11,26 @@ contratual.
 - Agendador persistente próprio (cron + registro de execuções no banco), recupera execuções após reinício.
 - Fuso: America/Sao_Paulo em todas as datas (ISO 8601 com offset).
 
+## Instalação automática no Windows
+
+Abra o **PowerShell** (não precisa ser administrador) e cole:
+
+```powershell
+irm https://raw.githubusercontent.com/EmergentCold/SMS/claude/sst-autonomous-agent-scmmqs/sst-autonomous-business/instalar/instalar_windows.ps1 -OutFile $env:TEMP\instalar_sst.ps1; powershell -NoProfile -ExecutionPolicy Bypass -File $env:TEMP\instalar_sst.ps1
+```
+
+O instalador ([`instalar/instalar_windows.ps1`](instalar/instalar_windows.ps1)) **pede confirmação em cada etapa**:
+instala Git, Python, Power BI Desktop e (opcional) Node.js via `winget`; baixa o código; cria a pasta
+`OneDrive/SST-Agent` da ponte; gera o `.env` com tokens aleatórios e restringe o acesso a ele; pergunta sua
+identidade comercial; roda testes, simulação e a primeira exportação; registra o agente (e, se quiser, a
+API/painel) como tarefa agendada que inicia com o Windows; oferece copiar a pasta
+"Segurança do Trabalho em Projetos" da Área de Trabalho (com alerta de dados pessoais, pois o repositório é
+público); e abre os guias e os sites do Power Automate e do Power Apps. Depois de clonado, também dá para rodar
+`instalar\INSTALAR.cmd` com duplo clique. Para desfazer as tarefas: `instalar_windows.ps1 -Remover`.
+
+O envio externo continua desligado: nenhum e-mail sai até você configurar o SMTP e habilitar
+`EXTERNAL_SENDING_ENABLED`.
+
 ## Início rápido
 
 ```bash

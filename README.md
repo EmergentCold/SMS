@@ -18,7 +18,7 @@ Página pública que o celular abre ao escanear o QR Code dos crachás emitidos 
 
 Projeto independente dos crachás: não aparece na página inicial do site (que é só dos crachás) e é acessado pelo link direto ou pelo QR Code da pasta `qr/`. Não usa nem lê dados dos crachás.
 
-- `jogos.html` — **Galpão Seguro**, jogos de segurança do trabalho para o armazém (`https://emergentcold.github.io/SMS/jogos.html`): 8 fases (caminho seguro, empilhadeiras, transpaleteiras/paleteiras, porta-paletes, picking, logística reversa, docas e desafio final) com caça a condições e comportamentos inseguros, "seguro ou inseguro", quiz e labirinto. Inscrição de funcionários, pontos, ranking e Painel SST (exporta CSV, backup e certificado). Os dados ficam só no navegador do aparelho usado. Ao concluir as 8 fases, o funcionário recebe o certificado em PDF.
+- `jogos.html` — **Galpão Seguro**, jogos de segurança do trabalho para o armazém (`https://emergentcold.github.io/SMS/jogos.html`): 8 fases (caminho seguro, empilhadeiras, transpaleteiras/paleteiras, porta-paletes, picking, logística reversa, docas e desafio final) com caça a condições e comportamentos inseguros, "seguro ou inseguro", quiz e labirinto. O funcionário só se cadastra (ou entra pela matrícula) e joga; ranking, Painel SST, exportação CSV, backup e certificados dos outros ficam na **Área do SST**, protegida por PIN (link discreto no rodapé da tela inicial; o PIN é criado no primeiro acesso em cada aparelho). Os dados ficam só no navegador do aparelho usado. Ao concluir as 8 fases, o funcionário recebe o certificado em PDF.
   Criado por **Luan Tavarez — Técnico em Segurança do Trabalho**.
 - `qr/` — QR Code do link do jogo e cartaz A4 (PDF/PNG) para divulgação.
 

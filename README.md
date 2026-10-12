@@ -1,14 +1,31 @@
-# Emergent Cold — Ficha do crachá (SST)
+# Emergent Cold — SST
+
+## Crachás SST (Emissor e ficha do crachá)
 
 Página pública que o celular abre ao escanear o QR Code dos crachás emitidos pelo **Emissor de Crachás SMS**.
 
 - `emissor.html` — Emissor de Crachás SMS (`https://emergentcold.github.io/SMS/emissor.html`). A planilha escolhida é lida só no navegador de quem usa; nada é enviado a servidor.
-- `jogos.html` — **Galpão Seguro**, jogos de segurança do trabalho para o armazém (`https://emergentcold.github.io/SMS/jogos.html`): 8 fases (caminho seguro, empilhadeiras, transpaleteiras/paleteiras, porta-paletes, picking, logística reversa, docas e desafio final) com caça a condições e comportamentos inseguros, "seguro ou inseguro", quiz e labirinto. Inscrição de funcionários, pontos, ranking e Painel SST (exporta CSV, backup e certificado). Os dados ficam só no navegador do aparelho usado. Ao concluir as 8 fases, o funcionário recebe o certificado em PDF.
-  Criado por **Luan Tavarez — Técnico em Segurança do Trabalho**.
-- `hospital.html` — **Hospital Seguro** (criado por **Luan Tavarez**, Técnico em Segurança do Trabalho), jogos de segurança do trabalho em serviços de saúde (`https://emergentcold.github.io/SMS/hospital.html`): a rotina de um plantão em 6 fases (UTI/Internação, Centro Cirúrgico, Farmácia, Almoxarifado, Administrativo e Ronda Final). Caça aos riscos com condições e comportamentos inseguros que **mudam a cada partida** (cada ponto da cena aparece no jeito errado ou no jeito certo), "Descarte Certo" (caixa de perfurocortante, caixa laranja, infectante, comum, papel, plástico e dados sensíveis), "Passo a Passo" (acidente com agulha, limpeza da sala cirúrgica, medicamento quebrado, kit de derramamento nível I), "seguro ou inseguro", quiz e dois jogos de habilidade dentro das fases, com o conteúdo de cada setor (UTI, Farmácia e Administrativo: Descarte em Movimento; Centro Cirúrgico e Almoxarifado: Risco Ninja; Ronda Final: os dois com tudo misturado): **Risco Ninja** (deslizar o dedo para cortar os riscos que voam pela tela sem cortar as proteções) e **Descarte em Movimento** (arrastar cada resíduo que cai para a lixeira certa: perfurocortante, caixa laranja, infectante, comum, papel, plástico e dados sensíveis). Ao concluir as 6 fases, abre na hora o certificado com o nome da inscrição (baixar em PDF no celular, tablet ou notebook, compartilhar ou imprimir; PDF gerado no próprio aparelho, sem internet), com data de conclusão e código de verificação também exportados no CSV. Mesma inscrição, ranking e Painel SST do Galpão Seguro (cores e logo do Hospital Beneficência Portuguesa no cabeçalho, nas cenas e no certificado); dados só no navegador do aparelho.
 - `ficha.html` — mostra a ficha do colaborador (ASO / NRs, status e validades) em formato de formulário.
 - **Não há dados de colaboradores neste repositório.** As informações vão dentro do próprio QR, no trecho do link após o `#`, que o navegador não envia ao servidor.
 - Publicado pelo GitHub Pages: `https://emergentcold.github.io/SMS/ficha.html`
 
 - Site: https://emergentcold.github.io/SMS/ (GitHub Pages, branch main, raiz).
 - Publicação automática: a cada envio para a branch main.
+
+---
+
+## Galpão Seguro — jogos de segurança do armazém (projeto separado dos crachás)
+
+Projeto independente dos crachás: não aparece na página inicial do site (que é só dos crachás) e é acessado pelo link direto ou pelo QR Code da pasta `qr/`. Não usa nem lê dados dos crachás.
+
+- `jogos.html` — **Galpão Seguro**, jogos de segurança do trabalho para o armazém (`https://emergentcold.github.io/SMS/jogos.html`): 8 fases (caminho seguro, empilhadeiras, transpaleteiras/paleteiras, porta-paletes, picking, logística reversa, docas e desafio final) com caça a condições e comportamentos inseguros, "seguro ou inseguro", quiz e labirinto. Inscrição de funcionários, pontos, ranking e Painel SST (exporta CSV, backup e certificado). Os dados ficam só no navegador do aparelho usado. Ao concluir as 8 fases, o funcionário recebe o certificado em PDF.
+  Criado por **Luan Tavarez — Técnico em Segurança do Trabalho**.
+- `qr/` — QR Code do link do jogo e cartaz A4 (PDF/PNG) para divulgação.
+
+---
+
+## Projeto separado: Hospital Seguro
+
+O **Hospital Seguro** é um projeto independente do Galpão Seguro e da Emergent Cold. Ele fica hospedado neste mesmo repositório só por praticidade, mas **não aparece na página inicial da Emergent Cold** e é acessado apenas pelo link direto. Não compartilha dados com o Galpão Seguro: cada jogo tem suas próprias inscrições, pontuações, ranking e certificados.
+
+- `hospital.html` — **Hospital Seguro** (criado por **Luan Tavarez**, Técnico em Segurança do Trabalho), jogos de segurança do trabalho em serviços de saúde (`https://emergentcold.github.io/SMS/hospital.html`): a rotina de um plantão em 6 fases (UTI/Internação, Centro Cirúrgico, Farmácia, Almoxarifado, Administrativo e Ronda Final). Caça aos riscos com condições e comportamentos inseguros que **mudam a cada partida** (cada ponto da cena aparece no jeito errado ou no jeito certo), "Descarte Certo" (caixa de perfurocortante, caixa laranja, infectante, comum, papel, plástico e dados sensíveis), "Passo a Passo" (acidente com agulha, limpeza da sala cirúrgica, medicamento quebrado, kit de derramamento nível I), "seguro ou inseguro", quiz e dois jogos de habilidade dentro das fases, com o conteúdo de cada setor (UTI, Farmácia e Administrativo: Descarte em Movimento; Centro Cirúrgico e Almoxarifado: Risco Ninja; Ronda Final: os dois com tudo misturado): **Risco Ninja** (deslizar o dedo para cortar os riscos que voam pela tela sem cortar as proteções) e **Descarte em Movimento** (arrastar cada resíduo que cai para a lixeira certa: perfurocortante, caixa laranja, infectante, comum, papel, plástico e dados sensíveis). Ao concluir as 6 fases, abre na hora o certificado com o nome da inscrição (baixar em PDF no celular, tablet ou notebook, compartilhar ou imprimir; PDF gerado no próprio aparelho, sem internet), com data de conclusão e código de verificação também exportados no CSV. Mesma inscrição, ranking e Painel SST do Galpão Seguro (cores e logo do Hospital Beneficência Portuguesa no cabeçalho, nas cenas e no certificado); dados só no navegador do aparelho.

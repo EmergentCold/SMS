@@ -1818,7 +1818,7 @@ ETAPAS.ninja = function(et, done){
     hud(r.pts);
     var el = document.getElementById('njFim'); if (!el) return;
     el.innerHTML = '<div class="card resumo"><h2>' + (r.motivo === 'vidas' ? '💔 Acabaram as vidas' : '⏰ Tempo esgotado!') + '</h2><p class="muted" style="margin-top:-6px">Pontos da etapa: <b>' + fmt(r.pts) + '</b> (meta: ' + meta + ')</p>' + resumoNinja(r) + '<button class="btn ok big" id="njOk" style="margin-top:10px">Próxima etapa ▶</button></div>';
-    document.getElementById('njOk').onclick = function(){ done(Math.min(r.pts, meta), meta, Math.max(0, r.pts - meta)); };
+    document.getElementById('njOk').onclick = function(){ done(r.pts, meta, Math.max(0, r.pts - meta)); };
     el.scrollIntoView({ behavior:'smooth' });
   });
 };
@@ -2012,7 +2012,7 @@ ETAPAS.mov = function(et, done){
     hud(r.pts);
     var el = document.getElementById('njFim'); if (!el) return;
     el.innerHTML = '<div class="card resumo"><h2>' + (r.motivo === 'vidas' ? '💔 Acabaram as vidas' : '⏰ Tempo esgotado!') + '</h2><p class="muted" style="margin-top:-6px">Pontos da etapa: <b>' + fmt(r.pts) + '</b> (meta: ' + meta + ')</p>' + resumoMov(r) + '<button class="btn ok big" id="njOk" style="margin-top:10px">Próxima etapa ▶</button></div>';
-    document.getElementById('njOk').onclick = function(){ done(Math.min(r.pts, meta), meta, Math.max(0, r.pts - meta)); };
+    document.getElementById('njOk').onclick = function(){ done(r.pts, meta, Math.max(0, r.pts - meta)); };
     el.scrollIntoView({ behavior:'smooth' });
   });
 };

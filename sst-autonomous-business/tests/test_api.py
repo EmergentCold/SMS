@@ -150,3 +150,23 @@ def test_openapi_matches_routes():
                 ref = resp.get("schema", {}).get("$ref") or resp.get("schema", {}).get("items", {}).get("$ref")
                 if ref:
                     assert ref.split("/")[-1] in spec["definitions"]
+
+
+def test_cli_api_loads_dotenv_before_reading_token(monkeypatch):
+    """Regressão: `python -m src.main api` precisa ler SST_API_TOKEN do .env (tarefa agendada no Windows)."""
+    import src.api.server as server_module
+    import src.main as main_module
+    import src.settings as settings_module
+
+    monkeypatch.setattr(settings_module, "load_dotenv",
+                        lambda path: monkeypatch.setenv("SST_API_TOKEN", "token-vindo-do-dotenv-1234567890"))
+    started = {}
+
+    def fake_serve(factory):
+        srv = server_module.make_server(factory, host="127.0.0.1", port=0)
+        started["token"] = srv.token
+        srv.server_close()
+
+    monkeypatch.setattr(server_module, "serve", fake_serve)
+    assert main_module.main(["api"]) == 0
+    assert started["token"] == "token-vindo-do-dotenv-1234567890"

@@ -323,6 +323,9 @@ HANDLERS = {
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    # Carrega o .env antes de qualquer comando (api/openapi leem o ambiente sem passar por build_app).
+    from . import settings as settings_module
+    settings_module.load_dotenv(settings_module.BASE_DIR / ".env")
     if args.cmd in ("simulate", "api", "openapi"):
         try:
             {"simulate": cmd_simulate, "api": cmd_api, "openapi": cmd_openapi}[args.cmd](None, args)

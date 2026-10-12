@@ -18,9 +18,12 @@ Página pública que o celular abre ao escanear o QR Code dos crachás emitidos 
 
 Projeto independente dos crachás: não aparece na página inicial do site (que é só dos crachás) e é acessado pelo link direto ou pelo QR Code da pasta `qr/`. Não usa nem lê dados dos crachás.
 
-- `jogos.html` — **link do jogador** do **Galpão Seguro** (`https://emergentcold.github.io/SMS/jogos.html`), jogos de segurança do trabalho para o armazém: 8 fases (caminho seguro, empilhadeiras, transpaleteiras/paleteiras, porta-paletes, picking, logística reversa, docas e desafio final) com caça a condições e comportamentos inseguros, "seguro ou inseguro", quiz e labirinto. O funcionário só se cadastra (ou entra pela matrícula) e joga; não há nenhuma função de administração nesta página. Ao concluir as 8 fases, recebe o certificado em PDF.
-- `jogos-admin.html` — **link do administrador** (`https://emergentcold.github.io/SMS/jogos-admin.html`): abre só com o PIN de administrador (criado no primeiro acesso em cada aparelho) e reúne Painel SST, ranking, exportação CSV, backup/importação, exclusão e certificados dos funcionários. Os dados ficam no navegador do aparelho onde se joga: abra este link no mesmo tablet/computador do jogo, ou junte os backups de vários aparelhos.
-- `galpao.js` e `galpao.css` — código e visual compartilhados pelas duas páginas acima.
+- `jogos.html` — **Galpão Seguro** (`https://emergentcold.github.io/SMS/jogos.html`), link único dos jogos de segurança do trabalho para o armazém: 8 fases (caminho seguro, empilhadeiras, transpaleteiras/paleteiras, porta-paletes, picking, logística reversa, docas e desafio final) com caça a condições e comportamentos inseguros, "seguro ou inseguro", quiz e labirinto. A tela inicial tem duas áreas separadas:
+  - **Área do jogador** — o funcionário só se cadastra (ou entra pela matrícula) e joga; não consegue alterar nada. Ao concluir as 8 fases, recebe o certificado em PDF.
+  - **Área do administrador** — só com PIN (criado no primeiro acesso em cada aparelho): Painel SST, ranking, exportação CSV, backup/importação, exclusão e certificados. Bloqueia ao tocar em "Bloquear", ao voltar ao início, ao recarregar a página ou após 5 minutos sem uso.
+  - Os dados ficam no navegador do aparelho onde se joga; para juntar vários aparelhos, use o backup do painel.
+- `jogos-admin.html` — endereço antigo do administrador; redireciona para `jogos.html` já pedindo o PIN.
+- `galpao.js` e `galpao.css` — código e visual do jogo.
 
 Criado por **Luan Tavarez — Técnico em Segurança do Trabalho**.
 

@@ -11,6 +11,7 @@ from ..compliance import lgpd
 from ..crm import repository
 from ..integrations import registry
 from ..integrations.base import BudgetExceeded, NotConfigured, record_pending, track_usage
+from ..settings import now
 from . import dedupe, enrichment
 
 
@@ -46,8 +47,16 @@ def run(app, max_queries: int | None = None) -> dict:
     limit = max_queries or int(cfg.get("max_queries_per_run", 20))
     done = {r["value"] for r in app.db.all("SELECT value FROM meta WHERE key LIKE 'query:%'")}
     stats = {"consultas": 0, "resultados": 0, "empresas_novas": 0, "duplicadas": 0, "ignoradas": 0, "enriquecidas": 0}
+    monthly_cap = int(cfg.get("max_search_calls_per_month", 0) or 0)
+    month = now().strftime("%Y-%m")
+    used = int(app.db.scalar("SELECT COALESCE(SUM(calls),0) FROM integration_usage WHERE integration=? "
+                             "AND day LIKE ?", (provider.name, month + "%")) or 0)
     for segment, city, uf, query in build_queries(app):
         if stats["consultas"] >= limit:
+            break
+        if monthly_cap and used + stats["consultas"] >= monthly_cap:
+            stats["parado_por_limite_mensal"] = monthly_cap
+            app.log.warning("pesquisa pausada: limite mensal de %s buscas (plano gratuito) atingido", monthly_cap)
             break
         if query in done:
             continue

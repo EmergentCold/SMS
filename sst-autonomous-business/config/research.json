@@ -275,5 +275,7 @@
         "AM"
       ]
     ]
-  }
+  },
+  "max_search_calls_per_month": 800,
+  "_comment_custos": "Plano gratuito: a Brave Search API dá ~US$ 5/mês de crédito (~1.000 buscas) e cobra o excedente no cartão. O agente para em 800 buscas/mês para nunca gerar cobrança. 0 = sem limite."
 }

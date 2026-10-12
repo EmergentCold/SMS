@@ -46,3 +46,22 @@ def test_national_queries_keep_state(app):
     curitiba = [q for q in queries if q[1] == "Curitiba"]
     assert curitiba and all(q[2] == "PR" for q in curitiba)
     assert all(" SP" not in q[3] for q in curitiba)
+
+
+def test_search_stops_at_free_monthly_cap(app):
+    from src.integrations.providers import SearchHit
+
+    class FakeSearch:
+        name = "busca_web_brave"
+        cost_per_call = 0.0
+        def is_configured(self):
+            return True
+        def search(self, query, count=10):
+            return [SearchHit("Empresa", "https://empresa-cap.test", "")]
+
+    app.overrides["search"] = FakeSearch()
+    app.overrides["fetcher"] = type("F", (), {"get": lambda self, url: (_ for _ in ()).throw(OSError("sem rede"))})()
+    app.settings.research["max_search_calls_per_month"] = 3
+    out = discovery.run(app, max_queries=10)
+    assert out["consultas"] == 3 and out["parado_por_limite_mensal"] == 3
+    assert discovery.run(app, max_queries=10)["consultas"] == 0  # mês já no limite

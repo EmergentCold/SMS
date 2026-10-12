@@ -205,7 +205,30 @@ $atual = Ler-Env $EnvArq
 if ($PastaPonte) { Definir-Env $EnvArq 'POWERPLATFORM_DIR' $PastaPonte }
 if (-not $atual['SST_BRIDGE_TOKEN']) { Definir-Env $EnvArq 'SST_BRIDGE_TOKEN' (Novo-Token); Ok 'token da ponte gerado' }
 if (-not $atual['SST_API_TOKEN']) { Definir-Env $EnvArq 'SST_API_TOKEN' (Novo-Token); Ok 'token da API gerado' }
-if ($PastaPonte -and (Perguntar 'Seu e-mail comercial é Microsoft 365? Enviar pelo Power Automate/Outlook (recomendado; sem senha SMTP)?')) {
+$GmailConfigurado = $false
+if ((-not $SimParaTudo) -and (Perguntar 'Usar um Gmail GRATUITO para enviar e receber (recomendado enquanto não houver domínio)?')) {
+    Write-Host '    Antes: ative a verificação em duas etapas no Gmail e crie uma "senha de app"'
+    Write-Host '    (myaccount.google.com > Segurança > Senhas de app). A senha não aparece na tela.'
+    $gmail = (Read-Host '    Endereço Gmail (ex.: tavarezsst@gmail.com)').Trim().ToLower()
+    if ($gmail -notmatch '^[a-z0-9._%+\-]+@gmail\.com$') {
+        Aviso 'endereço não parece ser um Gmail; envio não configurado.'
+    } else {
+        $seguro = Read-Host '    Senha de app (16 letras)' -AsSecureString
+        $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($seguro)
+        try { $senha = ([Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)) -replace '\s', '' }
+        finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr) }
+        $valores = [ordered]@{
+            'EMAIL_CHANNEL' = 'smtp'; 'SMTP_HOST' = 'smtp.gmail.com'; 'SMTP_PORT' = '587'; 'SMTP_SECURITY' = 'starttls'
+            'SMTP_USER' = $gmail; 'SMTP_PASSWORD' = $senha; 'SMTP_FROM' = $gmail
+            'IMAP_HOST' = 'imap.gmail.com'; 'IMAP_PORT' = '993'; 'IMAP_USER' = $gmail; 'IMAP_PASSWORD' = $senha
+        }
+        foreach ($k in $valores.Keys) { Definir-Env $EnvArq $k $valores[$k] $true }
+        $senha = $null
+        $GmailConfigurado = $true
+        Ok "envio e leitura de respostas pelo Gmail configurados ($gmail); senha gravada só no .env"
+    }
+}
+if ((-not $GmailConfigurado) -and $PastaPonte -and (Perguntar 'Seu e-mail comercial é Microsoft 365? Enviar pelo Power Automate/Outlook (sem senha SMTP)?' $false)) {
     Definir-Env $EnvArq 'EMAIL_CHANNEL' 'power_automate' $true
     Ok 'canal de envio: Power Automate (crie o fluxo 9 "SST – Enviar e-mails")'
 }
@@ -221,7 +244,7 @@ if ((-not $SimParaTudo) -and (Perguntar 'Preencher agora nome, marca e e-mail co
     $nome = Read-Host '    Seu nome completo'
     $marca = Read-Host '    Nome comercial (Enter = seu nome)'
     if (-not $marca) { $marca = $nome }
-    $email = Read-Host '    E-mail comercial (do seu domínio, se tiver)'
+    $email = Read-Host '    E-mail comercial (o Gmail configurado acima, ou o do seu domínio)'
     $tel = Read-Host '    Telefone comercial (opcional)'
     $horas = Read-Host '    Horas por semana disponíveis para atender clientes (ex.: 10)'
     $contratos = Read-Host '    Máximo de contratos simultâneos (ex.: 3)'
@@ -244,6 +267,9 @@ if (Perguntar 'Rodar a simulação (dados fictícios, nada sai do computador)?')
 Rodar-Python @('-m', 'src.main', 'powerbi-export')
 Ok 'arquivos para Power BI/Power Apps exportados'
 Rodar-Python @('-m', 'src.main', 'integrations', '--offline')
+if ($GmailConfigurado -and (Perguntar 'Testar agora o login no Gmail (não envia nenhuma mensagem)?')) {
+    & $script:PythonExe -c "from src.app import build_app; from src.integrations.email_smtp import SmtpEmailChannel; from src.integrations.email_imap import ImapInbox; build_app(); [print('   ', s.name, '->', s.detail) for s in (SmtpEmailChannel().verify(), ImapInbox().verify())]"
+}
 
 # 7. Execução contínua ----------------------------------------------------------------------------
 Passo '7/9 Execução contínua (tarefa agendada do Windows)'

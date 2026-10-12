@@ -191,6 +191,9 @@ if ($PastaPonte) {
     foreach ($sub in @('', 'export', 'inbox', 'outbox', 'aprovacoes')) {
         New-Item -ItemType Directory -Force -Path (Join-Path $PastaPonte $sub) | Out-Null
     }
+    foreach ($sub in @('envios', 'envios\confirmados', 'envios\falhas')) {
+        New-Item -ItemType Directory -Force -Path (Join-Path $PastaPonte $sub) | Out-Null
+    }
     Ok "pasta criada: $PastaPonte"
 } else { Aviso 'sem pasta da ponte: Power Automate/Power Apps (modo padrão) não terão onde ler/gravar.' }
 
@@ -202,6 +205,10 @@ $atual = Ler-Env $EnvArq
 if ($PastaPonte) { Definir-Env $EnvArq 'POWERPLATFORM_DIR' $PastaPonte }
 if (-not $atual['SST_BRIDGE_TOKEN']) { Definir-Env $EnvArq 'SST_BRIDGE_TOKEN' (Novo-Token); Ok 'token da ponte gerado' }
 if (-not $atual['SST_API_TOKEN']) { Definir-Env $EnvArq 'SST_API_TOKEN' (Novo-Token); Ok 'token da API gerado' }
+if ($PastaPonte -and (Perguntar 'Seu e-mail comercial é Microsoft 365? Enviar pelo Power Automate/Outlook (recomendado; sem senha SMTP)?')) {
+    Definir-Env $EnvArq 'EMAIL_CHANNEL' 'power_automate' $true
+    Ok 'canal de envio: Power Automate (crie o fluxo 9 "SST – Enviar e-mails")'
+}
 if (Perguntar 'Restringir o .env para que só o seu usuário possa lê-lo?') {
     & icacls $EnvArq /inheritance:r /grant:r "$($env:USERDOMAIN)\$($env:USERNAME):(R,W)" | Out-Null
     if ($LASTEXITCODE -ne 0) { Aviso 'icacls falhou; o .env manteve as permissões padrão.' }

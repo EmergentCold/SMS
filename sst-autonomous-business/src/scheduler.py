@@ -102,8 +102,9 @@ def job_table(app) -> dict[str, Callable[[], object]]:
         return export.export_all(app)
 
     def powerplatform_inbox():
+        from .integrations.power_automate_mail import check_confirmations
         from .powerplatform import bridge
-        return bridge.process_inbox(app)
+        return {"ponte": bridge.process_inbox(app), "envios_power_automate": check_confirmations(app)}
 
     def backup():
         keep = int(app.settings.business.get("retention", {}).get("backups_keep", 14))

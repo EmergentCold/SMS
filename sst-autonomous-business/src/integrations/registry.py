@@ -5,7 +5,7 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from ..settings import iso
+from ..settings import env, iso
 from .base import IntegrationStatus
 from .calendar import ExternalCalendar
 from .email_imap import ImapInbox
@@ -39,6 +39,9 @@ def email_channel(app):
         return app.overrides["email"]
     if app.settings.simulation:
         return SimulationChannel(app.settings.data_dir / "simulation_outbox")
+    if (env("EMAIL_CHANNEL") or "smtp").lower() == "power_automate":
+        from .power_automate_mail import PowerAutomateMailChannel
+        return PowerAutomateMailChannel()
     return SmtpEmailChannel()
 
 
@@ -68,7 +71,8 @@ def ai(app):
 
 def check_all(app, network: bool = True) -> list[IntegrationStatus]:
     """network=False só verifica configuração (sem conexões)."""
-    adapters = [SmtpEmailChannel(), ImapInbox(), BraveSearch(), BrasilApiCnpj(), B2BProvider(), ExternalCrm(),
+    from .power_automate_mail import PowerAutomateMailChannel
+    adapters = [SmtpEmailChannel(), PowerAutomateMailChannel(), ImapInbox(), BraveSearch(), BrasilApiCnpj(), B2BProvider(), ExternalCrm(),
                 ExternalCalendar(), AnthropicModel()]
     results: list[IntegrationStatus] = []
     for adapter in adapters:

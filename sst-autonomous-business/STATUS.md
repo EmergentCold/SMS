@@ -32,7 +32,7 @@ desenvolvimento (contêiner Linux, Python 3.13, **sem acesso de rede às APIs ex
 | Painel JavaScript: funções e cliente da API | `cd web && npm test` (4 testes) |
 | Painel JavaScript no navegador (login, KPIs, funil, filtro, aprovação, kill switch, registro de resposta) | `npm run e2e` (Playwright/Chromium) |
 
-Resultado: **104 testes Python aprovados** (`python3 -m pytest -q`), **4 testes JavaScript aprovados**
+Resultado: **109 testes Python aprovados** (`python3 -m pytest -q`), **4 testes JavaScript aprovados**
 (`node --test`) e **teste ponta a ponta no Chromium aprovado**.
 
 ## Implementado, mas não verificado contra o serviço real (sem credencial/rede neste ambiente)
@@ -79,6 +79,15 @@ Latência observada da ponte: até ~60 s por comando (ciclo de 1 minuto), mais o
 Bugs encontrados e corrigidos pelo ensaio: função `Python` do instalador sombreava `python.exe`; testes liam o
 `.env` real e gravavam na pasta do OneDrive; comando `api` lia o token antes de carregar o `.env` (a tarefa
 agendada da API não subiria); ponte podia ler arquivo ainda em sincronização; erro inesperado repetia a cada minuto.
+
+## Canal de e-mail pelo Power Automate (2026-10-12)
+
+`EMAIL_CHANNEL=power_automate`: o agente entrega cada mensagem aprovada em `<OneDrive>/SST-Agent/envios/` e o
+fluxo 9 envia pelo Outlook do Microsoft 365 (OAuth, sem senha SMTP). Confirmações/falhas do fluxo são lidas a
+cada minuto; sem confirmação em 2 h a mensagem vira INCERTA e não é reenviada. Testado em
+`tests/test_power_automate_mail.py`; o fluxo em si precisa ser criado no tenant.
+
+Próximos passos com o proprietário: [`PROXIMA_SESSAO.md`](PROXIMA_SESSAO.md).
 
 ## Instalador do Windows
 

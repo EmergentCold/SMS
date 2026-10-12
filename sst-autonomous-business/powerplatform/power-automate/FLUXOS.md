@@ -19,6 +19,7 @@ Convenções:
 | 6 | SST – Botão de pausa | Botão do celular | Liga/desliga o kill switch |
 | 7 | SST – Importar leads do Excel | Manual/recorrência | Envia linhas de uma tabela Excel ao agente |
 | 8 | Variante Premium | — | Mesmos fluxos usando o conector "SST Agent" |
+| 9 | SST – Enviar e-mails | Arquivo criado em `envios/` | Envia pelo Outlook do Microsoft 365 as mensagens aprovadas (`EMAIL_CHANNEL=power_automate`) |
 
 ---
 
@@ -172,6 +173,35 @@ legal_basis, facts`). Toda linha precisa de `source_url` ou `source_description`
    ```
 4. **Compor**: `{"id": "@{guid()}", "type": "leads_import", "rows": @{body('Selecionar')}, "by": "excel", "token": "@{variables('token')}"}`
 5. **Criar arquivo** na `inbox/`. Duplicatas (CNPJ, domínio, e-mail) são mescladas pelo agente.
+
+## 9. SST – Enviar e-mails (Outlook do Microsoft 365)
+
+Recomendado para e-mail de domínio próprio no Microsoft 365: o Outlook autentica por OAuth, sem senha de SMTP
+(o SMTP com senha do Microsoft 365 passa a ser desligado por padrão a partir de dezembro de 2026). No `.env`:
+`EMAIL_CHANNEL=power_automate`. O agente só grava aqui mensagens que passaram por **todas** as travas
+(aprovação, supressão, horário, limites, kill switch, `EXTERNAL_SENDING_ENABLED=true`).
+
+1. Gatilho **Quando um arquivo é criado** — OneDrive for Business, pasta `/SST-Agent/envios`.
+   Em *Configurações* do gatilho: **Simultaneidade = 1** (envia um de cada vez).
+2. **Analisar JSON** — esquema:
+   ```json
+   {"type":"object","properties":{"chave":{"type":"string"},"para":{"type":"string"},"assunto":{"type":"string"},
+    "corpo_texto":{"type":"string"},"corpo_html":{"type":"string"},"em_resposta_a":{"type":["string","null"]},
+    "descadastro":{"type":["string","null"]},"entregue_em":{"type":"string"}}}
+   ```
+3. **Escopo "Enviar"** contendo:
+   - **Enviar um email (V2)** (*Send an email (V2)*) — Office 365 Outlook, conectado com a **caixa comercial**:
+     Para `para`, Assunto `assunto`, Corpo `corpo_html`, Importância Normal.
+   - **Criar arquivo** — pasta `/SST-Agent/envios/confirmados`, nome `concat(body('Analisar_JSON')?['chave'], '.json')`,
+     conteúdo `{"enviado_em":"@{utcNow()}"}`.
+4. **Escopo "Falhou"** — *Configurar execução após*: **falhou / tempo limite** do escopo "Enviar":
+   - **Criar arquivo** — pasta `/SST-Agent/envios/falhas`, mesmo nome, conteúdo
+     `{"erro":"@{result('Enviar')?[0]?['error']?['message']}"}`.
+5. **Excluir arquivo** — o arquivo do gatilho (após os dois escopos, *Configurar execução após*: sucesso/falhou).
+
+O agente confere `confirmados/` e `falhas/` a cada minuto. Sem confirmação em 2 h, a mensagem vira
+**INCERTA** (alerta no relatório) e **não é reenviada** — confira o histórico do fluxo antes de qualquer ação.
+O conector do Outlook não permite o cabeçalho `List-Unsubscribe`; o texto de descadastro vai no corpo de toda mensagem.
 
 ## 8. Variante Premium (conector "SST Agent")
 

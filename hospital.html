@@ -254,6 +254,20 @@
   .nj-res .grid4{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:6px 0 10px; }
   .nj-res .grid4 > div{ background:#f6f8f7; border-radius:12px; padding:10px; text-align:center; } .nj-res .grid4 b{ display:block; font:800 26px "Barlow",Arial,sans-serif; color:var(--verde2); } .nj-res .grid4 small{ color:var(--soft); }
   .nj-res h3{ margin:14px 0 4px; }
+  .lnk{ background:none; border:0; color:var(--soft); font-size:13px; text-decoration:underline; padding:8px; margin-top:4px; }
+  .sst-tabs{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; background:#fff; border-radius:14px; padding:10px 12px; box-shadow:var(--sh); border-left:6px solid var(--vermelho); }
+  .sst-tabs b{ margin-right:6px; } .sst-tabs .btn.on{ background:var(--verde); }
+  .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:14px; }
+  @media (max-width:560px){ .kpis{ grid-template-columns:1fr 1fr; gap:8px; } .kpis > div{ padding:10px 12px; } .kpis b{ font-size:24px; } .kpis span{ font-size:12px; } }
+  .kpis > div{ background:#fff; border-radius:16px; box-shadow:var(--sh); padding:14px 16px; display:flex; flex-direction:column; gap:3px; border-top:4px solid var(--verde); }
+  .kpis > div:nth-child(2n){ border-top-color:var(--vermelho); }
+  .kpis small{ color:var(--soft); font-weight:800; text-transform:uppercase; letter-spacing:.05em; font-size:11px; }
+  .kpis b{ font:800 30px "Barlow",Arial,sans-serif; color:var(--verde2); } .kpis span{ color:var(--soft); font-size:13px; }
+  .barra{ position:relative; height:22px; background:#eef1ef; border-radius:999px; overflow:hidden; }
+  .barra i{ position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,var(--verde),#3cc46b); border-radius:999px; }
+  .barra span{ position:relative; font-size:12px; font-weight:800; padding-left:10px; line-height:22px; color:#1f2937; }
+  .alerta{ background:var(--warnbg); border-left:5px solid var(--warn); border-radius:10px; padding:10px 12px; margin:0 0 12px; }
+  .dicas{ margin:0; padding-left:20px; line-height:1.7; }
 </style>
 </head>
 <body>
@@ -1256,10 +1270,14 @@ function telaInicio(){
     h += '<div class="card quem"><div class="av">' + esc(iniciais(p.nome)) + '</div><div style="flex:1"><b>' + esc(p.nome) + '</b><div class="muted">Matrícula ' + esc(p.matricula) + ' · ' + fmt(total(p)) + ' pontos · ' + nivel(total(p)).n.ic + ' ' + nivel(total(p)).n.nome + '</div></div><button class="btn sm ghost" data-act="trocar">Trocar</button></div>';
   }
   h += '<div class="menu">';
-  h += '<button class="btn ok" data-act="jogar"><span>▶️</span>' + (p ? 'Continuar plantão' : 'Começar plantão') + '<small>' + (p ? 'Ir para a rotina do dia' : 'Inscreva-se e comece') + '</small></button>';
-  h += '<button class="btn" data-act="inscricao"><span>📝</span>Inscrição<small>Cadastrar ou escolher colaborador</small></button>';
-  h += '<button class="btn red" data-act="ranking"><span>🏆</span>Ranking<small>Quem mais pontuou</small></button>';
-  h += '<button class="btn ghost" data-act="painel"><span>📋</span>Painel SST<small>Participação, exportar e certificados</small></button>';
+  if (p){
+    h += '<button class="btn ok" data-act="jogar"><span>▶️</span>Continuar plantão<small>Ir para a rotina do dia</small></button>';
+    h += '<button class="btn red" data-act="meuPainel"><span>📊</span>Meu painel<small>Pontos, estrelas, posição e certificado</small></button>';
+    h += '<button class="btn" data-act="trocar"><span>🔄</span>Não é você?<small>Entrar com outra matrícula</small></button>';
+  } else {
+    h += '<button class="btn ok" data-act="inscricao"><span>📝</span>Cadastrar e jogar<small>Primeira vez? Comece aqui</small></button>';
+    h += '<button class="btn" data-act="entrarMat"><span>🔑</span>Já tenho cadastro<small>Entrar com a matrícula</small></button>';
+  }
   h += '</div>';
   h += '<div class="card" style="margin-top:14px"><h2>Como funciona</h2><div class="como">' +
        '<div><div class="ci" style="background:var(--okbg)">🔍</div><b>Caça aos Riscos</b>Toque no que está errado na cena e diga se é condição ou comportamento inseguro. O que está certo é exemplo: tocar nele custa pontos, mas mostra o jeito correto.</div>' +
@@ -1271,45 +1289,126 @@ function telaInicio(){
   h += '<div class="card"><h2>🗑️ Onde descartar no hospital</h2><div class="lixleg">' + Object.keys(LIX).map(function(k){ return '<div><span class="li">' + iconeLix(k) + '</span><div><b>' + LIX[k].n + '</b><small>' + LIX[k].s + '</small></div></div>'; }).join('') + '</div>' +
        '<p class="muted" style="margin:10px 0 0;font-size:14px">🧪 Derramamento de produto químico: use o <b>kit de derramamento nível I</b> (bolsa com barreiras, mantas, EPIs e saco para resíduo) para fazer a contenção.</p></div>';
   h += '<div class="card credito"><div class="cav">LT</div><div><small>Idealização, conteúdo e criação</small><b>Luan Tavarez</b><span>Técnico em Segurança do Trabalho</span><p>Jogo criado para o treinamento de Segurança e Saúde do Trabalho do Hospital Beneficência Portuguesa de São José do Rio Preto, com a rotina real dos setores: UTI e internação, centro cirúrgico, farmácia, almoxarifado e administrativo.</p></div></div>';
-  h += '<div class="foot"><b>Hospital Beneficência Portuguesa</b> · São José do Rio Preto · Segurança e Saúde do Trabalho<br>Criado por Luan Tavarez · Técnico em Segurança do Trabalho<br>Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador. Use o Painel SST para exportar.</div>';
+  h += '<div class="foot"><b>Hospital Beneficência Portuguesa</b> · São José do Rio Preto · Segurança e Saúde do Trabalho<br>Criado por Luan Tavarez · Técnico em Segurança do Trabalho<br>Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador.<br><button class="lnk" data-act="sst">🔒 Área do SST (administrador)</button></div>';
   app.innerHTML = h; scrollTo(0,0);
 }
 
 var SETORES = ['UTI','Internação / Enfermaria','Centro Cirúrgico','CME','Pronto-Socorro','Farmácia','Almoxarifado','Administrativo','Faturamento','Recepção','Higienização / Limpeza','Nutrição','Laboratório','Manutenção','Liderança','Terceiro','Outro'];
 var TURNOS = ['Diurno (12x36)','Noturno (12x36)','Manhã','Tarde','Comercial'];
-function telaInscricao(){
+function telaInscricao(foco){
   clearAll();
-  var lista = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).sort(function(a,b){ return a.nome.localeCompare(b.nome); });
-  var h = '<div class="grid2"><div class="card"><h2>📝 Nova inscrição</h2><form id="fIns" autocomplete="off">' +
+  var h = '<div class="grid2"><div class="card"><h2>📝 Cadastro</h2><p class="muted" style="margin-top:-4px">Primeira vez? Preencha com o seu <b>nome completo</b>: é ele que sai no certificado.</p><form id="fIns" autocomplete="off">' +
     '<label class="f">Nome completo *<input name="nome" required maxlength="80" placeholder="Ex.: Maria da Silva"></label>' +
     '<label class="f">Matrícula *<input name="matricula" required maxlength="20" placeholder="Ex.: 12345"></label>' +
     '<label class="f">Setor<select name="setor"><option value="">Selecione…</option>' + SETORES.map(function(s){ return '<option>' + s + '</option>'; }).join('') + '</select></label>' +
     '<label class="f">Turno<select name="turno"><option value="">Selecione…</option>' + TURNOS.map(function(t){ return '<option>' + t + '</option>'; }).join('') + '</select></label>' +
     '<label class="f">Função<input name="funcao" maxlength="50" placeholder="Ex.: Técnico(a) de enfermagem"></label>' +
-    '<button class="btn ok big" type="submit">✅ Inscrever e jogar</button></form></div>';
-  h += '<div class="card"><h2>👥 Já sou inscrito</h2>' + (lista.length ? '<label class="f">Buscar<input id="busca" placeholder="Nome ou matrícula"></label><div class="lista-j" id="listaJ"></div>' : '<p class="muted">Nenhum funcionário inscrito neste aparelho ainda.</p>') + '</div></div>';
+    '<button class="btn ok big" type="submit">✅ Cadastrar e jogar</button></form></div>';
+  h += '<div class="card" id="cardEntrar"><h2>🔑 Já tenho cadastro</h2><p class="muted" style="margin-top:-4px">Digite a sua matrícula para continuar de onde parou.</p><form id="fEnt" autocomplete="off">' +
+    '<label class="f">Matrícula<input name="mat" required maxlength="20" placeholder="Ex.: 12345"></label>' +
+    '<button class="btn big" type="submit">▶ Entrar</button></form><p class="muted" style="font-size:13px;margin:12px 0 0">🔒 Por privacidade, a lista de colaboradores fica só na Área do SST.</p></div></div>';
   app.innerHTML = h; scrollTo(0,0);
-  function renderLista(q){
-    q = (q || '').toLowerCase().trim();
-    var el = document.getElementById('listaJ'); if (!el) return;
-    var f = lista.filter(function(p){ return !q || p.nome.toLowerCase().indexOf(q) >= 0 || String(p.matricula).toLowerCase().indexOf(q) >= 0; });
-    el.innerHTML = f.map(function(p){ return '<button class="jg" data-act="entrar" data-id="' + esc(p.id) + '"><div class="av">' + esc(iniciais(p.nome)) + '</div><div><div class="n">' + esc(p.nome) + '</div><div class="s">Mat. ' + esc(p.matricula) + (p.setor ? ' · ' + esc(p.setor) : '') + '</div></div><div class="p">' + fmt(total(p)) + ' pts</div></button>'; }).join('') || '<p class="muted">Nenhum resultado.</p>';
-  }
-  renderLista('');
-  var b = document.getElementById('busca'); if (b) b.addEventListener('input', function(){ renderLista(b.value); });
+  if (foco){ var ce = document.getElementById('cardEntrar'); ce.scrollIntoView({ block:'start' }); ce.querySelector('input').focus(); }
+  document.getElementById('fEnt').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var mat = String(new FormData(ev.target).get('mat')).trim().toUpperCase(), p = DB.players[mat];
+    if (!p) { toast('Matrícula não encontrada neste aparelho. Faça o cadastro.'); SND.bad(); return; }
+    DB.atual = mat; save(); SND.ok(); toast('Bem-vindo(a) de volta, ' + p.nome.split(' ')[0] + '!'); telaMapa();
+  });
   document.getElementById('fIns').addEventListener('submit', function(ev){
     ev.preventDefault();
     var fd = new FormData(ev.target), nome = String(fd.get('nome')).trim().replace(/\s+/g,' '), mat = String(fd.get('matricula')).trim().toUpperCase();
-    if (nome.length < 3) { toast('Informe o nome completo.'); return; }
+    if (nome.length < 3 || nome.indexOf(' ') < 0) { toast('Informe o nome completo (nome e sobrenome).'); return; }
     if (!mat) { toast('Informe a matrícula.'); return; }
-    var id = mat, ex = DB.players[id];
-    if (ex && ex.nome.toLowerCase() !== nome.toLowerCase()){
-      if (!confirm('A matrícula ' + mat + ' já está inscrita para "' + ex.nome + '". Deseja entrar como ' + ex.nome + '?')) return;
-    } else if (!ex){
-      DB.players[id] = { id:id, nome:nome, matricula:mat, setor:String(fd.get('setor')||''), turno:String(fd.get('turno')||''), funcao:String(fd.get('funcao')||'').trim(), criado:hoje(), fases:{} };
-    }
-    DB.atual = id; save(); SND.ok(); toast('Bem-vindo(a), ' + DB.players[id].nome.split(' ')[0] + '!'); telaMapa();
+    var ex = DB.players[mat];
+    if (ex && ex.nome.toLowerCase() !== nome.toLowerCase()) { toast('Esta matrícula já tem cadastro. Use “Já tenho cadastro” para entrar.'); SND.bad(); return; }
+    if (!ex) DB.players[mat] = { id:mat, nome:nome, matricula:mat, setor:String(fd.get('setor')||''), turno:String(fd.get('turno')||''), funcao:String(fd.get('funcao')||'').trim(), criado:hoje(), fases:{} };
+    DB.atual = mat; save(); SND.ok(); toast('Bem-vindo(a), ' + DB.players[mat].nome.split(' ')[0] + '!'); telaMapa();
   });
+}
+
+/* ---------- PAINEL DO COLABORADOR ---------- */
+function posicao(p, filtroSetor){
+  var l = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).filter(function(q){ return !filtroSetor || q.setor === p.setor; })
+    .sort(function(a, b){ return total(b) - total(a) || estrelasTot(b) - estrelasTot(a); });
+  var i = l.findIndex(function(q){ return q.id === p.id; });
+  return { pos:i + 1, de:l.length };
+}
+function telaMeuPainel(){
+  clearAll();
+  var p = atual(); if (!p) { telaInscricao(true); return; }
+  var t = total(p), nv = nivel(t), pct = nv.prox ? Math.min(100, (t - nv.n.min) / (nv.prox.min - nv.n.min) * 100) : 100;
+  var conc = concluidas(p), est = estrelasTot(p), rk = posicao(p), rs = p.setor ? posicao(p, true) : null, tent = 0;
+  FASES.forEach(function(f){ var r = p.fases[f.id]; if (r) tent += r.tentativas || 0; });
+  var h = '<div class="card perfil"><div class="av" style="width:64px;height:64px;font-size:24px">' + esc(iniciais(p.nome)) + '</div><div class="dados"><small class="muted" style="text-transform:uppercase;letter-spacing:.06em;font-weight:800">📊 Meu painel</small><b style="display:block;font-size:21px">' + esc(p.nome) + '</b>' +
+    '<div class="muted" style="font-size:14px">Mat. ' + esc(p.matricula) + (p.setor ? ' · ' + esc(p.setor) : '') + (p.turno ? ' · ' + esc(p.turno) : '') + (p.funcao ? ' · ' + esc(p.funcao) : '') + '</div>' +
+    '<div class="muted" style="font-size:13px">Cadastro em ' + dataBR(p.criado) + ' · Última atividade ' + dataBR(p.ultima || p.criado) + '</div></div>' +
+    '<div class="row"><button class="btn ok" data-act="mapa">▶ Jogar</button><button class="btn ghost sm" data-act="trocar">Não é você?</button></div></div>';
+  h += '<div class="kpis">' +
+    '<div><small>Pontos</small><b>' + fmt(t) + '</b><span>' + nv.n.ic + ' ' + nv.n.nome + '</span><div class="prog"><i style="width:' + pct + '%"></i></div><span>' + (nv.prox ? 'Faltam ' + fmt(nv.prox.min - t) + ' para ' + nv.prox.ic + ' ' + nv.prox.nome : 'Nível máximo!') + '</span></div>' +
+    '<div><small>Fases concluídas</small><b>' + conc + '/' + FASES.length + '</b><div class="prog"><i style="width:' + (conc / FASES.length * 100) + '%"></i></div><span>' + (conc === FASES.length ? '🎓 Certificado liberado' : 'Faltam ' + (FASES.length - conc) + ' para o certificado') + '</span></div>' +
+    '<div><small>Estrelas</small><b>' + est + '/' + (FASES.length * 3) + ' ★</b><div class="prog"><i style="width:' + (est / (FASES.length * 3) * 100) + '%"></i></div><span>' + tent + ' partida(s) jogada(s)</span></div>' +
+    '<div><small>Posição no ranking</small><b>' + (t ? rk.pos + 'º' : '—') + '</b><span>de ' + rk.de + ' colaborador(es) neste aparelho</span>' + (rs && t ? '<span>' + rs.pos + 'º de ' + rs.de + ' no setor ' + esc(p.setor) + '</span>' : '') + '</div></div>';
+  h += '<div class="card"><h2>🗺️ Meu desempenho por fase</h2><div class="tabwrap"><table><thead><tr><th>Fase</th><th>Estrelas</th><th class="num">Recorde</th><th class="num">Partidas</th><th>Última vez</th><th></th></tr></thead><tbody>';
+  FASES.forEach(function(f, i){
+    var r = p.fases[f.id], lib = liberada(p, i);
+    h += '<tr><td><b>' + f.ic + ' ' + (i + 1) + '. ' + f.nome + '</b></td><td class="estrelas" style="font-size:17px">' + stars(r ? r.stars : 0) + '</td><td class="num">' + (r ? fmt(r.best) : '—') + '</td><td class="num">' + (r ? r.tentativas || 0 : 0) + '</td><td><small>' + (r ? dataBR(r.ultima) : '—') + '</small></td>' +
+      '<td style="white-space:nowrap">' + (lib ? '<button class="btn sm ' + (r && r.stars >= 1 ? 'ghost' : 'ok') + '" data-act="fase" data-i="' + i + '">' + (r && r.stars >= 1 ? '🔁 De novo' : '▶ Jogar') + '</button>' : '<span class="muted">🔒</span>') + '</td></tr>';
+  });
+  h += '</tbody></table></div></div>';
+  var dicas = [];
+  FASES.forEach(function(f, i){ var r = p.fases[f.id]; if (liberada(p, i) && (!r || r.stars < 1)) dicas.push('▶ Conclua <b>' + f.nome + '</b> para liberar a próxima fase.'); });
+  FASES.forEach(function(f){ var r = p.fases[f.id]; if (r && r.stars >= 1 && r.stars < 3) dicas.push('⭐ Jogue de novo <b>' + f.nome + '</b>: você tem ' + r.stars + ' de 3 estrelas.'); });
+  h += '<div class="grid2"><div class="card"><h2>💡 Próximos passos</h2>' + (dicas.length ? '<ul class="dicas">' + dicas.slice(0, 4).map(function(d){ return '<li>' + d + '</li>'; }).join('') + '</ul>' : '<p>🏆 Todas as fases com 3 estrelas. Você é exemplo de segurança!</p>') + '</div>' +
+    '<div class="card"><h2>🎓 Meu certificado</h2>' + (conc === FASES.length ? '<p>Concluído em <b>' + dataBR(p.concluido || p.ultima) + '</b>.<br>Código de verificação: <b>' + codigoCert(Object.assign({}, p, { concluido:p.concluido || p.ultima })) + '</b></p><button class="btn gold" data-act="certificado" data-id="' + esc(p.id) + '">🎓 Ver e baixar em PDF</button>' : '<p class="muted">O certificado é liberado ao concluir as ' + FASES.length + ' fases. Você já concluiu <b>' + conc + '</b>.</p><div class="prog"><i style="width:' + (conc / FASES.length * 100) + '%"></i></div>') + '</div></div>';
+  h += '<div class="foot">Seus dados ficam salvos só neste aparelho. O ranking completo e as exportações ficam na Área do SST.</div>';
+  app.innerHTML = h; scrollTo(0,0);
+}
+
+/* ---------- ÁREA DO SST (PIN) — painel do administrador ---------- */
+var SST_OK = false;
+function hashPin(p){ var h = 5381, t = 'hospital-seguro:' + p; for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) >>> 0; return 'h' + h.toString(36); }
+function sstGate(cb){
+  if (SST_OK) { cb(); return; }
+  var novo = !DB.pin;
+  modal('<h3>🔒 Área do SST</h3><p class="muted" style="margin:0 0 10px">' + (novo ? 'Primeiro acesso neste aparelho: crie um PIN (4 a 8 números) para proteger o painel do administrador, o ranking e as exportações.' : 'Digite o PIN do SST para acessar o painel do administrador.') + '</p>' +
+    '<form id="fPin" autocomplete="off"><label class="f">PIN<input name="p1" type="password" inputmode="numeric" maxlength="8" required></label>' +
+    (novo ? '<label class="f">Repita o PIN<input name="p2" type="password" inputmode="numeric" maxlength="8" required></label>' : '') +
+    '<div class="opts"><button class="btn ok" type="submit">' + (novo ? 'Criar PIN e entrar' : 'Entrar') + '</button><button class="btn ghost" type="button" id="pinX">Cancelar</button></div></form>' +
+    (novo ? '' : '<p class="muted" style="font-size:12px;margin:12px 0 0">O PIN fica salvo só neste aparelho. Se esquecer, procure quem configurou o aparelho.</p>'));
+  MB.querySelector('input').focus();
+  document.getElementById('pinX').onclick = closeModal;
+  document.getElementById('fPin').onsubmit = function(ev){
+    ev.preventDefault();
+    var fd = new FormData(ev.target), p1 = String(fd.get('p1')), p2 = String(fd.get('p2') || '');
+    if (!/^[0-9]{4,8}$/.test(p1)) { toast('O PIN deve ter de 4 a 8 números.'); return; }
+    if (novo){ if (p1 !== p2) { toast('Os PINs não conferem.'); return; } DB.pin = hashPin(p1); save(); }
+    else if (hashPin(p1) !== DB.pin) { toast('PIN incorreto.'); SND.bad(); ev.target.reset(); return; }
+    SST_OK = true; closeModal(); SND.ok(); cb();
+  };
+}
+function sstTabs(on){
+  return '<div class="sst-tabs"><b>🔒 Área do SST · Administrador</b><button class="btn sm' + (on === 'painel' ? ' on' : '') + '" data-act="painel">📋 Painel</button><button class="btn sm' + (on === 'ranking' ? ' on' : '') + '" data-act="ranking">🏆 Ranking</button><button class="btn sm ghost" data-act="sstSair">Sair da Área do SST</button></div>';
+}
+function indicadores(lista){
+  var tot = lista.length, h = '';
+  var fases = FASES.map(function(f){
+    var jog = 0, ok = 0, soma = 0, est = 0, tent = 0;
+    lista.forEach(function(p){ var r = p.fases[f.id]; if (r){ jog++; soma += r.best || 0; est += r.stars || 0; tent += r.tentativas || 0; if (r.stars >= 1) ok++; } });
+    return { f:f, jog:jog, ok:ok, media:jog ? soma / jog : 0, est:jog ? est / jog : 0, tent:tent };
+  });
+  var jogadas = fases.filter(function(x){ return x.jog; }), dificil = jogadas.length ? jogadas.slice().sort(function(a, b){ return a.est - b.est; })[0] : null;
+  h += '<div class="card"><h2>📈 Desempenho por fase</h2>' + (dificil && dificil.est < 2.5 ? '<p class="alerta">⚠️ Fase com menor desempenho: <b>' + dificil.f.ic + ' ' + dificil.f.nome + '</b> (média de ' + dificil.est.toFixed(1) + ' estrela(s)). Vale reforçar esse tema no treinamento.</p>' : '') +
+    '<div class="tabwrap"><table><thead><tr><th>Fase</th><th>Concluíram</th><th class="num">Jogaram</th><th class="num">Média de pontos</th><th class="num">Média ★</th><th class="num">Partidas</th></tr></thead><tbody>' +
+    fases.map(function(x){ var pc = tot ? Math.round(x.ok / tot * 100) : 0; return '<tr><td><b>' + x.f.ic + ' ' + x.f.nome + '</b></td><td style="min-width:150px"><div class="barra"><i style="width:' + pc + '%"></i><span>' + x.ok + ' (' + pc + '%)</span></div></td><td class="num">' + x.jog + '</td><td class="num">' + (x.jog ? fmt(x.media) : '—') + '</td><td class="num">' + (x.jog ? x.est.toFixed(1) : '—') + '</td><td class="num">' + x.tent + '</td></tr>'; }).join('') +
+    '</tbody></table></div></div>';
+  var set = {};
+  lista.forEach(function(p){ var k = p.setor || 'Sem setor'; var s = set[k] || (set[k] = { n:0, c:0, pts:0 }); s.n++; s.pts += total(p); if (concluidas(p) === FASES.length) s.c++; });
+  var ks = Object.keys(set).sort(function(a, b){ return set[b].n - set[a].n; });
+  h += '<div class="card"><h2>🏥 Participação por setor</h2>' + (ks.length ? '<div class="tabwrap"><table><thead><tr><th>Setor</th><th class="num">Inscritos</th><th>Concluíram tudo</th><th class="num">Média de pontos</th></tr></thead><tbody>' +
+    ks.map(function(k){ var s = set[k], pc = Math.round(s.c / s.n * 100); return '<tr><td><b>' + esc(k) + '</b></td><td class="num">' + s.n + '</td><td style="min-width:150px"><div class="barra"><i style="width:' + pc + '%"></i><span>' + s.c + ' (' + pc + '%)</span></div></td><td class="num">' + fmt(s.pts / s.n) + '</td></tr>'; }).join('') +
+    '</tbody></table></div>' : '<p class="muted">Sem dados ainda.</p>') + '</div>';
+  return h;
 }
 
 function telaMapa(){
@@ -1318,7 +1417,7 @@ function telaMapa(){
   var t = total(p), nv = nivel(t), pct = nv.prox ? Math.min(100, (t - nv.n.min) / (nv.prox.min - nv.n.min) * 100) : 100;
   var todas = concluidas(p) === FASES.length;
   var h = '<div class="card perfil"><div class="av" style="width:60px;height:60px;font-size:22px">' + esc(iniciais(p.nome)) + '</div><div class="dados"><b style="font-size:19px">' + esc(p.nome) + '</b><div class="muted" style="font-size:14px">Mat. ' + esc(p.matricula) + (p.setor ? ' · ' + esc(p.setor) : '') + (p.turno ? ' · ' + esc(p.turno) : '') + '</div>' +
-    '<div style="margin-top:6px"><span class="badge">' + nv.n.ic + ' ' + nv.n.nome + '</span></div>' +
+    '<div style="margin-top:6px" class="row"><span class="badge">' + nv.n.ic + ' ' + nv.n.nome + '</span><button class="btn sm ghost" data-act="meuPainel">📊 Meu painel</button></div>' +
     '<div class="prog"><i style="width:' + pct + '%"></i></div><small class="muted">' + (nv.prox ? 'Faltam ' + fmt(nv.prox.min - t) + ' pontos para ' + nv.prox.ic + ' ' + nv.prox.nome : 'Nível máximo alcançado!') + '</small></div>' +
     '<div style="text-align:right"><div class="pts">' + fmt(t) + '</div><div class="muted">pontos · ' + concluidas(p) + '/' + FASES.length + ' fases · ' + estrelasTot(p) + '★</div>' + (todas ? '<button class="btn sm gold" style="margin-top:8px" data-act="certificado" data-id="' + esc(p.id) + '">🎓 Meu certificado</button>' : '') + '</div></div>';
   h += '<div class="fases">';
@@ -1328,7 +1427,7 @@ function telaMapa(){
       '<div class="row" style="justify-content:space-between"><span class="estrelas">' + stars(st) + '</span><small class="muted">' + (r ? 'Recorde: <b>' + fmt(r.best) + '</b>' : '') + '</small></div>' +
       (lib ? '<button class="btn ' + (st >= 1 ? 'ghost' : 'ok') + '" data-act="fase" data-i="' + i + '">' + (st >= 1 ? '🔁 Jogar de novo' : '▶ Jogar') + '</button>' : '<button class="btn" disabled>🔒 Conclua a fase ' + i + '</button>') + '</div>';
   });
-  h += '</div><div class="foot">Faça pelo menos ★ (1 estrela) para liberar a próxima fase. O ranking usa a soma dos seus recordes em cada fase.</div>';
+  h += '</div><div class="foot">Faça pelo menos ★ (1 estrela) para liberar a próxima fase. Seus pontos são a soma dos seus recordes em cada fase. Veja sua posição em 📊 Meu painel.</div>';
   app.innerHTML = h; scrollTo(0,0);
 }
 
@@ -2050,7 +2149,7 @@ function telaRanking(filtro){
   var lista = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).filter(function(p){ return !filtro || p.setor === filtro || p.turno === filtro; })
     .sort(function(a, b){ return total(b) - total(a) || estrelasTot(b) - estrelasTot(a) || a.nome.localeCompare(b.nome); });
   var opts = SETORES.concat(TURNOS);
-  var h = '<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">🏆 Ranking</h2><select id="filt" style="padding:10px;border-radius:10px;border:2px solid var(--line);font-size:15px"><option value="">Todos os setores e turnos</option>' + opts.map(function(o){ return '<option' + (o === filtro ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select></div>';
+  var h = sstTabs('ranking') + '<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">🏆 Ranking</h2><select id="filt" style="padding:10px;border-radius:10px;border:2px solid var(--line);font-size:15px"><option value="">Todos os setores e turnos</option>' + opts.map(function(o){ return '<option' + (o === filtro ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select></div>';
   if (!lista.length) h += '<p class="muted">Ninguém pontuou ainda. Que tal ser o primeiro?</p>';
   else {
     var top = lista.slice(0, 3), ord = [1, 0, 2];
@@ -2069,11 +2168,16 @@ function telaPainel(){
   clearAll();
   var lista = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).sort(function(a, b){ return a.nome.localeCompare(b.nome); });
   var tot = lista.length, conc = lista.filter(function(p){ return concluidas(p) === FASES.length; }).length;
-  var h = '<div class="card"><h2>📋 Painel SST</h2><div class="grid2" style="margin-bottom:12px">' +
-    '<div class="card" style="background:#f6f8fb;margin:0"><div class="muted">Inscritos</div><div class="pts">' + tot + '</div></div>' +
-    '<div class="card" style="background:#f6f8fb;margin:0"><div class="muted">Concluíram todas as fases</div><div class="pts">' + conc + '</div></div>' +
-    '<div class="card" style="background:#f6f8fb;margin:0"><div class="muted">Média de pontos</div><div class="pts">' + (tot ? fmt(lista.reduce(function(s, p){ return s + total(p); }, 0) / tot) : 0) + '</div></div></div>' +
-    '<div class="row" style="margin-bottom:12px"><button class="btn ok" data-act="csv">⬇️ Exportar planilha (CSV)</button><button class="btn" data-act="backup">💾 Salvar backup</button><label class="btn ghost" style="cursor:pointer">📂 Importar backup<input type="file" id="impBk" accept=".json,application/json" hidden></label><button class="btn bad" data-act="zerar">🗑️ Apagar tudo</button></div>' +
+  var partidas = 0, ativos7 = 0, lim = Date.now() - 7 * 864e5;
+  lista.forEach(function(p){ FASES.forEach(function(f){ var r = p.fases[f.id]; if (r) partidas += r.tentativas || 0; }); if (p.ultima && new Date(p.ultima).getTime() >= lim) ativos7++; });
+  var h = sstTabs('painel') + '<div class="kpis">' +
+    '<div><small>Inscritos</small><b>' + tot + '</b><span>' + ativos7 + ' ativo(s) nos últimos 7 dias</span></div>' +
+    '<div><small>Concluíram as ' + FASES.length + ' fases</small><b>' + conc + '</b><div class="prog"><i style="width:' + (tot ? conc / tot * 100 : 0) + '%"></i></div><span>' + (tot ? Math.round(conc / tot * 100) : 0) + '% de conclusão</span></div>' +
+    '<div><small>Média de pontos</small><b>' + (tot ? fmt(lista.reduce(function(s, p){ return s + total(p); }, 0) / tot) : 0) + '</b><span>por colaborador</span></div>' +
+    '<div><small>Partidas jogadas</small><b>' + fmt(partidas) + '</b><span>somando todas as fases</span></div></div>' +
+    indicadores(lista) +
+    '<div class="card"><h2>📋 Colaboradores e gestão</h2>' +
+    '<div class="row" style="margin-bottom:12px"><button class="btn ok" data-act="csv">⬇️ Exportar planilha (CSV)</button><button class="btn" data-act="backup">💾 Salvar backup</button><label class="btn ghost" style="cursor:pointer">📂 Importar backup<input type="file" id="impBk" accept=".json,application/json" hidden></label><button class="btn ghost" data-act="trocarPin">🔑 Trocar PIN</button><button class="btn bad" data-act="zerar">🗑️ Apagar tudo</button></div>' +
     '<p class="muted" style="font-size:14px;margin-top:0">Os dados ficam somente neste aparelho. Para juntar resultados de vários tablets/computadores, salve o backup em cada um e importe aqui (o maior recorde de cada fase é mantido).</p>' +
     '<label class="f" style="max-width:520px">Nome da instituição (aparece no certificado)<input id="inst" maxlength="80" placeholder="Hospital Beneficência Portuguesa · São José do Rio Preto" value="' + esc(DB.inst || '') + '"></label>';
   if (tot){
@@ -2228,22 +2332,26 @@ function telaCertificado(id, novo, resumo){
    AÇÕES
    ============================================================ */
 var ACT = {
-  inicio: function(){ if (RUN && !confirm('Sair da fase? O progresso desta tentativa será perdido.')) return; RUN = null; telaInicio(); },
+  inicio: function(){ if (RUN && !confirm('Sair da fase? O progresso desta tentativa será perdido.')) return; RUN = null; SST_OK = false; telaInicio(); },
   som: function(){ DB.som = !DB.som; save(); updSom(); if (DB.som) SND.ok(); },
   jogar: function(){ atual() ? telaMapa() : telaInscricao(); },
-  inscricao: telaInscricao,
-  trocar: function(){ DB.atual = null; save(); telaInscricao(); },
-  entrar: function(d){ DB.atual = d.id; save(); SND.ok(); telaMapa(); },
+  inscricao: function(){ telaInscricao(false); },
+  entrarMat: function(){ telaInscricao(true); },
+  trocar: function(){ DB.atual = null; save(); telaInscricao(true); },
   mapa: telaMapa,
-  ranking: function(){ telaRanking(''); },
-  painel: telaPainel,
+  meuPainel: telaMeuPainel,
+  ranking: function(){ sstGate(function(){ telaRanking(''); }); },
+  painel: function(){ sstGate(telaPainel); },
+  sst: function(){ sstGate(telaPainel); },
+  sstSair: function(){ SST_OK = false; toast('Você saiu da Área do SST.'); telaInicio(); },
+  trocarPin: function(){ if (!SST_OK) return; if (confirm('Criar um novo PIN para a Área do SST?')) { DB.pin = null; save(); SST_OK = false; sstGate(telaPainel); } },
   fase: function(d){ var p = atual(); if (!p) { telaInscricao(); return; } var i = +d.i; if (!liberada(p, i)) return; iniciarFase(i); },
   sair: function(){ if (confirm('Sair da fase? O progresso desta tentativa será perdido.')) { RUN = null; telaMapa(); } },
-  csv: exportarCSV,
-  backup: function(){ baixar('hospital-seguro-backup-' + new Date().toISOString().slice(0,10) + '.json', JSON.stringify({ app:'hospital-seguro', versao:1, exportado:hoje(), players:DB.players }, null, 1), 'application/json'); },
-  zerar: function(){ if (confirm('Apagar TODOS os inscritos e pontuações deste aparelho? Esta ação não pode ser desfeita.') && confirm('Tem certeza? Recomendamos salvar um backup antes.')) { DB = { players:{}, atual:null, som:DB.som, inst:DB.inst }; save(); telaPainel(); } },
-  excluir: function(d){ var p = DB.players[d.id]; if (p && confirm('Excluir ' + p.nome + ' e toda a sua pontuação?')) { delete DB.players[d.id]; if (DB.atual === d.id) DB.atual = null; save(); telaPainel(); } },
-  certificado: function(d){ telaCertificado(d.id, false); }
+  csv: function(){ if (SST_OK) exportarCSV(); },
+  backup: function(){ if (!SST_OK) return; baixar('hospital-seguro-backup-' + new Date().toISOString().slice(0,10) + '.json', JSON.stringify({ app:'hospital-seguro', versao:1, exportado:hoje(), players:DB.players }, null, 1), 'application/json'); },
+  zerar: function(){ if (!SST_OK) return; if (confirm('Apagar TODOS os inscritos e pontuações deste aparelho? Esta ação não pode ser desfeita.') && confirm('Tem certeza? Recomendamos salvar um backup antes.')) { DB = { players:{}, atual:null, som:DB.som, inst:DB.inst, pin:DB.pin }; save(); telaPainel(); } },
+  excluir: function(d){ if (!SST_OK) return; var p = DB.players[d.id]; if (p && confirm('Excluir ' + p.nome + ' e toda a sua pontuação?')) { delete DB.players[d.id]; if (DB.atual === d.id) DB.atual = null; save(); telaPainel(); } },
+  certificado: function(d){ if (d.id === DB.atual || SST_OK) telaCertificado(d.id, false); else sstGate(function(){ telaCertificado(d.id, false); }); }
 };
 document.addEventListener('click', function(ev){
   var b = ev.target.closest('[data-act]'); if (!b) return;

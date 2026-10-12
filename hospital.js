@@ -1,6 +1,5 @@
 (function(){
 'use strict';
-var ADM = window.HS_MODO === 'adm'; // hospital-admin.html = administração (SST); hospital.html = colaborador (só jogar)
 
 /* ============================================================
    DADOS SALVOS (somente neste navegador / aparelho)
@@ -987,7 +986,7 @@ function telaInicio(){
   if (p){
     h += '<div class="card quem"><div class="av">' + esc(iniciais(p.nome)) + '</div><div style="flex:1"><b>' + esc(p.nome) + '</b><div class="muted">Matrícula ' + esc(p.matricula) + ' · ' + fmt(total(p)) + ' pontos · ' + nivel(total(p)).n.ic + ' ' + nivel(total(p)).n.nome + '</div></div><button class="btn sm ghost" data-act="trocar">Trocar</button></div>';
   }
-  h += '<div class="menu">';
+  h += '<div class="area"><div class="area-h">👤 Área do colaborador</div><div class="menu">';
   if (p){
     h += '<button class="btn ok" data-act="jogar"><span>▶️</span>Continuar plantão<small>Ir para a rotina do dia</small></button>';
     h += '<button class="btn red" data-act="meuPainel"><span>📊</span>Meu painel<small>Pontos, estrelas, posição e certificado</small></button>';
@@ -996,7 +995,8 @@ function telaInicio(){
     h += '<button class="btn ok" data-act="inscricao"><span>📝</span>Cadastrar e jogar<small>Primeira vez? Comece aqui</small></button>';
     h += '<button class="btn" data-act="entrarMat"><span>🔑</span>Já tenho cadastro<small>Entrar com a matrícula</small></button>';
   }
-  h += '</div>';
+  h += '</div></div>';
+  h += '<div class="area adm"><div><div class="area-h">🛠️ Área do administrador (SST)</div><div class="muted" style="font-size:14px">Painel, desempenho por fase e setor, ranking, planilha, backup e certificados. Acesso somente com PIN.</div></div><button class="btn ghost" data-act="painel">🔒 Entrar como administrador</button></div>';
   h += '<div class="card" style="margin-top:14px"><h2>Como funciona</h2><div class="como">' +
        '<div><div class="ci" style="background:var(--okbg)">🔍</div><b>Caça aos Riscos</b>Toque no que está errado na cena e diga se é condição ou comportamento inseguro. O que está certo é exemplo: tocar nele custa pontos, mas mostra o jeito correto.</div>' +
        '<div><div class="ci" style="background:var(--badbg)">🗑️</div><b>Descarte Certo</b>Cada resíduo no seu lugar: perfurocortante, caixa laranja, infectante, comum, reciclável e dados sensíveis.</div>' +
@@ -1007,7 +1007,7 @@ function telaInicio(){
   h += '<div class="card"><h2>🗑️ Onde descartar no hospital</h2><div class="lixleg">' + Object.keys(LIX).map(function(k){ return '<div><span class="li">' + iconeLix(k) + '</span><div><b>' + LIX[k].n + '</b><small>' + LIX[k].s + '</small></div></div>'; }).join('') + '</div>' +
        '<p class="muted" style="margin:10px 0 0;font-size:14px">🧪 Derramamento de produto químico: use o <b>kit de derramamento nível I</b> (bolsa com barreiras, mantas, EPIs e saco para resíduo) para fazer a contenção.</p></div>';
   h += '<div class="card credito"><div class="cav">LT</div><div><small>Idealização, conteúdo e criação</small><b>Luan Tavarez</b><span>Técnico em Segurança do Trabalho</span><p>Jogo criado para o treinamento de Segurança e Saúde do Trabalho do Hospital Beneficência Portuguesa de São José do Rio Preto, com a rotina real dos setores: UTI e internação, centro cirúrgico, farmácia, almoxarifado e administrativo.</p></div></div>';
-  h += '<div class="foot"><b>Hospital Beneficência Portuguesa</b> · São José do Rio Preto · Segurança e Saúde do Trabalho<br>Criado por Luan Tavarez · Técnico em Segurança do Trabalho<br>Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador. Ranking e relatórios: com a equipe de SST.</div>';
+  h += '<div class="foot"><b>Hospital Beneficência Portuguesa</b> · São José do Rio Preto · Segurança e Saúde do Trabalho<br>Criado por Luan Tavarez · Técnico em Segurança do Trabalho<br>Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador.</div>';
   app.innerHTML = h; scrollTo(0,0);
 }
 
@@ -1106,16 +1106,7 @@ function sstGate(cb){
   };
 }
 function sstTabs(on){
-  return '<div class="sst-tabs"><b>🔒 Área do SST · Administrador</b><button class="btn sm' + (on === 'painel' ? ' on' : '') + '" data-act="painel">📋 Painel</button><button class="btn sm' + (on === 'ranking' ? ' on' : '') + '" data-act="ranking">🏆 Ranking</button><a class="btn sm ghost" href="hospital.html" target="_blank" rel="noopener">▶ Abrir o jogo</a><button class="btn sm bad" data-act="sstSair">🔒 Bloquear</button></div>';
-}
-function telaAdmin(){
-  clearAll();
-  if (SST_OK) { telaPainel(); return; }
-  app.innerHTML = '<div class="card adm-lock"><img src="' + document.getElementById('logoImg').src + '" alt="Hospital Beneficência Portuguesa"><div class="cad">🔒</div><h1>Área do SST · Administração</h1><p>Painel do administrador do <b>Hospital Seguro</b>: indicadores, desempenho por fase e por setor, ranking, lista de colaboradores, planilha (CSV), backup e certificados.</p>' +
-    '<button class="btn ok big" data-act="sst" style="max-width:340px">🔑 ' + (DB.pin ? 'Desbloquear com PIN' : 'Criar PIN e entrar') + '</button>' +
-    '<p class="muted" style="margin:14px 0 0;font-size:14px">Página do colaborador (só jogar): <a href="hospital.html" target="_blank" rel="noopener">hospital.html</a></p></div>' +
-    '<div class="foot">Os dados ficam salvos somente neste aparelho/navegador. O PIN protege esta área neste aparelho.</div>';
-  scrollTo(0,0);
+  return '<div class="sst-tabs"><b>🔒 Área do SST · Administrador</b><button class="btn sm' + (on === 'painel' ? ' on' : '') + '" data-act="painel">📋 Painel</button><button class="btn sm' + (on === 'ranking' ? ' on' : '') + '" data-act="ranking">🏆 Ranking</button><button class="btn sm bad" data-act="sstSair">🔒 Bloquear e sair</button></div>';
 }
 function indicadores(lista){
   var tot = lista.length, h = '';
@@ -2028,7 +2019,7 @@ function telaCertificado(id, novo, resumo){
   var p = DB.players[id]; if (!p) { telaInicio(); return; }
   if (concluidas(p) < FASES.length) { toast('O certificado é liberado ao concluir as ' + FASES.length + ' fases.'); telaMapa(); return; }
   if (!p.concluido) { p.concluido = p.ultima || hoje(); save(); }
-  var volta = ADM ? 'painel' : 'mapa', pode = !!(navigator.share && navigator.canShare);
+  var volta = SST_OK ? 'painel' : 'mapa', pode = !!(navigator.share && navigator.canShare);
   var h = novo ? '<div class="card parabens"><div class="big">🎓</div><h1>Parabéns, ' + esc(p.nome.split(' ')[0]) + '!</h1><p>Você concluiu todas as fases do <b>Hospital Seguro</b>.' + (resumo ? ' ' + resumo : '') + ' Seu certificado já está pronto:</p></div>'
                : '<div class="card"><h2 style="margin:0">🎓 Certificado de ' + esc(p.nome) + '</h2></div>';
   h += '<div class="certwrap"><img id="certImg" alt="Certificado de conclusão de ' + esc(p.nome) + '" hidden><div class="muted" id="certLoad" style="padding:40px;text-align:center">Gerando certificado…</div></div>';
@@ -2059,7 +2050,7 @@ function telaCertificado(id, novo, resumo){
    AÇÕES
    ============================================================ */
 var ACT = {
-  inicio: function(){ if (ADM) { SST_OK ? telaPainel() : telaAdmin(); return; } if (RUN && !confirm('Sair da fase? O progresso desta tentativa será perdido.')) return; RUN = null; telaInicio(); },
+  inicio: function(){ if (RUN && !confirm('Sair da fase? O progresso desta tentativa será perdido.')) return; RUN = null; if (SST_OK) { SST_OK = false; toast('Área do administrador bloqueada.'); } telaInicio(); },
   som: function(){ DB.som = !DB.som; save(); updSom(); if (DB.som) SND.ok(); },
   jogar: function(){ atual() ? telaMapa() : telaInscricao(); },
   inscricao: function(){ telaInscricao(false); },
@@ -2070,7 +2061,7 @@ var ACT = {
   ranking: function(){ sstGate(function(){ telaRanking(''); }); },
   painel: function(){ sstGate(telaPainel); },
   sst: function(){ sstGate(telaPainel); },
-  sstSair: function(){ SST_OK = false; toast('Área do SST bloqueada.'); ADM ? telaAdmin() : telaInicio(); },
+  sstSair: function(){ SST_OK = false; toast('Área do administrador bloqueada.'); telaInicio(); },
   trocarPin: function(){ if (!SST_OK) return; if (confirm('Criar um novo PIN para a Área do SST?')) { DB.pin = null; save(); SST_OK = false; sstGate(telaPainel); } },
   fase: function(d){ var p = atual(); if (!p) { telaInscricao(); return; } var i = +d.i; if (!liberada(p, i)) return; iniciarFase(i); },
   sair: function(){ if (confirm('Sair da fase? O progresso desta tentativa será perdido.')) { RUN = null; telaMapa(); } },
@@ -2078,11 +2069,13 @@ var ACT = {
   backup: function(){ if (!SST_OK) return; baixar('hospital-seguro-backup-' + new Date().toISOString().slice(0,10) + '.json', JSON.stringify({ app:'hospital-seguro', versao:1, exportado:hoje(), players:DB.players }, null, 1), 'application/json'); },
   zerar: function(){ if (!SST_OK) return; if (confirm('Apagar TODOS os inscritos e pontuações deste aparelho? Esta ação não pode ser desfeita.') && confirm('Tem certeza? Recomendamos salvar um backup antes.')) { DB = { players:{}, atual:null, som:DB.som, inst:DB.inst, pin:DB.pin }; save(); telaPainel(); } },
   excluir: function(d){ if (!SST_OK) return; var p = DB.players[d.id]; if (p && confirm('Excluir ' + p.nome + ' e toda a sua pontuação?')) { delete DB.players[d.id]; if (DB.atual === d.id) DB.atual = null; save(); telaPainel(); } },
-  certificado: function(d){ if (!ADM) { if (d.id === DB.atual) telaCertificado(d.id, false); return; } sstGate(function(){ telaCertificado(d.id, false); }); }
+  certificado: function(d){ if (SST_OK || d.id === DB.atual) telaCertificado(d.id, false); }
 };
-// na página do colaborador as ações de administração não existem
-if (!ADM) ['ranking','painel','sst','sstSair','trocarPin','csv','backup','zerar','excluir'].forEach(function(k){ delete ACT[k]; });
-else ['jogar','inscricao','entrarMat','trocar','mapa','meuPainel','fase','sair'].forEach(function(k){ delete ACT[k]; });
+// administração: só com PIN (painel/ranking pedem o PIN; as demais ações exigem a área desbloqueada)
+// bloqueio automático após 5 minutos sem uso
+var ultimoUso = Date.now();
+['click','keydown','touchstart'].forEach(function(t){ document.addEventListener(t, function(){ ultimoUso = Date.now(); }, true); });
+setInterval(function(){ if (SST_OK && Date.now() - ultimoUso > 5*60*1000) { SST_OK = false; closeModal(); toast('Área do administrador bloqueada por inatividade.'); telaInicio(); } }, 20000);
 document.addEventListener('click', function(ev){
   var b = ev.target.closest('[data-act]'); if (!b) return;
   var a = ACT[b.getAttribute('data-act')]; if (!a) return;
@@ -2090,5 +2083,6 @@ document.addEventListener('click', function(ev){
 });
 
 if (DEBUG) window.__G = { ACT:ACT, DB:function(){ return DB; }, FASES:FASES, CENAS:CENAS, iniciarFase:iniciarFase, sortear:sortearCena, ITENS:ITENS, EXTRAS:EXTRAS, svgItem:svgItem };
-if (ADM) telaAdmin(); else telaInicio();
+telaInicio();
+if (location.hash === '#admin') sstGate(telaPainel);
 })();

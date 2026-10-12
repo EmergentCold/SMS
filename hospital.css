@@ -256,6 +256,7 @@
   .barra span{ position:relative; font-size:12px; font-weight:800; padding-left:10px; line-height:22px; color:#1f2937; }
   .alerta{ background:var(--warnbg); border-left:5px solid var(--warn); border-radius:10px; padding:10px 12px; margin:0 0 12px; }
   .dicas{ margin:0; padding-left:20px; line-height:1.7; }
-  .adm-lock{ text-align:center; padding:30px 18px; } .adm-lock img{ height:64px; display:block; margin:0 auto 6px; }
-  .adm-lock .cad{ font-size:54px; } .adm-lock h1{ color:var(--verde2); } .adm-lock p{ max-width:600px; margin:0 auto 14px; line-height:1.5; }
-  .adm-lock a{ color:var(--verde2); font-weight:700; }
+  .area{ background:#fff; border-radius:18px; padding:14px; margin-bottom:14px; box-shadow:var(--sh); }
+  .area-h{ font-weight:900; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; }
+  .area.adm{ display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; border:2px dashed var(--line); box-shadow:none; background:#f8faf9; }
+  .area.adm .area-h{ margin-bottom:4px; }

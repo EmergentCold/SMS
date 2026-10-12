@@ -1,6 +1,8 @@
 import csv
 import json
 
+import pytest
+
 from src.compliance import permissions
 from src.outreach import sender
 from src.powerplatform import bridge, export
@@ -38,6 +40,11 @@ def test_simulation_never_writes_to_real_onedrive_folder(app, monkeypatch, tmp_p
 
 def _inbox(app):
     return export.export_dir(app) / "inbox"
+
+
+@pytest.fixture(autouse=True)
+def _sem_espera_de_sincronizacao(monkeypatch):
+    monkeypatch.setattr(bridge, "SETTLE_SECONDS", 0)
 
 
 def test_bridge_processes_approval_once(app):
@@ -170,3 +177,22 @@ def test_installer_identity_helper(tmp_path):
     assert data["owner"]["name"] == "Fulano de Tal" and data["brand"]["commercial_email"] == "contato@fulano.test"
     assert data["owner"]["registration_verified"] is False  # nunca inventa registro
     assert data["capacity"]["verified"] is True
+
+
+def test_bridge_waits_for_files_still_syncing(app, monkeypatch):
+    monkeypatch.setattr(bridge, "SETTLE_SECONDS", 60)
+    bridge.write_command(_inbox(app), {"id": "s1", "type": "kill_switch", "on": True})
+    stats = bridge.process_inbox(app)
+    assert stats["processados"] == 0 and stats["aguardando_sincronizacao"] == 1
+    assert (_inbox(app) / "s1.json").exists()
+
+
+def test_bridge_isolates_unexpected_errors(app, monkeypatch):
+    def boom(*a, **k):
+        raise RuntimeError("falha inesperada token=segredo999")
+    monkeypatch.setattr(bridge, "execute", boom)
+    bridge.write_command(_inbox(app), {"id": "e1", "type": "kill_switch", "on": True})
+    assert bridge.process_inbox(app)["falhas"] == 1
+    assert (_inbox(app) / "falhas" / "e1.json").exists()
+    err = (export.export_dir(app) / "outbox" / "e1.result.json").read_text(encoding="utf-8")
+    assert "segredo999" not in err

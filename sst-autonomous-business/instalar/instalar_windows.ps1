@@ -115,13 +115,13 @@ function Definir-Env([string]$arquivo, [string]$chave, [string]$valor, [bool]$so
     [IO.File]::WriteAllLines($arquivo, $linhas, (New-Object Text.UTF8Encoding $false))
 }
 
-function Python([string[]]$argumentos) {
+function Rodar-Python([string[]]$argumentos) {
     & $script:PythonExe @argumentos
     if ($LASTEXITCODE -ne 0) { throw "falhou: python $($argumentos -join ' ')" }
 }
 
 # ----------------------------------------------------------------------------------------- início
-if ([Environment]::OSVersion.Platform -ne 'Win32NT') {
+if ([Environment]::OSVersion.Platform -ne 'Win32NT' -and -not $env:SST_INSTALADOR_TESTE) {
     Write-Host 'Este instalador é para Windows. No Linux/macOS, siga o README (python3 -m src.main ...).'
     exit 1
 }
@@ -153,7 +153,9 @@ else {
 }
 if (-not $script:PythonExe) { throw 'Python 3.11+ não encontrado. Instale pelo site python.org e rode de novo.' }
 if (-not (Tem 'git')) { throw 'Git não encontrado. Instale e rode de novo.' }
-[void](Instalar-Winget 'Microsoft.PowerBI' 'Power BI Desktop (para o relatório)' $true)
+if (-not (Instalar-Winget 'Microsoft.PowerBI' 'Power BI Desktop (para o relatório)' $true)) {
+    Aviso 'se o winget falhar (ex.: "hash does not match"), instale o Power BI Desktop pela Microsoft Store.'
+}
 if (-not (Tem 'node')) { [void](Instalar-Winget 'OpenJS.NodeJS.LTS' 'Node.js (opcional; testes do painel JavaScript)' $false) }
 
 # 2. Repositório -----------------------------------------------------------------------------------
@@ -201,7 +203,8 @@ if ($PastaPonte) { Definir-Env $EnvArq 'POWERPLATFORM_DIR' $PastaPonte }
 if (-not $atual['SST_BRIDGE_TOKEN']) { Definir-Env $EnvArq 'SST_BRIDGE_TOKEN' (Novo-Token); Ok 'token da ponte gerado' }
 if (-not $atual['SST_API_TOKEN']) { Definir-Env $EnvArq 'SST_API_TOKEN' (Novo-Token); Ok 'token da API gerado' }
 if (Perguntar 'Restringir o .env para que só o seu usuário possa lê-lo?') {
-    & icacls $EnvArq /inheritance:r /grant:r "$($env:USERNAME):(R,W)" | Out-Null
+    & icacls $EnvArq /inheritance:r /grant:r "$($env:USERDOMAIN)\$($env:USERNAME):(R,W)" | Out-Null
+    if ($LASTEXITCODE -ne 0) { Aviso 'icacls falhou; o .env manteve as permissões padrão.' }
     Ok 'permissões do .env restritas'
 }
 
@@ -219,21 +222,21 @@ if ((-not $SimParaTudo) -and (Perguntar 'Preencher agora nome, marca e e-mail co
     if ($tel) { $argsId += @('--telefone', $tel) }
     if ($horas -match '^\d+$') { $argsId += @('--horas-semana', $horas) }
     if ($contratos -match '^\d+$') { $argsId += @('--contratos-max', $contratos) }
-    Python $argsId
+    Rodar-Python $argsId
 }
 Aviso 'preços continuam "pendentes": defina-os em config\pricing.json antes de enviar propostas.'
 
 # 6. Verificação ----------------------------------------------------------------------------------
 Passo '6/9 Verificação (testes, simulação sem envio e primeira exportação)'
 if (Perguntar 'Instalar o pytest e rodar os testes automatizados?') {
-    Python @('-m', 'pip', 'install', '--user', '--quiet', 'pytest')
-    Python @('-m', 'pytest', '-q')
+    Rodar-Python @('-m', 'pip', 'install', '--user', '--quiet', 'pytest')
+    Rodar-Python @('-m', 'pytest', '-q')
 }
-Python @('-m', 'src.main', 'init')
-if (Perguntar 'Rodar a simulação (dados fictícios, nada sai do computador)?') { Python @('-m', 'src.main', 'simulate') | Out-Null; Ok 'simulação concluída (relatório em reports\simulation)' }
-Python @('-m', 'src.main', 'powerbi-export')
+Rodar-Python @('-m', 'src.main', 'init')
+if (Perguntar 'Rodar a simulação (dados fictícios, nada sai do computador)?') { Rodar-Python @('-m', 'src.main', 'simulate') | Out-Null; Ok 'simulação concluída (relatório em reports\simulation)' }
+Rodar-Python @('-m', 'src.main', 'powerbi-export')
 Ok 'arquivos para Power BI/Power Apps exportados'
-Python @('-m', 'src.main', 'integrations', '--offline')
+Rodar-Python @('-m', 'src.main', 'integrations', '--offline')
 
 # 7. Execução contínua ----------------------------------------------------------------------------
 Passo '7/9 Execução contínua (tarefa agendada do Windows)'
@@ -241,7 +244,8 @@ $Pythonw = Join-Path (Split-Path $script:PythonExe) 'pythonw.exe'
 if (-not (Test-Path $Pythonw)) { $Pythonw = $script:PythonExe }
 $config = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable `
     -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 5) -ExecutionTimeLimit ([TimeSpan]::Zero)
-$gatilho = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+$Usuario = "$env:USERDOMAIN\$env:USERNAME"
+$gatilho = New-ScheduledTaskTrigger -AtLogOn -User $Usuario
 if (Perguntar "Registrar o agente para iniciar com o Windows (tarefa '$TarefaAgente') e iniciar agora?") {
     $acao = New-ScheduledTaskAction -Execute $Pythonw -Argument '-m src.main daemon' -WorkingDirectory $Projeto
     Register-ScheduledTask -TaskName $TarefaAgente -Action $acao -Trigger $gatilho -Settings $config `

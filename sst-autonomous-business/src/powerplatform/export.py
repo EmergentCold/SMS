@@ -12,6 +12,7 @@ import csv
 import io
 import json
 import os
+import time
 from pathlib import Path
 
 from ..analytics import metrics
@@ -161,7 +162,14 @@ def _atomic_write(path: Path, content: str, encoding: str = "utf-8") -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(content, encoding=encoding)
-    os.replace(tmp, path)
+    for tentativa in range(5):  # no Windows o OneDrive/Power BI podem bloquear o arquivo por instantes
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            if tentativa == 4:
+                raise
+            time.sleep(0.5 * (tentativa + 1))
 
 
 def sync_approval_files(app) -> dict:

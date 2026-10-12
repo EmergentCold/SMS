@@ -23,6 +23,7 @@ import json
 import os
 import re
 import shutil
+import time
 from pathlib import Path
 
 from ..settings import env, iso, redact
@@ -31,6 +32,7 @@ from . import export
 ALLOWED_JOBS = {"qualify", "outreach", "followups", "daily_report", "weekly_report", "powerbi_export", "recover"}
 SAFE_ID = re.compile(r"^[A-Za-z0-9_\-{}]{1,80}$")
 MAX_BYTES = 2_000_000
+SETTLE_SECONDS = 3  # idade mínima do arquivo antes de processar
 
 
 class CommandError(ValueError):
@@ -100,6 +102,9 @@ def process_inbox(app) -> dict:
     for path in sorted(inbox.glob("*.json"), key=lambda p: p.stat().st_mtime):
         result: dict
         target = failed
+        if time.time() - path.stat().st_mtime < SETTLE_SECONDS:
+            stats["aguardando_sincronizacao"] = stats.get("aguardando_sincronizacao", 0) + 1
+            continue  # o OneDrive pode ainda estar gravando o arquivo; processa no próximo ciclo
         try:
             if path.stat().st_size > MAX_BYTES:
                 raise CommandError("arquivo maior que 2 MB")
@@ -130,6 +135,11 @@ def process_inbox(app) -> dict:
                       "processado_em": iso()}
             stats["falhas"] += 1
             app.log.warning("ponte: comando %s rejeitado: %s", path.name, result["erro"])
+        except Exception as exc:  # noqa: BLE001 - erro inesperado: isola o arquivo para não repetir a cada minuto
+            result = {"status": "erro_interno", "arquivo": path.name, "erro": redact(f"{type(exc).__name__}: {exc}"),
+                      "processado_em": iso()}
+            stats["falhas"] += 1
+            app.log.error("ponte: erro interno ao processar %s: %s", path.name, result["erro"])
         (outbox / f"{path.stem}.result.json").write_text(
             json.dumps(result, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
         dest = target / path.name

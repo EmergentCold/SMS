@@ -8,6 +8,7 @@ from pathlib import Path
 VAR_RE = re.compile(r"\{\{\s*([\w.]+)\s*\}\}")
 VARIANT_RE = re.compile(r"<!--\s*variant:\s*([\w\-]+)\s*-->")
 COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
+OPTIONAL_VARS = {"digital_line"}  # podem ficar vazias
 
 
 class TemplateError(ValueError):
@@ -24,6 +25,8 @@ def render_text(text: str, variables: dict) -> str:
     def repl(match: re.Match) -> str:
         key = match.group(1)
         value = variables.get(key)
+        if key in OPTIONAL_VARS and value is not None:
+            return str(value)
         if value is None or value == "":
             raise TemplateError(f"variável obrigatória ausente: {key}")
         return str(value)
@@ -75,7 +78,11 @@ def base_variables(app, lead: dict, contact: dict | None) -> dict:
     catalog = s.services.get("services", {})
     services = lead.get("services") or []
     remote_only = bool(services) and all(catalog.get(c, {}).get("delivery") in ("remoto", "hibrido") for c in services)
-    if remote_only:
+    if lead.get("segment") == "consultoria_sst":
+        oferta = ("por exemplo, uma demonstração online de 15 minutos da planilha de vencimentos e do gerador de "
+                  "crachás, para avaliar se faz sentido para os clientes de vocês")
+        abrangencia = "atendo empresas de todo o Brasil de forma remota"
+    elif remote_only:
         oferta = ("por exemplo, a gestão documental de SST dos prestadores de serviço ou um painel mensal de "
                   "indicadores de segurança, feitos de forma remota")
         abrangencia = "atendo empresas de todo o Brasil de forma remota (e presencialmente em Guarulhos, São Paulo e região)"
@@ -92,6 +99,7 @@ def base_variables(app, lead: dict, contact: dict | None) -> dict:
         "segment_hook_lower": hook[:1].lower() + hook[1:] if hook else hook,
         "source_description": source,
         "oferta": oferta,
+        "digital_line": "" if lead.get("segment") == "consultoria_sst" else s.outreach.get("digital_line", ""),
         "abrangencia": abrangencia,
         "commercial_email": commercial_email,
         "signature": "\n".join(x for x in signature_lines if x),

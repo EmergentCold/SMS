@@ -1,9 +1,18 @@
 {
   "_comment": "Regras de contato. Os intervalos de follow-up são parâmetros, não autorização para contatar qualquer pessoa.",
   "channels": {
-    "email": {"enabled": true, "provider": "smtp"},
-    "whatsapp": {"enabled": false, "note": "Somente WhatsApp Business Platform (API oficial) com opt-in do destinatário e templates aprovados. Não implementado no MVP."},
-    "linkedin": {"enabled": false, "note": "Sem automação: termos da plataforma proíbem envio automatizado. Uso manual pelo proprietário."}
+    "email": {
+      "enabled": true,
+      "provider": "smtp"
+    },
+    "whatsapp": {
+      "enabled": false,
+      "note": "Somente WhatsApp Business Platform (API oficial) com opt-in do destinatário e templates aprovados. Não implementado no MVP."
+    },
+    "linkedin": {
+      "enabled": false,
+      "note": "Sem automação: termos da plataforma proíbem envio automatizado. Uso manual pelo proprietário."
+    }
   },
   "limits": {
     "max_first_contacts_per_day": 15,
@@ -14,37 +23,188 @@
     "min_score_for_contact": 60
   },
   "business_hours": {
-    "weekdays": [0, 1, 2, 3, 4],
+    "weekdays": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
     "start": "09:00",
     "end": "17:30"
   },
   "followup_sequence": [
-    {"step": 0, "day": 0, "template": "first_contact", "variant": "default", "kind": "first_contact"},
-    {"step": 1, "day": 3, "template": "followup", "variant": "followup_1", "kind": "followup"},
-    {"step": 2, "day": 7, "template": "followup", "variant": "followup_2", "kind": "followup"},
-    {"step": 3, "day": 14, "template": "followup", "variant": "encerramento", "kind": "followup"}
+    {
+      "step": 0,
+      "day": 0,
+      "template": "first_contact",
+      "variant": "default",
+      "kind": "first_contact"
+    },
+    {
+      "step": 1,
+      "day": 3,
+      "template": "followup",
+      "variant": "followup_1",
+      "kind": "followup"
+    },
+    {
+      "step": 2,
+      "day": 7,
+      "template": "followup",
+      "variant": "followup_2",
+      "kind": "followup"
+    },
+    {
+      "step": 3,
+      "day": 14,
+      "template": "followup",
+      "variant": "encerramento",
+      "kind": "followup"
+    }
   ],
-  "allowed_contact_types": ["generic_corporate", "named_professional", "inbound_request", "referral_authorized"],
-  "free_email_domains": ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com", "yahoo.com.br", "bol.com.br", "uol.com.br", "terra.com.br", "icloud.com", "live.com"],
+  "allowed_contact_types": [
+    "generic_corporate",
+    "named_professional",
+    "inbound_request",
+    "referral_authorized"
+  ],
+  "free_email_domains": [
+    "gmail.com",
+    "hotmail.com",
+    "outlook.com",
+    "yahoo.com",
+    "yahoo.com.br",
+    "bol.com.br",
+    "uol.com.br",
+    "terra.com.br",
+    "icloud.com",
+    "live.com"
+  ],
   "forbidden_claims": [
-    {"pattern": "auditoria\\s+(realizada|revelou|identificou|apontou)", "reason": "Alega auditoria que não aconteceu"},
-    {"pattern": "identific(amos|ei)\\s+(falhas|irregularidades|n[ãa]o\\s+conformidades|problemas)", "reason": "Afirma problema de conformidade sem evidência"},
-    {"pattern": "(sua|vossa)\\s+empresa\\s+(est[áa]|encontra-se)\\s+(irregular|em\\s+desacordo|exposta)", "reason": "Classifica a empresa como irregular"},
-    {"pattern": "(indica[çc][ãa]o\\s+d[eo]|indicado\\s+por|recomendado\\s+por)", "reason": "Alega indicação inexistente"},
-    {"pattern": "(parceiro\\s+oficial|parceria\\s+com|credenciado\\s+pelo)", "reason": "Alega parceria/credenciamento não comprovado"},
-    {"pattern": "conforme\\s+(conversamos|combinado)", "reason": "Alega relação anterior inexistente"},
-    {"pattern": "(garant(o|imos|ia)\\s+(a\\s+)?conformidade|100%\\s+em\\s+conformidade|livre\\s+de\\s+multas)", "reason": "Promessa de conformidade/resultado"},
-    {"pattern": "(evite|evitar)\\s+(multas|autua[çc][õo]es)\\s+(agora|imediatamente)", "reason": "Apelo por medo"},
-    {"pattern": "(engenheiro|m[ée]dico)\\s+do\\s+trabalho", "reason": "Habilitação não comprovada do remetente (revisar manualmente se for parceiro formal)"}
+    {
+      "pattern": "auditoria\\s+(realizada|revelou|identificou|apontou)",
+      "reason": "Alega auditoria que não aconteceu"
+    },
+    {
+      "pattern": "identific(amos|ei)\\s+(falhas|irregularidades|n[ãa]o\\s+conformidades|problemas)",
+      "reason": "Afirma problema de conformidade sem evidência"
+    },
+    {
+      "pattern": "(sua|vossa)\\s+empresa\\s+(est[áa]|encontra-se)\\s+(irregular|em\\s+desacordo|exposta)",
+      "reason": "Classifica a empresa como irregular"
+    },
+    {
+      "pattern": "(indica[çc][ãa]o\\s+d[eo]|indicado\\s+por|recomendado\\s+por)",
+      "reason": "Alega indicação inexistente"
+    },
+    {
+      "pattern": "(parceiro\\s+oficial|parceria\\s+com|credenciado\\s+pelo)",
+      "reason": "Alega parceria/credenciamento não comprovado"
+    },
+    {
+      "pattern": "conforme\\s+(conversamos|combinado)",
+      "reason": "Alega relação anterior inexistente"
+    },
+    {
+      "pattern": "(garant(o|imos|ia)\\s+(a\\s+)?conformidade|100%\\s+em\\s+conformidade|livre\\s+de\\s+multas)",
+      "reason": "Promessa de conformidade/resultado"
+    },
+    {
+      "pattern": "(evite|evitar)\\s+(multas|autua[çc][õo]es)\\s+(agora|imediatamente)",
+      "reason": "Apelo por medo"
+    },
+    {
+      "pattern": "(engenheiro|m[ée]dico)\\s+do\\s+trabalho",
+      "reason": "Habilitação não comprovada do remetente (revisar manualmente se for parceiro formal)"
+    }
   ],
-  "optout_keywords": ["descadastr", "remover meu", "remova meu", "remova nosso", "não envie", "nao envie", "não quero receber", "nao quero receber", "pare de enviar", "parem de enviar", "unsubscribe", "sair da lista", "não entre em contato", "nao entre em contato"],
-  "negative_keywords": ["não temos interesse", "nao temos interesse", "sem interesse", "não tenho interesse", "nao tenho interesse", "já temos", "ja temos", "já possuímos", "ja possuimos", "não é o momento", "nao e o momento"],
-  "positive_keywords": ["tenho interesse", "temos interesse", "podemos conversar", "vamos conversar", "agendar", "reunião", "reuniao", "orçamento", "orcamento", "proposta", "valores", "quanto custa", "me ligue", "pode ligar", "visita"],
-  "invalid_address_markers": ["user unknown", "mailbox unavailable", "address rejected", "no such user", "delivery status notification (failure)", "undeliverable", "não foi possível entregar"],
+  "optout_keywords": [
+    "descadastr",
+    "remover meu",
+    "remova meu",
+    "remova nosso",
+    "não envie",
+    "nao envie",
+    "não quero receber",
+    "nao quero receber",
+    "pare de enviar",
+    "parem de enviar",
+    "unsubscribe",
+    "sair da lista",
+    "não entre em contato",
+    "nao entre em contato"
+  ],
+  "negative_keywords": [
+    "não temos interesse",
+    "nao temos interesse",
+    "sem interesse",
+    "não tenho interesse",
+    "nao tenho interesse",
+    "já temos",
+    "ja temos",
+    "já possuímos",
+    "ja possuimos",
+    "não é o momento",
+    "nao e o momento"
+  ],
+  "positive_keywords": [
+    "tenho interesse",
+    "temos interesse",
+    "podemos conversar",
+    "vamos conversar",
+    "agendar",
+    "reunião",
+    "reuniao",
+    "orçamento",
+    "orcamento",
+    "proposta",
+    "valores",
+    "quanto custa",
+    "me ligue",
+    "pode ligar",
+    "visita"
+  ],
+  "invalid_address_markers": [
+    "user unknown",
+    "mailbox unavailable",
+    "address rejected",
+    "no such user",
+    "delivery status notification (failure)",
+    "undeliverable",
+    "não foi possível entregar"
+  ],
   "faq": [
-    {"id": "quem_e", "keywords": ["quem é você", "quem e voce", "como conseguiu", "onde pegou", "como obteve"], "answer": "Sou {{owner_name}}, {{owner_title}}. Encontrei o contato comercial de vocês em {{source_description}}. Se preferir não receber mais mensagens, basta responder com \"descadastrar\" que removo o contato imediatamente."},
-    {"id": "atendimento_regiao", "keywords": ["atendem", "região", "regiao", "cidade"], "answer": "Atendo prioritariamente Guarulhos, São Paulo e região metropolitana. Para outras localidades, avalio caso a caso."},
-    {"id": "como_funciona", "keywords": ["como funciona", "como é o serviço", "como e o servico"], "answer": "Normalmente começo com um diagnóstico preliminar: uma visita de levantamento e um relatório com plano de ação priorizado. A partir dele, vocês decidem o que faz sentido contratar."}
+    {
+      "id": "quem_e",
+      "keywords": [
+        "quem é você",
+        "quem e voce",
+        "como conseguiu",
+        "onde pegou",
+        "como obteve"
+      ],
+      "answer": "Sou {{owner_name}}, {{owner_title}}. Encontrei o contato comercial de vocês em {{source_description}}. Se preferir não receber mais mensagens, basta responder com \"descadastrar\" que removo o contato imediatamente."
+    },
+    {
+      "id": "atendimento_regiao",
+      "keywords": [
+        "atendem",
+        "região",
+        "regiao",
+        "cidade"
+      ],
+      "answer": "Atendo prioritariamente Guarulhos, São Paulo e região metropolitana. Para outras localidades, avalio caso a caso."
+    },
+    {
+      "id": "como_funciona",
+      "keywords": [
+        "como funciona",
+        "como é o serviço",
+        "como e o servico"
+      ],
+      "answer": "Normalmente começo com um diagnóstico preliminar: uma visita de levantamento e um relatório com plano de ação priorizado. A partir dele, vocês decidem o que faz sentido contratar."
+    }
   ],
   "segment_hooks": {
     "transportadora": "Em transportadoras, costumo apoiar com integração de motoristas e ajudantes, DDS objetivos e organização dos registros de treinamento.",
@@ -58,6 +218,8 @@
     "terceirizada": "Em empresas terceirizadas, costumo apoiar com a documentação de SST exigida pelos contratantes e com treinamentos das equipes.",
     "servicos_industriais": "Em prestadores de serviços industriais, costumo apoiar com APR/permissões de trabalho e com a documentação exigida pelas plantas clientes.",
     "pme_geral": "Em empresas sem equipe própria de SST, costumo apoiar com um diagnóstico inicial e acompanhamento mensal enxuto.",
-    "desconhecido": "Costumo apoiar empresas com diagnóstico inicial de SST e acompanhamento consultivo."
-  }
+    "desconhecido": "Costumo apoiar empresas com diagnóstico inicial de SST e acompanhamento consultivo.",
+    "consultoria_sst": "Para consultorias e clínicas de SST, desenvolvo ferramentas digitais prontas para usar com os seus clientes: planilhas de controle de vencimentos, crachás com QR Code que abrem a ficha do colaborador, painéis em Power BI e apresentações de treinamento."
+  },
+  "digital_line": "Também desenvolvo soluções digitais para SST: planilhas de controle de vencimentos de ASO e treinamentos, crachás com QR Code, painéis de indicadores e apresentações para DDS e SIPAT."
 }

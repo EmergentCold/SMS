@@ -77,5 +77,20 @@
   "costs": {
     "monthly_budget_brl": 100.0,
     "alert_at_pct": 80
-  }
+  },
+  "portfolio": [
+    {
+      "nome": "Emissor de crachás com QR Code e controle de vencimentos (CIPA, Brigada, Empilhadeira, Transpaleteira, ASO)",
+      "descricao_publica": "gerador de crachás com QR Code a partir da planilha de vencimentos; o celular abre a ficha de SST do colaborador; impressão 9 por A4",
+      "cliente_pode_ser_citado": false,
+      "codigo_reutilizavel_confirmado": false,
+      "_comment": "Desenvolvido para um empregador/cliente: só citar o nome do cliente ou reutilizar o código com autorização registrada."
+    },
+    {
+      "nome": "Agente comercial automatizado com Power BI, Power Automate, Power Apps e painel web",
+      "descricao_publica": "automação de prospecção, CRM, aprovações no Teams e painéis de indicadores",
+      "cliente_pode_ser_citado": true,
+      "codigo_reutilizavel_confirmado": true
+    }
+  ]
 }

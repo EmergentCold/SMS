@@ -1,51 +1,279 @@
 {
   "_comment": "Parâmetros de pesquisa. O robô respeita robots.txt, identifica-se no User-Agent, não contorna CAPTCHA/login e só lê páginas públicas.",
-  "start_region": {"state": "SP", "cities": ["Guarulhos", "São Paulo", "Barueri", "Cajamar", "Osasco", "Itaquaquecetuba", "Arujá"]},
+  "start_region": {
+    "state": "SP",
+    "cities": [
+      "Guarulhos",
+      "São Paulo",
+      "Barueri",
+      "Cajamar",
+      "Osasco",
+      "Itaquaquecetuba",
+      "Arujá"
+    ]
+  },
   "queries": {
-    "transportadora": ["transportadora {city} SP"],
-    "centro_distribuicao": ["centro de distribuição {city} SP empresa"],
-    "operador_logistico": ["operador logístico {city} SP"],
-    "armazem_galpao": ["armazém geral {city} SP", "armazenagem de cargas {city} SP"],
-    "industria": ["indústria {city} SP fábrica"],
-    "manutencao": ["manutenção industrial {city} SP"],
-    "construcao": ["construtora {city} SP"],
-    "condominio_empresarial": ["condomínio logístico {city} SP", "condomínio empresarial {city} SP"],
-    "terceirizada": ["empresa de terceirização de serviços {city} SP"],
-    "servicos_industriais": ["serviços industriais {city} SP"]
+    "transportadora": [
+      "transportadora {city} SP"
+    ],
+    "centro_distribuicao": [
+      "centro de distribuição {city} SP empresa"
+    ],
+    "operador_logistico": [
+      "operador logístico {city} SP"
+    ],
+    "armazem_galpao": [
+      "armazém geral {city} SP",
+      "armazenagem de cargas {city} SP"
+    ],
+    "industria": [
+      "indústria {city} SP fábrica"
+    ],
+    "manutencao": [
+      "manutenção industrial {city} SP"
+    ],
+    "construcao": [
+      "construtora {city} SP"
+    ],
+    "condominio_empresarial": [
+      "condomínio logístico {city} SP",
+      "condomínio empresarial {city} SP"
+    ],
+    "terceirizada": [
+      "empresa de terceirização de serviços {city} SP"
+    ],
+    "servicos_industriais": [
+      "serviços industriais {city} SP"
+    ],
+    "consultoria_sst": [
+      "consultoria em segurança do trabalho {city}",
+      "clínica de medicina e segurança do trabalho {city}"
+    ]
   },
   "max_results_per_query": 10,
   "max_queries_per_run": 20,
   "blocked_domains": [
-    "facebook.com", "instagram.com", "linkedin.com", "twitter.com", "x.com", "youtube.com", "tiktok.com",
-    "wikipedia.org", "google.com", "gov.br", "jusbrasil.com.br", "reclameaqui.com.br",
-    "glassdoor.com.br", "indeed.com", "infojobs.com.br", "catho.com.br", "vagas.com.br",
-    "econodata.com.br", "cnpj.biz", "casadosdados.com.br", "solutudo.com.br", "apontador.com.br",
-    "guiamais.com.br", "telelistas.net", "mercadolivre.com.br", "olx.com.br"
+    "facebook.com",
+    "instagram.com",
+    "linkedin.com",
+    "twitter.com",
+    "x.com",
+    "youtube.com",
+    "tiktok.com",
+    "wikipedia.org",
+    "google.com",
+    "gov.br",
+    "jusbrasil.com.br",
+    "reclameaqui.com.br",
+    "glassdoor.com.br",
+    "indeed.com",
+    "infojobs.com.br",
+    "catho.com.br",
+    "vagas.com.br",
+    "econodata.com.br",
+    "cnpj.biz",
+    "casadosdados.com.br",
+    "solutudo.com.br",
+    "apontador.com.br",
+    "guiamais.com.br",
+    "telelistas.net",
+    "mercadolivre.com.br",
+    "olx.com.br"
   ],
-  "contact_paths": ["/", "/contato", "/fale-conosco", "/contato/", "/contact"],
-  "generic_email_prefixes": ["contato", "comercial", "atendimento", "faleconosco", "vendas", "sac", "comunicacao", "suprimentos", "compras", "rh"],
+  "contact_paths": [
+    "/",
+    "/contato",
+    "/fale-conosco",
+    "/contato/",
+    "/contact"
+  ],
+  "generic_email_prefixes": [
+    "contato",
+    "comercial",
+    "atendimento",
+    "faleconosco",
+    "vendas",
+    "sac",
+    "comunicacao",
+    "suprimentos",
+    "compras",
+    "rh"
+  ],
   "segment_keywords": {
-    "transportadora": ["transportadora", "transporte rodoviário", "frota", "fretamento de cargas"],
-    "centro_distribuicao": ["centro de distribuição", "cd ", "cross docking", "cross-docking"],
-    "operador_logistico": ["operador logístico", "operação logística", "logística integrada", "3pl"],
-    "armazem_galpao": ["armazém", "armazenagem", "galpão", "estocagem"],
-    "industria": ["indústria", "fábrica", "linha de produção", "manufatura"],
-    "manutencao": ["manutenção industrial", "manutenção predial", "manutenção preventiva"],
-    "construcao": ["construtora", "obras", "construção civil", "incorporadora"],
-    "condominio_empresarial": ["condomínio logístico", "condomínio empresarial", "condomínio industrial"],
-    "terceirizada": ["terceirização", "facilities", "mão de obra terceirizada"],
-    "servicos_industriais": ["serviços industriais", "montagem industrial", "caldeiraria", "andaimes"]
+    "transportadora": [
+      "transportadora",
+      "transporte rodoviário",
+      "frota",
+      "fretamento de cargas"
+    ],
+    "centro_distribuicao": [
+      "centro de distribuição",
+      "cd ",
+      "cross docking",
+      "cross-docking"
+    ],
+    "operador_logistico": [
+      "operador logístico",
+      "operação logística",
+      "logística integrada",
+      "3pl"
+    ],
+    "armazem_galpao": [
+      "armazém",
+      "armazenagem",
+      "galpão",
+      "estocagem"
+    ],
+    "industria": [
+      "indústria",
+      "fábrica",
+      "linha de produção",
+      "manufatura"
+    ],
+    "manutencao": [
+      "manutenção industrial",
+      "manutenção predial",
+      "manutenção preventiva"
+    ],
+    "construcao": [
+      "construtora",
+      "obras",
+      "construção civil",
+      "incorporadora"
+    ],
+    "condominio_empresarial": [
+      "condomínio logístico",
+      "condomínio empresarial",
+      "condomínio industrial"
+    ],
+    "terceirizada": [
+      "terceirização",
+      "facilities",
+      "mão de obra terceirizada"
+    ],
+    "servicos_industriais": [
+      "serviços industriais",
+      "montagem industrial",
+      "caldeiraria",
+      "andaimes"
+    ],
+    "consultoria_sst": [
+      "consultoria em segurança do trabalho",
+      "medicina do trabalho",
+      "sesmt",
+      "assessoria em sst"
+    ]
   },
   "demand_signals": {
     "_comment": "Trechos do site oficial que indicam POSSÍVEL demanda. Registrados como FATO ('o site menciona X'); a necessidade de SST derivada deles é HIPÓTESE.",
-    "expansao": ["nova unidade", "inauguração", "inauguramos", "expansão", "novo centro de distribuição", "novo galpão"],
-    "trabalho_altura": ["trabalho em altura", "telhado", "cobertura metálica", "linha de vida"],
-    "espaco_confinado": ["espaço confinado", "tanques", "silos"],
-    "maquinas": ["empilhadeira", "máquinas", "prensas", "esteiras"],
-    "terceiros": ["prestadores de serviço", "fornecedores homologados", "homologação de fornecedores"],
-    "certificacao": ["iso 45001", "iso 9001", "sassmaq", "auditoria de clientes"]
+    "expansao": [
+      "nova unidade",
+      "inauguração",
+      "inauguramos",
+      "expansão",
+      "novo centro de distribuição",
+      "novo galpão"
+    ],
+    "trabalho_altura": [
+      "trabalho em altura",
+      "telhado",
+      "cobertura metálica",
+      "linha de vida"
+    ],
+    "espaco_confinado": [
+      "espaço confinado",
+      "tanques",
+      "silos"
+    ],
+    "maquinas": [
+      "empilhadeira",
+      "máquinas",
+      "prensas",
+      "esteiras"
+    ],
+    "terceiros": [
+      "prestadores de serviço",
+      "fornecedores homologados",
+      "homologação de fornecedores"
+    ],
+    "certificacao": [
+      "iso 45001",
+      "iso 9001",
+      "sassmaq",
+      "auditoria de clientes"
+    ]
   },
   "request_delay_seconds": 2.0,
   "timeout_seconds": 15,
-  "user_agent": "SST-Business-Research/0.1 (+contato configurado em config/business.json; respeita robots.txt)"
+  "user_agent": "SST-Business-Research/0.1 (+contato configurado em config/business.json; respeita robots.txt)",
+  "national": {
+    "_comment": "Segmentos atendidos de forma remota: pesquisa nas capitais e polos logísticos do Brasil.",
+    "segments": [
+      "consultoria_sst",
+      "centro_distribuicao",
+      "operador_logistico"
+    ],
+    "cities": [
+      [
+        "Belo Horizonte",
+        "MG"
+      ],
+      [
+        "Curitiba",
+        "PR"
+      ],
+      [
+        "Porto Alegre",
+        "RS"
+      ],
+      [
+        "Florianópolis",
+        "SC"
+      ],
+      [
+        "Goiânia",
+        "GO"
+      ],
+      [
+        "Brasília",
+        "DF"
+      ],
+      [
+        "Rio de Janeiro",
+        "RJ"
+      ],
+      [
+        "Salvador",
+        "BA"
+      ],
+      [
+        "Recife",
+        "PE"
+      ],
+      [
+        "Fortaleza",
+        "CE"
+      ],
+      [
+        "Campinas",
+        "SP"
+      ],
+      [
+        "Ribeirão Preto",
+        "SP"
+      ],
+      [
+        "Joinville",
+        "SC"
+      ],
+      [
+        "Contagem",
+        "MG"
+      ],
+      [
+        "Manaus",
+        "AM"
+      ]
+    ]
+  }
 }

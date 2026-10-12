@@ -15,6 +15,21 @@ como cada serviço deve ser vendido. **Nenhum preço está aprovado**: todos est
 | H | Elaboração/revisão de documentos técnicos | não | **sim — sempre nível 3** | 20 dias |
 | I | Programa mensal de suporte consultivo | sim | não | 7 dias |
 
+### Soluções digitais (atendimento remoto em todo o Brasil)
+
+| Cód. | Serviço | Recorrente | Prazo |
+|---|---|---|---|
+| J | Sistema web sob medida para SST | não | 20 dias |
+| K | Planilha inteligente de controle de SST | não | 5 dias |
+| L | Painel Power BI e automações (Power Automate/Power Apps) | não | 15 dias |
+| M | Apresentações profissionais de SST | não | 4 dias |
+| N | Crachás e etiquetas com QR Code | não | 7 dias |
+| O | Jogo ou quiz educativo de segurança | não | 7 dias |
+| P | Melhoria de processos de SST (híbrido) | não | 15 dias |
+
+Público adicional: **consultorias, clínicas e SESMTs** de todo o Brasil (segmento `consultoria_sst`), que compram
+ferramentas digitais para usar com os próprios clientes.
+
 Para cada serviço, `config/services.json` documenta: cliente ideal, problema, entregáveis, exclusões, prazo,
 informações necessárias, requisitos profissionais, recorrência e critérios de aceite.
 Custos operacionais, preço mínimo, margem e desconto máximo ficam em `config/pricing.json`.

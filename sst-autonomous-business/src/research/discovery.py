@@ -21,13 +21,18 @@ def _blocked(app, domain: str | None) -> bool:
     return any(domain == b or domain.endswith("." + b) for b in blocked) or domain.endswith(".gov.br")
 
 
-def build_queries(app) -> list[tuple[str, str, str]]:
+def build_queries(app) -> list[tuple[str, str, str, str]]:
     cfg = app.settings.research
     cities = cfg["start_region"]["cities"]
+    uf_inicial = cfg["start_region"].get("state", "SP")
     out = []
     for city, (segment, templates) in itertools.product(cities, cfg["queries"].items()):
         for template in templates:
-            out.append((segment, city, template.format(city=city)))
+            out.append((segment, city, uf_inicial, template.format(city=city)))
+    national = cfg.get("national", {})
+    for (city, _uf), segment in itertools.product(national.get("cities", []), national.get("segments", [])):
+        for template in cfg["queries"].get(segment, []):
+            out.append((segment, city, _uf, template.format(city=city).replace(" SP", f" {_uf}")))
     return out
 
 
@@ -41,7 +46,7 @@ def run(app, max_queries: int | None = None) -> dict:
     limit = max_queries or int(cfg.get("max_queries_per_run", 20))
     done = {r["value"] for r in app.db.all("SELECT value FROM meta WHERE key LIKE 'query:%'")}
     stats = {"consultas": 0, "resultados": 0, "empresas_novas": 0, "duplicadas": 0, "ignoradas": 0, "enriquecidas": 0}
-    for segment, city, query in build_queries(app):
+    for segment, city, uf, query in build_queries(app):
         if stats["consultas"] >= limit:
             break
         if query in done:
@@ -68,7 +73,7 @@ def run(app, max_queries: int | None = None) -> dict:
                 continue
             name = (hit.title.split("|")[0].split(" - ")[0]).strip()[:120] or domain
             result = repository.upsert_company(app, name=name, website=f"https://{domain}", segment=segment,
-                                               segment_confidence="baixa", city=city, state="SP",
+                                               segment_confidence="baixa", city=city, state=uf,
                                                source_id=source_id)
             repository.ensure_lead(app, result.company_id)
             repository.add_evidence(app, result.company_id, kind="HIPOTESE", tag="segmento", source_id=source_id,

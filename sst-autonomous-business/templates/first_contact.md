@@ -2,7 +2,7 @@
 Modelo aprovado de contato inicial. Formato:
   marcador de variante (comentário "variant: nome"), linha "Assunto:", linha "---" e corpo.
 Variáveis disponíveis: {{greeting}} {{company_name}} {{owner_name}} {{owner_title}} {{brand_name}}
-{{segment_hook}} {{source_description}} {{signature}} {{optout_line}} {{oferta}} {{abrangencia}}
+{{segment_hook}} {{source_description}} {{signature}} {{optout_line}} {{oferta}} {{abrangencia}} {{digital_line}}
 Regras: curto, específico do segmento, remetente identificado, origem do contato informada,
 sem alegar auditoria, falha, indicação ou relação anterior. O filtro de conteúdo bloqueia violações.
 -->
@@ -14,6 +14,8 @@ Assunto: Apoio em segurança do trabalho para a {{company_name}}
 Meu nome é {{owner_name}}, sou {{owner_title}} e {{abrangencia}} com consultoria em Segurança e Saúde no Trabalho.
 
 {{segment_hook}}
+
+{{digital_line}}
 
 Não conheço a rotina de vocês por dentro, então a proposta é simples: uma conversa de 20 minutos para entender se há algo em que eu possa ajudar — {{oferta}}.
 

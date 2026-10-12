@@ -18,6 +18,25 @@ Preços **de lançamento**, pensados para serem atrativos a pequenas e médias e
 | H | Elaboração/revisão de documento técnico (a partir de) | híbrido | documento | **R$ 990** | R$ 790 | 8 | R$ 116 / R$ 91 |
 | I | Programa mensal de suporte (1 visita de até 4 h + DDS + até 3 h remoto + relatório) | presencial | mês | **R$ 1.290** | R$ 1.090 | 8 | R$ 146 / R$ 121 |
 
+### Soluções digitais (remoto — todo o Brasil)
+
+| Cód. | Serviço | Unidade | **Preço** | Mínimo | Horas | Sobra por hora* (tabela / mínimo) |
+|---|---|---|---:|---:|---:|---:|
+| J | Sistema web sob medida para SST (até 6 telas; a partir de) | projeto | **R$ 2.900** | R$ 2.400 | 30 | R$ 97 / R$ 80 |
+| K | Planilha inteligente de controle (ASO, treinamentos, EPIs, inspeções) | planilha | **R$ 490** | R$ 390 | 5 | R$ 98 / R$ 78 |
+| L | Painel Power BI + até 2 automações Power Automate | projeto | **R$ 1.490** | R$ 1.190 | 14 | R$ 106 / R$ 85 |
+| M | Apresentação profissional (até 15 slides: DDS, integração, SIPAT, diretoria) | apresentação | **R$ 390** | R$ 320 | 4 | R$ 98 / R$ 80 |
+| N | Crachás e etiquetas com QR Code (implantação + até 20 QR de equipamentos) | implantação | **R$ 690** | R$ 590 | 6 | R$ 115 / R$ 98 |
+| O | Jogo/quiz educativo de segurança (até 30 perguntas) | jogo | **R$ 790** | R$ 650 | 8 | R$ 99 / R$ 81 |
+| P | Melhoria de processo de SST (mapeamento + padrão + modelos digitais) | projeto | **R$ 1.490** | R$ 1.190 | 14 | R$ 101 / R$ 79 |
+
+Referências: planilhas avançadas R$ 300–1.000 e automações R$ 800–3.000
+([FreelaSemCrise](https://www.freelasemcrise.com.br/quanto-cobrar/automacao-planilhas)); dashboard Power BI simples
+R$ 1.500–4.000 ([FreelaSemCrise](https://www.freelasemcrise.com.br/quanto-cobrar/criar-dashboard-bi));
+desenvolvimento web a partir de R$ 2.500 ([Nuvemshop](https://www.nuvemshop.com.br/blog/quanto-custa-um-site/));
+apresentações US$ 8–50 por slide ([SlideModel](https://slidemodel.com/presentation-design-pricing/)).
+Os preços ficaram na parte de baixo de cada faixa (oferta de lançamento).
+
 \* Preço menos custos diretos estimados (deslocamento, impressão), dividido pelas horas. É o que remunera o seu
 tempo **antes de impostos** (MEI/Simples) — confira com seu contador.
 
@@ -52,3 +71,10 @@ tempo **antes de impostos** (MEI/Simples) — confira com seu contador.
 - **"Saúde e Meio Ambiente" no nome:** o catálogo oferece apenas serviços de SST compatíveis com Técnico em
   Segurança do Trabalho. PCMSO/ASO (exigem médico) e licenciamento ambiental não são ofertados pelo agente.
 - O serviço H sempre passa por validação humana (nível 3) antes de qualquer proposta.
+
+## Portfólio e direitos sobre o código
+
+- O **Emissor de crachás com QR Code** foi feito para um empregador/cliente. O agente descreve a solução de forma
+  genérica e **não cita o nome do cliente** nem reutiliza aquele código até você registrar a autorização em
+  `config/business.json → portfolio` (`cliente_pode_ser_citado`, `codigo_reutilizavel_confirmado`).
+  Para clientes novos, a solução é desenvolvida do zero ou a partir de código seu.

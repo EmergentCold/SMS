@@ -259,6 +259,226 @@
       "available": true,
       "requires_professional_validation": false,
       "delivery": "presencial"
+    },
+    "J": {
+      "name": "Sistema web sob medida para SST",
+      "ideal_client": "Empresas e consultorias de SST que controlam treinamentos, ASO, EPIs ou inspeções em papel ou planilhas soltas.",
+      "problem": "Controles de SST espalhados, sem alerta de vencimento e difíceis de consultar em campo.",
+      "deliverables": [
+        "Levantamento das telas e regras com o cliente",
+        "Sistema web responsivo (computador e celular)",
+        "Publicação e manual de uso",
+        "30 dias de ajustes após a entrega"
+      ],
+      "exclusions": [
+        "Hospedagem/domínio pagos pelo cliente",
+        "Integrações com ERP/folha não previstas",
+        "Dados pessoais armazenados em servidor de terceiros sem contrato de tratamento"
+      ],
+      "lead_time_days": 20,
+      "required_inputs": [
+        "Planilhas e formulários atuais",
+        "Fluxo de trabalho",
+        "Quem acessa e o que pode ver"
+      ],
+      "professional_requirements": "Desenvolvimento pelo proprietário (experiência própria em ferramentas digitais para SST).",
+      "recurring": false,
+      "upsell": [
+        "K",
+        "N"
+      ],
+      "acceptance_criteria": "Sistema publicado, funcionando com os dados de exemplo do cliente e manual entregue.",
+      "available": true,
+      "requires_professional_validation": false,
+      "delivery": "remoto",
+      "category": "digital"
+    },
+    "K": {
+      "name": "Planilha inteligente de controle de SST",
+      "ideal_client": "PMEs e consultorias que precisam controlar vencimentos de ASO, treinamentos (NRs), EPIs ou inspeções.",
+      "problem": "Vencimentos perdidos e informação desatualizada por falta de um controle simples e confiável.",
+      "deliverables": [
+        "Planilha Excel com cadastro, validades e status automáticos",
+        "Alertas visuais de vencimento (30/15/0 dias)",
+        "Painel resumo por setor/NR",
+        "Vídeo curto de uso"
+      ],
+      "exclusions": [
+        "Macros que dependam de sistemas externos",
+        "Lançamento dos dados históricos (orçado à parte)"
+      ],
+      "lead_time_days": 5,
+      "required_inputs": [
+        "Lista de treinamentos/ASO/EPIs controlados",
+        "Prazos de validade adotados"
+      ],
+      "professional_requirements": "Desenvolvimento pelo proprietário (experiência própria em ferramentas digitais para SST).",
+      "recurring": false,
+      "upsell": [
+        "N",
+        "L"
+      ],
+      "acceptance_criteria": "Planilha entregue e testada com 10 registros reais do cliente.",
+      "available": true,
+      "requires_professional_validation": false,
+      "delivery": "remoto",
+      "category": "digital"
+    },
+    "L": {
+      "name": "Painel Power BI e automações (Power Automate/Power Apps) para SST",
+      "ideal_client": "Empresas com Microsoft 365 que querem indicadores de SST e rotinas automáticas (alertas, aprovações).",
+      "problem": "Indicadores feitos à mão, atrasados e sem alerta automático.",
+      "deliverables": [
+        "Modelo de dados e painel Power BI (até 3 fontes, até 8 visuais)",
+        "Até 2 fluxos do Power Automate (ex.: alerta de vencimento por e-mail/Teams)",
+        "Publicação no ambiente do cliente e treinamento de 1 h"
+      ],
+      "exclusions": [
+        "Licenças Microsoft do cliente",
+        "Integrações premium/API pagas",
+        "Mais fontes ou fluxos (orçados à parte)"
+      ],
+      "lead_time_days": 15,
+      "required_inputs": [
+        "Acesso ao ambiente Microsoft 365",
+        "Fontes de dados (planilhas/sistemas)"
+      ],
+      "professional_requirements": "Desenvolvimento pelo proprietário (experiência própria em ferramentas digitais para SST).",
+      "recurring": false,
+      "upsell": [
+        "G"
+      ],
+      "acceptance_criteria": "Painel publicado e fluxos funcionando no ambiente do cliente.",
+      "available": true,
+      "requires_professional_validation": false,
+      "delivery": "remoto",
+      "category": "digital"
+    },
+    "M": {
+      "name": "Apresentações profissionais de SST",
+      "ideal_client": "Empresas e SESMTs que precisam de material para DDS, integração, SIPAT ou relatório à diretoria.",
+      "problem": "Materiais genéricos, desatualizados ou com aparência pouco profissional.",
+      "deliverables": [
+        "Apresentação PowerPoint de até 15 slides com identidade do cliente",
+        "Notas do apresentador",
+        "1 rodada de ajustes"
+      ],
+      "exclusions": [
+        "Gravação de vídeo",
+        "Tradução",
+        "Conteúdo que exija responsabilidade técnica não comprovada"
+      ],
+      "lead_time_days": 4,
+      "required_inputs": [
+        "Tema e público",
+        "Logotipo e cores",
+        "Dados a apresentar"
+      ],
+      "professional_requirements": "Desenvolvimento pelo proprietário (experiência própria em ferramentas digitais para SST).",
+      "recurring": false,
+      "upsell": [
+        "C",
+        "O"
+      ],
+      "acceptance_criteria": "Arquivo .pptx entregue e aprovado após a rodada de ajustes.",
+      "available": true,
+      "requires_professional_validation": false,
+      "delivery": "remoto",
+      "category": "digital"
+    },
+    "N": {
+      "name": "Crachás e etiquetas com QR Code para SST",
+      "ideal_client": "Empresas que querem consultar no celular a ficha de SST do colaborador (ASO, treinamentos) ou o procedimento de um equipamento.",
+      "problem": "Na portaria ou no campo, ninguém sabe se o ASO/treinamento do colaborador ou terceiro está válido.",
+      "deliverables": [
+        "Configuração do gerador de crachás com QR Code a partir da planilha do cliente",
+        "Modelo de crachá com a identidade do cliente (impressão 9 por A4)",
+        "Ficha consultável pelo QR (dados no próprio QR, sem servidor)",
+        "QR para equipamentos com checklist ou procedimento (até 20)"
+      ],
+      "exclusions": [
+        "Impressão e material dos crachás",
+        "Cadastro dos dados históricos (orçado à parte)"
+      ],
+      "lead_time_days": 7,
+      "required_inputs": [
+        "Planilha de colaboradores e validades",
+        "Logotipo",
+        "Lista de equipamentos (se houver)"
+      ],
+      "professional_requirements": "Desenvolvimento pelo proprietário (experiência própria em ferramentas digitais para SST).",
+      "recurring": false,
+      "upsell": [
+        "K",
+        "J"
+      ],
+      "acceptance_criteria": "Crachás de teste impressos e QR lidos corretamente no celular.",
+      "available": true,
+      "requires_professional_validation": false,
+      "delivery": "remoto",
+      "category": "digital"
+    },
+    "O": {
+      "name": "Jogo ou quiz educativo de segurança",
+      "ideal_client": "Empresas que querem engajar equipes em DDS, integração ou SIPAT.",
+      "problem": "Treinamentos e campanhas pouco atrativos, com baixa participação.",
+      "deliverables": [
+        "Jogo/quiz web (celular e computador) com até 30 perguntas do tema escolhido",
+        "Placar e certificado de participação simples",
+        "Identidade visual do cliente"
+      ],
+      "exclusions": [
+        "Prêmios",
+        "Hospedagem paga, se exigida pelo cliente",
+        "Validação de conteúdo normativo fora da habilitação do proprietário"
+      ],
+      "lead_time_days": 7,
+      "required_inputs": [
+        "Tema(s) e público",
+        "Logotipo e cores"
+      ],
+      "professional_requirements": "Desenvolvimento pelo proprietário (experiência própria em ferramentas digitais para SST).",
+      "recurring": false,
+      "upsell": [
+        "M",
+        "C"
+      ],
+      "acceptance_criteria": "Jogo publicado e testado em celular com 3 usuários do cliente.",
+      "available": true,
+      "requires_professional_validation": false,
+      "delivery": "remoto",
+      "category": "digital"
+    },
+    "P": {
+      "name": "Melhoria de processos de SST",
+      "ideal_client": "Empresas com rotinas de SST lentas, manuais ou dependentes de papel (permissões de trabalho, inspeções, terceiros).",
+      "problem": "Processos burocráticos que atrasam a operação e não geram registro confiável.",
+      "deliverables": [
+        "Mapeamento do processo atual (fluxograma)",
+        "Proposta de processo enxuto e padronizado",
+        "Modelos/formulários digitais",
+        "Plano de implantação"
+      ],
+      "exclusions": [
+        "Implantação de sistemas (ver serviço J)",
+        "Mudanças que exijam responsabilidade técnica não comprovada"
+      ],
+      "lead_time_days": 15,
+      "required_inputs": [
+        "Acompanhamento de 1 ciclo do processo",
+        "Documentos e formulários atuais"
+      ],
+      "professional_requirements": "Desenvolvimento pelo proprietário (experiência própria em ferramentas digitais para SST).",
+      "recurring": false,
+      "upsell": [
+        "J",
+        "K"
+      ],
+      "acceptance_criteria": "Fluxograma, padrão e modelos entregues e validados com o responsável do processo.",
+      "available": true,
+      "requires_professional_validation": false,
+      "delivery": "hibrido",
+      "category": "digital"
     }
   },
   "segments": {
@@ -271,7 +491,9 @@
         "A",
         "C",
         "I",
-        "G"
+        "G",
+        "K",
+        "N"
       ]
     },
     "centro_distribuicao": {
@@ -283,7 +505,9 @@
         "B",
         "C",
         "D",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "operador_logistico": {
@@ -295,7 +519,9 @@
         "B",
         "C",
         "D",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "armazem_galpao": {
@@ -306,7 +532,9 @@
         "A",
         "B",
         "D",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "industria": {
@@ -318,7 +546,9 @@
         "E",
         "F",
         "C",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "manutencao": {
@@ -329,7 +559,9 @@
         "C",
         "F",
         "D",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "construcao": {
@@ -340,7 +572,9 @@
         "B",
         "C",
         "F",
-        "D"
+        "D",
+        "K",
+        "N"
       ]
     },
     "condominio_empresarial": {
@@ -350,7 +584,9 @@
       "services": [
         "D",
         "B",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "terceirizada": {
@@ -360,7 +596,9 @@
       "services": [
         "C",
         "D",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "servicos_industriais": {
@@ -371,7 +609,9 @@
         "C",
         "F",
         "D",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "pme_geral": {
@@ -380,7 +620,9 @@
       "recurring": 12,
       "services": [
         "A",
-        "I"
+        "I",
+        "K",
+        "N"
       ]
     },
     "desconhecido": {
@@ -389,6 +631,19 @@
       "recurring": 5,
       "services": [
         "A"
+      ]
+    },
+    "consultoria_sst": {
+      "label": "Consultorias, clínicas e SESMTs (ferramentas digitais)",
+      "fit": 18,
+      "recurring": 10,
+      "services": [
+        "K",
+        "N",
+        "J",
+        "L",
+        "M",
+        "O"
       ]
     }
   },

@@ -159,6 +159,118 @@
       "estimated_hours": 8,
       "net_per_hour_list": 146,
       "net_per_hour_min": 121
+    },
+    "J": {
+      "status": "aprovado",
+      "unit": "projeto",
+      "list_price": 2900.0,
+      "min_price": 2400.0,
+      "operational_cost": 0.0,
+      "max_discount_pct": 10,
+      "scope_basis": "a partir de; sistema simples (até 6 telas)",
+      "reference_sources": [
+        "https://www.nuvemshop.com.br/blog/quanto-custa-um-site/"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 30,
+      "net_per_hour_list": 97,
+      "net_per_hour_min": 80
+    },
+    "K": {
+      "status": "aprovado",
+      "unit": "planilha",
+      "list_price": 490.0,
+      "min_price": 390.0,
+      "operational_cost": 0.0,
+      "max_discount_pct": 10,
+      "scope_basis": "1 planilha com até 3 controles",
+      "reference_sources": [
+        "https://www.freelasemcrise.com.br/quanto-cobrar/automacao-planilhas"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 5,
+      "net_per_hour_list": 98,
+      "net_per_hour_min": 78
+    },
+    "L": {
+      "status": "aprovado",
+      "unit": "projeto",
+      "list_price": 1490.0,
+      "min_price": 1190.0,
+      "operational_cost": 0.0,
+      "max_discount_pct": 10,
+      "scope_basis": "até 3 fontes, até 8 visuais e 2 fluxos",
+      "reference_sources": [
+        "https://www.freelasemcrise.com.br/quanto-cobrar/criar-dashboard-bi"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 14,
+      "net_per_hour_list": 106,
+      "net_per_hour_min": 85
+    },
+    "M": {
+      "status": "aprovado",
+      "unit": "apresentação",
+      "list_price": 390.0,
+      "min_price": 320.0,
+      "operational_cost": 0.0,
+      "max_discount_pct": 10,
+      "scope_basis": "até 15 slides",
+      "reference_sources": [
+        "https://slidemodel.com/presentation-design-pricing/"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 4,
+      "net_per_hour_list": 98,
+      "net_per_hour_min": 80
+    },
+    "N": {
+      "status": "aprovado",
+      "unit": "implantação",
+      "list_price": 690.0,
+      "min_price": 590.0,
+      "operational_cost": 0.0,
+      "max_discount_pct": 10,
+      "scope_basis": "configuração + modelo + até 20 QR de equipamentos",
+      "reference_sources": [
+        "https://www.freelasemcrise.com.br/quanto-cobrar/automacao-planilhas"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 6,
+      "net_per_hour_list": 115,
+      "net_per_hour_min": 98
+    },
+    "O": {
+      "status": "aprovado",
+      "unit": "jogo",
+      "list_price": 790.0,
+      "min_price": 650.0,
+      "operational_cost": 0.0,
+      "max_discount_pct": 10,
+      "scope_basis": "até 30 perguntas",
+      "reference_sources": [
+        "https://www.freelasemcrise.com.br/quanto-cobrar/automacao-planilhas"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 8,
+      "net_per_hour_list": 99,
+      "net_per_hour_min": 81
+    },
+    "P": {
+      "status": "aprovado",
+      "unit": "projeto",
+      "list_price": 1490.0,
+      "min_price": 1190.0,
+      "operational_cost": 80.0,
+      "max_discount_pct": 10,
+      "scope_basis": "1 processo",
+      "reference_sources": [
+        "estimado pela base de R$ 120/h (sem referência pública específica)"
+      ],
+      "approved_note": "definido a pedido do proprietário em 2026-10-12; revisar",
+      "estimated_hours": 14,
+      "net_per_hour_list": 101,
+      "net_per_hour_min": 79
     }
   }
 }

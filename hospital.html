@@ -248,6 +248,10 @@
   .tag.k{ background:var(--ok); }
   .arc-banner{ display:flex; align-items:center; gap:14px; width:100%; border:0; border-radius:18px; padding:16px 18px; margin-bottom:12px; color:#fff; text-align:left; background:linear-gradient(120deg,#04241a 0%,#0f5132 55%,var(--vermelho) 140%); box-shadow:var(--sh); position:relative; overflow:hidden; }
   .arc-banner:hover{ filter:brightness(1.07); }
+  .arc-titulo{ font:800 15px "Barlow",Arial,sans-serif; color:var(--soft); text-transform:uppercase; letter-spacing:.06em; margin:4px 2px 8px; }
+  .arc-duo{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:12px; margin-bottom:12px; } .arc-duo .arc-banner{ margin:0; height:100%; }
+  .arc-banner.b2{ background:linear-gradient(120deg,#1f2937 0%,#374151 50%,var(--verde) 140%); }
+  .arcade a{ color:var(--verde2); font-weight:700; }
   .arc-banner .ai{ font-size:42px; flex:none; filter:drop-shadow(0 0 10px #fde047); }
   .arc-banner .at{ flex:1; } .arc-banner small{ display:block; font-weight:800; letter-spacing:.08em; font-size:11px; color:#fde047; }
   .arc-banner b{ display:block; font:800 26px "Barlow",Arial,sans-serif; } .arc-banner .at span{ display:block; opacity:.9; font-size:14px; }
@@ -1209,10 +1213,10 @@ var FASES = [
       ] }
     ] },
   { id:'f6', nome:'Ronda Final do Plantão', hora:'19:00', ic:'🏆', cor:'#b7800b',
-    resumo:'Risco Ninja (jogo de habilidade), descarte relâmpago e perguntas de todos os setores contra o relógio.',
+    resumo:'Jogos de habilidade (Risco Ninja e Descarte em Movimento) e perguntas de todos os setores contra o relógio.',
     etapas:[
       { tipo:'ninja', tempo:60, meta:400 },
-      { tipo:'descarte', aleatorio:12, tempo:10, lixeiras:['perfuro','laranja','infect','comum','papel','plast','dados'] },
+      { tipo:'mov', tempo:60, meta:300 },
       { tipo:'quiz', aleatorio:10, tempo:20 }
     ] }
 ];
@@ -1265,7 +1269,9 @@ function telaInicio(){
   if (p){
     h += '<div class="card quem"><div class="av">' + esc(iniciais(p.nome)) + '</div><div style="flex:1"><b>' + esc(p.nome) + '</b><div class="muted">Matrícula ' + esc(p.matricula) + ' · ' + fmt(total(p)) + ' pontos · ' + nivel(total(p)).n.ic + ' ' + nivel(total(p)).n.nome + '</div></div><button class="btn sm ghost" data-act="trocar">Trocar</button></div>';
   }
-  h += '<button class="arc-banner" data-act="arcade"><span class="ai">⚡</span><span class="at"><small>NOVO · JOGO DE HABILIDADE</small><b>Risco Ninja</b><span>Deslize para cortar os riscos que voam pela tela — e não corte as proteções!</span></span><span class="ag">Jogar ▶</span></button>';
+  h += '<div class="arc-titulo">🕹️ Arcade · jogos de habilidade</div><div class="arc-duo">' +
+       '<button class="arc-banner" data-act="arcade" data-id="ninja"><span class="ai">⚡</span><span class="at"><small>CORTE OS RISCOS</small><b>Risco Ninja</b><span>Deslize para cortar os riscos que voam pela tela — e não corte as proteções!</span></span><span class="ag">Jogar ▶</span></button>' +
+       '<button class="arc-banner b2" data-act="arcade" data-id="mov"><span class="ai">🗑️</span><span class="at"><small>NOVO · ARRASTE E SOLTE</small><b>Descarte em Movimento</b><span>Os resíduos caem: arraste cada um para a lixeira certa antes que chegue embaixo!</span></span><span class="ag">Jogar ▶</span></button></div>';
   h += '<div class="menu">';
   h += '<button class="btn ok" data-act="jogar"><span>▶️</span>' + (p ? 'Continuar plantão' : 'Começar plantão') + '<small>' + (p ? 'Ir para a rotina do dia' : 'Inscreva-se e comece') + '</small></button>';
   h += '<button class="btn" data-act="inscricao"><span>📝</span>Inscrição<small>Cadastrar ou escolher colaborador</small></button>';
@@ -1346,7 +1352,7 @@ function telaMapa(){
    MOTOR DAS FASES
    ============================================================ */
 var RUN = null, stage = null;
-var NOMES_ETAPA = { ninja:'Risco Ninja', cena:'Caça aos Riscos', descarte:'Descarte Certo', ordem:'Passo a Passo', cartas:'Seguro ou Inseguro?', quiz:'Quiz' };
+var NOMES_ETAPA = { ninja:'Risco Ninja', mov:'Descarte em Movimento', cena:'Caça aos Riscos', descarte:'Descarte Certo', ordem:'Passo a Passo', cartas:'Seguro ou Inseguro?', quiz:'Quiz' };
 function iniciarFase(i){
   clearAll();
   var f = FASES[i];
@@ -1375,6 +1381,7 @@ function intro(et, go){
     ordem: ['🔢','Passo a Passo', '<b>' + (et.titulo || '') + '</b> — ' + (et.contexto || ''), ['Toque nos passos <b>na ordem correta</b>, um de cada vez.','De primeira: <b>+50</b> por passo. Depois de um erro: <b>+25</b>; depois de dois: <b>+10</b> (e mostramos o passo certo).','No final, revise o procedimento completo.']],
     cartas: ['👍','Seguro ou Inseguro?','Leia cada situação e decida se ela é segura ou insegura.',['Cada acerto vale <b>+50</b> pontos.','Leia a explicação para aprender o porquê.']],
     ninja: ['⚡','Risco Ninja','Jogo de habilidade! Os itens voam pela tela: <b>deslize o dedo (ou arraste o mouse) para CORTAR os riscos</b> e <b>NÃO corte as proteções</b>.',['🔪 Corte: agulha solta, ampola quebrada, bisturi esquecido, piso molhado sem placa, prontuário esquecido…','🛡️ Não corte: caixa de perfurocortante, caixa laranja, extintor, kit de derramamento, álcool gel, EPIs…','3 vidas ❤️: perde uma ao cortar uma proteção ou ao deixar um risco cair.','Cada risco: <b>+10</b>. Corte 3 ou mais num só movimento para fazer <b>COMBO</b>. Meta: <b>' + (et.meta || 400) + '</b> pontos em ' + (et.tempo || 60) + ' segundos.']],
+    mov: ['🗑️','Descarte em Movimento','Jogo de habilidade! Os resíduos caem do alto: <b>segure e arraste cada um até a lixeira certa</b> antes que chegue embaixo.',['Se você não arrastar, o resíduo cai na lixeira que estiver abaixo dele.','3 vidas ❤️: perde uma a cada resíduo na lixeira errada.','Cada acerto: <b>+10</b>. Acertos seguidos dão bônus de <b>sequência 🔥</b>. Meta: <b>' + (et.meta || 300) + '</b> pontos em ' + (et.tempo || 60) + ' segundos.']],
     quiz: ['❓', et.aleatorio ? 'Desafio Final' : 'Quiz', et.aleatorio ? 'Perguntas de todos os setores. Você tem ' + (et.tempo||20) + ' segundos por pergunta.' : 'Responda às perguntas sobre o setor.',['Cada acerto vale <b>+100</b> pontos.'].concat(et.tempo ? ['Responda rápido: bônus de até <b>+50</b> por pergunta!'] : [])]
   }[et.tipo];
   stage.innerHTML = '<div class="card intro"><div class="hora">🕒 ' + RUN.f.hora + ' · ' + RUN.f.nome + '</div><div class="big">' + I[0] + '</div><h2>' + I[1] + '</h2><p>' + I[2] + '</p><ul>' + I[3].map(function(l){ return '<li>' + l + '</li>'; }).join('') + '</ul><button class="btn ok big" id="goEt" style="max-width:360px">Começar ▶</button></div>';
@@ -1830,32 +1837,234 @@ ETAPAS.ninja = function(et, done){
   });
 };
 
-/* modo arcade (tela inicial) */
-function telaArcade(){
+/* ============================================================
+   DESCARTE EM MOVIMENTO — arraste cada resíduo para a lixeira certa
+   ============================================================ */
+var MOV_CURTO = { agulha:'Seringa com agulha', scalp:'Scalp / cateter', bisturi:'Lâmina de bisturi', sutura:'Agulha de sutura', lanceta:'Lanceta (HGT)', ampola:'Ampola vazia', ampolaQ:'Ampola quebrada', frascoQ:'Frasco quebrado', vencido:'Comprimido vencido', extraviado:'Remédio extraviado', gaze:'Gaze com sangue', luva:'Luva com sangue', equipo:'Equipo com sangue', toalha:'Papel toalha', resto:'Resto de lanche', guardanapo:'Guardanapo sujo', papelao:'Caixa de papelão', rascunho:'Rascunho sem dados', bula:'Bula / cartucho', copo:'Copo plástico', embalagem:'Embalagem plástica', pet:'Garrafa PET', bolha:'Plástico bolha', pulseira:'Pulseira do paciente', receita:'Receita do paciente', relatorio:'Relatório de pacientes', etiqueta:'Etiqueta de soro', guia:'Guia do convênio' };
+var MOV_LIX = ['perfuro','laranja','infect','comum','papel','plast','dados'];
+var MOV_LCURTO = { perfuro:'Perfuro', laranja:'Laranja', infect:'Infectante', comum:'Comum', papel:'Papel', plast:'Plástico', dados:'Dados' };
+var MOV_IMG = null;
+function svgImg(svg){ var im = new Image(); im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')); return im; }
+function movCarregar(){
+  if (MOV_IMG) return MOV_IMG;
+  MOV_IMG = { it:{}, lx:{} };
+  Object.keys(ITENS).forEach(function(k){ var s = svgItem(ITENS[k].svg || k); MOV_IMG.it[k] = s ? svgImg(s.replace('<svg ', '<svg width="160" height="128" ')) : null; });
+  MOV_LIX.forEach(function(k){ MOV_IMG.lx[k] = svgImg(iconeLix(k).replace('<svg ', '<svg width="120" height="128" ')); });
+  return MOV_IMG;
+}
+function rodarMov(box, op, fim){
+  var IMG = movCarregar(), tempoTotal = op.tempo || 60, vidas = op.vidas || 3, chaves = Object.keys(ITENS);
+  box.innerHTML = '<div class="nj mov"><canvas></canvas><button class="nj-pausa" title="Pausar">⏸</button><div class="nj-msg"></div></div>';
+  var wrap = box.querySelector('.nj'), cv = box.querySelector('canvas'), ctx = cv.getContext('2d'), msg = box.querySelector('.nj-msg'), btP = box.querySelector('.nj-pausa');
+  var W = 0, H = 0, R = 34, BH = 90, BW = 0, objs = [], parts = [], pops = [], brilho = {}, vivo = true, pausado = false, raf = 0, preso = null;
+  var pts = 0, certos = 0, errados = 0, seq = 0, melhorSeq = 0, log = [], t = -3.2, prox = 0, ult = 0, tremer = 0, flash = 0, ultimaK = '';
+  function medir(){
+    var w = wrap.clientWidth, h = w < 640 ? Math.min(Math.max(innerHeight - 190, 460), w * 1.6) : Math.min(w * 0.6, 640), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = w; H = h; cv.style.height = h + 'px'; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    R = Math.max(26, Math.min(44, Math.min(W, H) / 11)); BH = Math.max(86, Math.min(128, H * 0.19)); BW = W / MOV_LIX.length;
+  }
+  medir();
+  function rnd(a, b){ return a + Math.random() * (b - a); }
+  function topoLix(){ return H - BH; }
+  function lixEm(x){ return MOV_LIX[Math.max(0, Math.min(MOV_LIX.length - 1, Math.floor(x / BW)))]; }
+  function lancar(){
+    var dif = Math.min(1, Math.max(0, t) / tempoTotal), k;
+    do { k = chaves[Math.floor(Math.random() * chaves.length)]; } while (k === ultimaK && chaves.length > 1);
+    ultimaK = k;
+    objs.push({ k:k, it:ITENS[k], x:rnd(R + 8, W - R - 8), y:-R, vy:H * rnd(0.11, 0.15) * (1 + dif * 1.3), sw:rnd(0, 6.28) });
+    prox = t + Math.max(0.85, 2.1 - dif * 1.3) * rnd(0.85, 1.15);
+  }
+  function popup(txt, x, y, cor, g){ pops.push({ txt:txt, x:x, y:y, cor:cor, vida:1.1, g:g }); }
+  function aviso(html, cls){ msg.innerHTML = html; msg.className = 'nj-msg on ' + (cls || ''); clearTimeout(aviso.tm); aviso.tm = setTimeout(function(){ msg.className = 'nj-msg'; }, 2300); }
+  function avaliar(o, k){
+    o.fim = true;
+    var ok = k === o.it.l, i = MOV_LIX.indexOf(k), cx = (i + 0.5) * BW;
+    brilho[k] = { ok:ok, v:0.6 };
+    for (var n = 0; n < 14; n++) parts.push({ x:cx, y:topoLix(), vx:rnd(-180, 180), vy:rnd(-340, -80), vida:rnd(0.4, 0.8), cor:ok ? ['#22c55e','#fde047','#fff'][n % 3] : '#E1251B', r:rnd(2, 5) });
+    log.push({ k:o.k, ok:ok, foi:k });
+    if (ok){
+      certos++; seq++; melhorSeq = Math.max(melhorSeq, seq);
+      var b = seq >= 3 ? Math.min(10, 2 * (seq - 2)) : 0; pts += 10 + b; SND.ok();
+      popup('+' + (10 + b) + (seq >= 3 ? '  🔥x' + seq : ''), cx, topoLix() - 16, '#fde047', seq >= 3);
+    } else {
+      errados++; seq = 0; vidas--; tremer = 0.3; flash = 0.3; SND.bad();
+      popup('✖', cx, topoLix() - 16, '#E1251B', true);
+      aviso('❌ <b>' + (MOV_CURTO[o.k] || o.it.n) + '</b> não vai em <b>' + LIX[k].n + '</b>. Lugar certo: <b>' + LIX[o.it.l].n + '</b>. ' + o.it.e, 'bad');
+    }
+  }
+  function ponto(ev){ var r = cv.getBoundingClientRect(); return { x:ev.clientX - r.left, y:ev.clientY - r.top }; }
+  function down(ev){
+    if (!vivo || pausado || t < 0) return; ev.preventDefault();
+    var p = ponto(ev), alvo = null, d = 1e9;
+    objs.forEach(function(o){ if (o.fim) return; var dd = Math.hypot(o.x - p.x, o.y - p.y); if (dd < R * 1.35 && dd < d){ d = dd; alvo = o; } });
+    if (alvo){ preso = alvo; alvo.preso = true; alvo.dx = alvo.x - p.x; alvo.dy = alvo.y - p.y; try { cv.setPointerCapture(ev.pointerId); } catch (e) {} SND.click(); }
+  }
+  function move(ev){
+    if (!preso) return; ev.preventDefault();
+    var p = ponto(ev); preso.x = Math.max(R * 0.6, Math.min(W - R * 0.6, p.x + preso.dx)); preso.y = Math.max(R * 0.6, Math.min(H - R * 0.4, p.y + preso.dy));
+  }
+  function up(){
+    if (!preso) return;
+    var o = preso; preso = null; o.preso = false;
+    if (o.y + R * 0.2 >= topoLix()) avaliar(o, lixEm(o.x));
+    else o.vy = Math.max(o.vy * 0.6, H * 0.1);
+  }
+  cv.addEventListener('pointerdown', down); cv.addEventListener('pointermove', move); cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  function pausa(v){ pausado = v; btP.textContent = v ? '▶' : '⏸'; if (v) aviso('⏸ Pausado — toque em ▶ para continuar'); }
+  btP.onclick = function(){ if (vivo) pausa(!pausado); };
+  function vis(){ if (document.hidden && vivo) pausa(true); }
+  function rs(){ medir(); }
+  document.addEventListener('visibilitychange', vis); window.addEventListener('resize', rs);
+  CLEAN.push(function(){ vivo = false; cancelAnimationFrame(raf); document.removeEventListener('visibilitychange', vis); window.removeEventListener('resize', rs); });
+  if (DEBUG) window.__MOV = { objs:function(){ return objs; }, rect:function(){ return cv.getBoundingClientRect(); }, BW:function(){ return BW; }, topo:function(){ return topoLix(); }, lix:MOV_LIX };
+
+  function desenhaLixeiras(){
+    var ty = topoLix(), hov = preso ? lixEm(preso.x) : null;
+    ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(0, ty, W, BH);
+    MOV_LIX.forEach(function(k, i){
+      var x = i * BW, L = LIX[k], br = brilho[k], m = 4;
+      ctx.save();
+      if (br && br.v > 0 && !br.ok) ctx.translate(rnd(-4, 4), 0);
+      ctx.fillStyle = L.cor; ctx.strokeStyle = hov === k ? '#fde047' : 'rgba(0,0,0,.45)'; ctx.lineWidth = hov === k ? 4 : 2;
+      ctx.beginPath(); ctx.moveTo(x + m, ty + 10); ctx.lineTo(x + BW - m, ty + 10); ctx.lineTo(x + BW - m - 4, ty + BH - 4); ctx.lineTo(x + m + 4, ty + BH - 4); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = k === 'dados' ? '#0f172a' : L.cor; ctx.fillRect(x + m - 2, ty + 4, BW - 2 * m + 4, 9); ctx.strokeRect(x + m - 2, ty + 4, BW - 2 * m + 4, 9);
+      var im = IMG.lx[k], isz = Math.min(BW * 0.62, BH * 0.46); if (im.complete && im.naturalWidth) ctx.drawImage(im, x + BW / 2 - isz / 2, ty + 16, isz, isz * 1.06);
+      ctx.textAlign = 'center'; ctx.font = '800 ' + Math.max(10, Math.min(14, BW / 6.2)) + 'px Barlow, Arial, sans-serif';
+      ctx.fillStyle = L.tc; ctx.fillText(BW < 70 && k === 'infect' ? 'Infect.' : MOV_LCURTO[k], x + BW / 2, ty + BH - 12);
+      if (br && br.v > 0){ ctx.globalAlpha = Math.min(1, br.v * 2); ctx.fillStyle = br.ok ? 'rgba(34,197,94,.45)' : 'rgba(225,37,27,.5)'; ctx.fillRect(x + m, ty + 4, BW - 2 * m, BH - 8); ctx.globalAlpha = 1; }
+      if (hov === k){ ctx.fillStyle = 'rgba(253,224,71,.18)'; ctx.fillRect(x + m, ty + 4, BW - 2 * m, BH - 8); }
+      ctx.restore();
+    });
+  }
+  function hudDesenho(){
+    ctx.textAlign = 'left'; ctx.font = '800 ' + Math.round(Math.max(22, R * 0.7)) + 'px Barlow, Arial, sans-serif';
+    ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.strokeText('⭐ ' + pts, 14, 38); ctx.fillStyle = '#fde047'; ctx.fillText('⭐ ' + pts, 14, 38);
+    ctx.textAlign = 'right'; ctx.font = Math.round(Math.max(20, R * 0.62)) + 'px Arial'; var c = ''; for (var i = 0; i < (op.vidas || 3); i++) c += i < vidas ? '❤️' : '🖤'; ctx.fillText(c, W - 56, 36);
+    var rest = Math.max(0, tempoTotal - Math.max(0, t)), estreito = W < 560, bw = estreito ? W - 90 : Math.min(260, W * 0.4), bx = estreito ? 14 : W / 2 - bw / 2, by = estreito ? 56 : 16;
+    ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(bx, by, bw, 10); ctx.fillStyle = rest < 10 ? '#E1251B' : '#22c55e'; ctx.fillRect(bx, by, bw * rest / tempoTotal, 10);
+    ctx.font = '700 14px Barlow, Arial, sans-serif'; ctx.fillStyle = '#fff';
+    if (estreito) { ctx.textAlign = 'left'; ctx.fillText(Math.ceil(rest) + 's', bx + bw + 10, by + 10); } else { ctx.textAlign = 'center'; ctx.fillText(Math.ceil(rest) + 's', W / 2, 44); }
+    if (seq >= 3){ ctx.textAlign = 'left'; ctx.font = '800 16px Barlow, Arial, sans-serif'; ctx.fillStyle = '#fb923c'; ctx.fillText('🔥 Sequência x' + seq, 14, estreito ? 90 : 62); }
+  }
+  function quadro(agora){
+    if (!vivo) return;
+    raf = requestAnimationFrame(quadro);
+    var dt = Math.min(0.033, (agora - (ult || agora)) / 1000); ult = agora; if (pausado) dt = 0;
+    t += dt;
+    if (t >= 0 && t >= prox && t < tempoTotal && objs.filter(function(o){ return !o.fim; }).length < 5) lancar();
+    objs.forEach(function(o){
+      if (o.fim || o.preso) return;
+      o.y += o.vy * dt; o.sw += dt * 2; o.x += Math.sin(o.sw) * 12 * dt;
+      if (o.y + R * 0.2 >= topoLix()) avaliar(o, lixEm(o.x));
+    });
+    objs = objs.filter(function(o){ return !o.fim; });
+    parts.forEach(function(p){ p.vy += 700 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vida -= dt; }); parts = parts.filter(function(p){ return p.vida > 0; });
+    pops.forEach(function(p){ p.y -= 40 * dt; p.vida -= dt; }); pops = pops.filter(function(p){ return p.vida > 0; });
+    Object.keys(brilho).forEach(function(k){ brilho[k].v -= dt; });
+    tremer = Math.max(0, tremer - dt); flash = Math.max(0, flash - dt);
+    ctx.save();
+    if (tremer > 0) ctx.translate(rnd(-6, 6) * tremer * 3, rnd(-6, 6) * tremer * 3);
+    var g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0f5132'); g.addColorStop(1, '#04241a'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.setLineDash([6, 8]); ctx.lineWidth = 1;
+    for (var i = 1; i < MOV_LIX.length; i++){ ctx.beginPath(); ctx.moveTo(i * BW, 70); ctx.lineTo(i * BW, topoLix()); ctx.stroke(); }
+    ctx.setLineDash([]);
+    desenhaLixeiras();
+    objs.forEach(function(o){
+      var s = o.preso ? 1.12 : 1;
+      ctx.save(); ctx.translate(o.x, o.y);
+      if (o.preso){ ctx.shadowColor = '#fde047'; ctx.shadowBlur = 18; }
+      ctx.beginPath(); ctx.arc(0, 0, R * s, 0, 6.29); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0;
+      ctx.lineWidth = 3; ctx.strokeStyle = o.preso ? '#fde047' : 'rgba(255,255,255,.4)'; ctx.stroke();
+      var im = IMG.it[o.k];
+      if (im && im.complete && im.naturalWidth) ctx.drawImage(im, -R * 0.9 * s, -R * 0.72 * s, R * 1.8 * s, R * 1.44 * s);
+      else { ctx.font = Math.round(R) + 'px Arial'; ctx.textAlign = 'center'; ctx.fillText(o.it.ic, 0, R * 0.35); }
+      ctx.restore();
+      ctx.font = '800 ' + Math.max(11, Math.round(R * 0.34)) + 'px Barlow, Arial, sans-serif'; ctx.textAlign = 'center';
+      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.8)'; var tx = MOV_CURTO[o.k] || o.it.n, lx = Math.max(60, Math.min(W - 60, o.x));
+      ctx.strokeText(tx, lx, o.y + R + 15); ctx.fillStyle = '#fff'; ctx.fillText(tx, lx, o.y + R + 15);
+    });
+    parts.forEach(function(p){ ctx.globalAlpha = Math.min(1, p.vida * 2); ctx.fillStyle = p.cor; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.29); ctx.fill(); });
+    ctx.globalAlpha = 1;
+    pops.forEach(function(p){ ctx.globalAlpha = Math.min(1, p.vida * 1.6); ctx.font = '900 ' + (p.g ? 26 : 22) + 'px Barlow, Arial, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,.7)'; ctx.strokeText(p.txt, p.x, p.y); ctx.fillStyle = p.cor; ctx.fillText(p.txt, p.x, p.y); });
+    ctx.globalAlpha = 1;
+    if (flash > 0){ ctx.fillStyle = 'rgba(225,37,27,.25)'; ctx.fillRect(-20, -20, W + 40, H + 40); }
+    ctx.restore();
+    hudDesenho();
+    if (t < 0){
+      ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(0, 0, W, topoLix());
+      var n = Math.ceil(-t); ctx.textAlign = 'center'; ctx.fillStyle = '#fff'; ctx.font = '900 ' + Math.round(Math.min(W, H) / 4) + 'px Barlow, Arial, sans-serif'; ctx.fillText(n > 3 ? 3 : n, W / 2, H * 0.42);
+      ctx.font = '700 ' + Math.max(16, Math.round(R * 0.5)) + 'px Barlow, Arial, sans-serif'; ctx.fillText('Arraste cada resíduo para a lixeira certa', W / 2, H * 0.42 + 50);
+    }
+    if (pausado){ ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = '900 40px Barlow, Arial, sans-serif'; ctx.fillText('PAUSADO', W / 2, H / 2); }
+    if (vidas <= 0 || (t >= tempoTotal && !objs.length) || t >= tempoTotal + 8) terminar(vidas <= 0 ? 'vidas' : 'tempo');
+  }
+  function terminar(motivo){
+    if (!vivo) return; vivo = false; cancelAnimationFrame(raf);
+    document.removeEventListener('visibilitychange', vis); window.removeEventListener('resize', rs);
+    ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(0, 0, W, H); ctx.textAlign = 'center'; ctx.fillStyle = '#fff'; ctx.font = '900 ' + Math.round(Math.min(W, H) / 9) + 'px Barlow, Arial, sans-serif';
+    ctx.fillText(motivo === 'vidas' ? 'FIM DE JOGO' : 'TEMPO!', W / 2, H / 2); ctx.font = '800 28px Barlow, Arial, sans-serif'; ctx.fillStyle = '#fde047'; ctx.fillText('⭐ ' + pts + ' pontos', W / 2, H / 2 + 48);
+    motivo === 'vidas' ? SND.bad() : SND.win();
+    setTimeout(function(){ box.innerHTML = ''; fim({ pts:pts, certos:certos, errados:errados, melhorSeq:melhorSeq, motivo:motivo, log:log }); }, 900);
+  }
+  raf = requestAnimationFrame(quadro);
+}
+function resumoMov(r){
+  var erros = r.log.filter(function(l){ return !l.ok; }), vistos = {};
+  var h = '<div class="nj-res"><div class="grid4"><div><b>' + r.certos + '</b><small>no lugar certo</small></div><div><b>' + r.errados + '</b><small>no lugar errado</small></div><div><b>' + (r.melhorSeq >= 3 ? 'x' + r.melhorSeq : r.melhorSeq || '—') + '</b><small>melhor sequência</small></div></div>';
+  if (erros.length){
+    h += '<h3>📌 Para revisar</h3>';
+    erros.forEach(function(l){ if (vistos[l.k]) return; vistos[l.k] = 1; var it = ITENS[l.k];
+      h += '<div class="rz"><div class="n" style="background:var(--bad)">✖</div><div><div class="tt">' + it.n + '</div><div class="ex">Foi para: <b>' + LIX[l.foi].n + '</b> · Lugar certo: <b style="color:var(--verde2)">' + LIX[it.l].n + '</b><br>' + it.e + '</div></div></div>'; });
+  } else if (r.certos) h += '<p style="font-size:17px">🏆 Nenhum erro de descarte. Excelente!</p>';
+  return h + '</div>';
+}
+ETAPAS.mov = function(et, done){
+  var meta = et.meta || 300;
+  stage.innerHTML = '<div id="njBox"></div><div id="njFim"></div>';
+  rodarMov(document.getElementById('njBox'), { tempo:et.tempo || 60, vidas:3 }, function(r){
+    hud(r.pts);
+    var el = document.getElementById('njFim'); if (!el) return;
+    el.innerHTML = '<div class="card resumo"><h2>' + (r.motivo === 'vidas' ? '💔 Acabaram as vidas' : '⏰ Tempo esgotado!') + '</h2><p class="muted" style="margin-top:-6px">Pontos da etapa: <b>' + fmt(r.pts) + '</b> (meta: ' + meta + ')</p>' + resumoMov(r) + '<button class="btn ok big" id="njOk" style="margin-top:10px">Próxima etapa ▶</button></div>';
+    document.getElementById('njOk').onclick = function(){ done(Math.min(r.pts, meta), meta, Math.max(0, r.pts - meta)); };
+    el.scrollIntoView({ behavior:'smooth' });
+  });
+};
+
+/* modo arcade (tela inicial): Risco Ninja e Descarte em Movimento */
+var ARC = {
+  ninja: { nome:'Risco Ninja', ic:'⚡', campo:'ninja', tempo:75, rodar:function(b, o, f){ rodarNinja(b, o, f); }, resumo:function(r){ return resumoNinja(r); }, sub:'Corte os riscos · poupe as proteções',
+    texto:'Os itens voam pela tela. <b>Deslize o dedo (ou arraste o mouse) para CORTAR os riscos</b> e <b>NÃO corte as proteções</b>!',
+    regras:function(){ return '<div class="arc-regras"><div class="r"><b>🔪 Corte os riscos</b><small>' + NJ.risco.slice(0, 6).map(function(i){ return i.n; }).join(' · ') + '…</small></div><div class="p"><b>🛡️ Poupe as proteções</b><small>' + NJ.protecao.slice(0, 6).map(function(i){ return i.n; }).join(' · ') + '…</small></div></div>' +
+      '<ul><li>3 vidas ❤️: perde uma ao cortar uma proteção ou ao deixar um risco cair.</li><li>Corte 3 ou mais riscos num só movimento para fazer <b>COMBO</b>.</li><li>75 segundos, cada vez mais rápido!</li></ul>'; } },
+  mov: { nome:'Descarte em Movimento', ic:'🗑️', campo:'mov', tempo:75, rodar:function(b, o, f){ rodarMov(b, o, f); }, resumo:function(r){ return resumoMov(r); }, sub:'Arraste cada resíduo para a lixeira certa',
+    texto:'Os resíduos caem do alto. <b>Segure e arraste cada um até a lixeira certa</b> antes que chegue embaixo — se você não arrastar, ele cai na lixeira que estiver abaixo dele!',
+    regras:function(){ return '<div class="lixleg" style="max-width:760px;margin:12px auto 0;text-align:left">' + MOV_LIX.map(function(k){ return '<div><span class="li">' + iconeLix(k) + '</span><div><b>' + LIX[k].n + '</b><small>' + LIX[k].s + '</small></div></div>'; }).join('') + '</div>' +
+      '<ul><li>3 vidas ❤️: perde uma a cada resíduo na lixeira errada.</li><li>Acertos seguidos dão bônus de <b>sequência 🔥</b>.</li><li>75 segundos, caindo cada vez mais rápido!</li></ul>'; } }
+};
+function telaArcade(jogo){
   clearAll();
+  var J = ARC[jogo] || ARC.ninja; jogo = ARC[jogo] ? jogo : 'ninja';
   var p = atual(); if (!p) { toast('Faça a inscrição para salvar seu recorde.'); telaInscricao(); return; }
-  var top = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).filter(function(q){ return q.ninja && q.ninja.best; }).sort(function(a, b){ return b.ninja.best - a.ninja.best; }).slice(0, 5);
-  var exR = NJ.risco.slice(0, 6).map(function(i){ return i.n; }).join(' · '), exP = NJ.protecao.slice(0, 6).map(function(i){ return i.n; }).join(' · ');
-  var h = '<div class="card arcade"><div class="big">⚡</div><h1>Risco Ninja</h1><p>Jogo de habilidade: os itens voam pela tela. <b>Deslize o dedo (ou arraste o mouse) para CORTAR os riscos</b> e <b>NÃO corte as proteções</b>!</p>' +
-    '<div class="arc-regras"><div class="r"><b>🔪 Corte os riscos</b><small>' + exR + '…</small></div><div class="p"><b>🛡️ Poupe as proteções</b><small>' + exP + '…</small></div></div>' +
-    '<ul><li>3 vidas ❤️: perde uma ao cortar uma proteção ou ao deixar um risco cair.</li><li>Corte 3 ou mais riscos num só movimento para fazer <b>COMBO</b>.</li><li>75 segundos, cada vez mais rápido!</li></ul>' +
+  var c = J.campo, top = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).filter(function(q){ return q[c] && q[c].best; }).sort(function(a, b){ return b[c].best - a[c].best; }).slice(0, 5);
+  var outro = jogo === 'ninja' ? 'mov' : 'ninja';
+  var h = '<div class="card arcade"><div class="big">' + J.ic + '</div><h1>' + J.nome + '</h1><p>' + J.texto + '</p>' + J.regras() +
     '<div class="row" style="justify-content:center"><button class="btn ok big" id="arcGo" style="max-width:340px">▶ Jogar</button></div>' +
-    '<p class="muted" style="margin:12px 0 0">Seu recorde: <b>' + fmt((p.ninja && p.ninja.best) || 0) + '</b> pontos</p></div>';
-  if (top.length) h += '<div class="card"><h2>🏆 Top 5 do Risco Ninja</h2>' + top.map(function(q, i){ return '<div class="jg" style="cursor:default"><div class="av">' + esc(iniciais(q.nome)) + '</div><div><div class="n">' + ['🥇','🥈','🥉','4º','5º'][i] + ' ' + esc(q.nome) + '</div><div class="s">' + esc(q.setor || '') + '</div></div><div class="p">' + fmt(q.ninja.best) + '</div></div>'; }).join('') + '</div>';
+    '<p class="muted" style="margin:12px 0 0">Seu recorde: <b>' + fmt((p[c] && p[c].best) || 0) + '</b> pontos · <a href="#" data-act="arcade" data-id="' + outro + '">Experimente também o ' + ARC[outro].ic + ' ' + ARC[outro].nome + '</a></p></div>';
+  if (top.length) h += '<div class="card"><h2>🏆 Top 5 — ' + J.nome + '</h2>' + top.map(function(q, i){ return '<div class="jg" style="cursor:default"><div class="av">' + esc(iniciais(q.nome)) + '</div><div><div class="n">' + ['🥇','🥈','🥉','4º','5º'][i] + ' ' + esc(q.nome) + '</div><div class="s">' + esc(q.setor || '') + '</div></div><div class="p">' + fmt(q[c].best) + '</div></div>'; }).join('') + '</div>';
   app.innerHTML = h; scrollTo(0,0);
   document.getElementById('arcGo').onclick = function(){
     clearAll(); SND.click();
-    app.innerHTML = '<div class="hud"><button class="btn sm ghost" data-act="arcade">✕ Sair</button><div class="t"><b>⚡ Risco Ninja</b><small>Corte os riscos · poupe as proteções</small></div></div><div id="njBox"></div><div id="njFim"></div>';
+    app.innerHTML = '<div class="hud"><button class="btn sm ghost" data-act="arcade" data-id="' + jogo + '">✕ Sair</button><div class="t"><b>' + J.ic + ' ' + J.nome + '</b><small>' + J.sub + '</small></div></div><div id="njBox"></div><div id="njFim"></div>';
     scrollTo(0,0);
-    rodarNinja(document.getElementById('njBox'), { tempo:75, vidas:3 }, function(r){
+    J.rodar(document.getElementById('njBox'), { tempo:J.tempo, vidas:3 }, function(r){
       var q = DB.players[p.id]; if (!q) return;
-      var ant = (q.ninja && q.ninja.best) || 0, rec = r.pts > ant;
-      q.ninja = { best:Math.max(ant, r.pts), jogos:((q.ninja && q.ninja.jogos) || 0) + 1, ultima:hoje() }; save();
+      var ant = (q[c] && q[c].best) || 0, rec = r.pts > ant;
+      q[c] = { best:Math.max(ant, r.pts), jogos:((q[c] && q[c].jogos) || 0) + 1, ultima:hoje() }; save();
       if (rec && r.pts > 0) confete();
       var el = document.getElementById('njFim'); if (!el) return;
-      el.innerHTML = '<div class="card resumo"><h2>' + (rec && r.pts > 0 ? '🎉 Novo recorde: ' : '⭐ ') + fmt(r.pts) + ' pontos</h2><p class="muted" style="margin-top:-6px">Seu recorde: <b>' + fmt(q.ninja.best) + '</b> · Partidas: ' + q.ninja.jogos + '</p>' + resumoNinja(r) +
-        '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn ok" id="arcAgain">🔁 Jogar de novo</button><button class="btn" data-act="arcade">🏆 Ranking do Ninja</button><button class="btn ghost" data-act="inicio">🏠 Início</button></div></div>';
-      document.getElementById('arcAgain').onclick = function(){ telaArcade(); setTimeout(function(){ var b = document.getElementById('arcGo'); if (b) b.click(); }, 0); };
+      el.innerHTML = '<div class="card resumo"><h2>' + (rec && r.pts > 0 ? '🎉 Novo recorde: ' : '⭐ ') + fmt(r.pts) + ' pontos</h2><p class="muted" style="margin-top:-6px">Seu recorde: <b>' + fmt(q[c].best) + '</b> · Partidas: ' + q[c].jogos + '</p>' + J.resumo(r) +
+        '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn ok" id="arcAgain">🔁 Jogar de novo</button><button class="btn" data-act="arcade" data-id="' + jogo + '">🏆 Ranking</button><button class="btn red" data-act="arcade" data-id="' + outro + '">' + ARC[outro].ic + ' ' + ARC[outro].nome + '</button><button class="btn ghost" data-act="inicio">🏠 Início</button></div></div>';
+      document.getElementById('arcAgain').onclick = function(){ telaArcade(jogo); setTimeout(function(){ var b = document.getElementById('arcGo'); if (b) b.click(); }, 0); };
       el.scrollIntoView({ behavior:'smooth' });
     });
   };
@@ -1965,13 +2174,13 @@ function exportarCSV(){
   var lista = Object.keys(DB.players).map(function(k){ return DB.players[k]; });
   if (!lista.length) { toast('Nenhum funcionário inscrito.'); return; }
   var q = function(v){ v = String(v == null ? '' : v); if (/^[=+\-@]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
-  var cab = ['Nome','Matrícula','Setor','Turno','Função'].concat(FASES.map(function(f, i){ return 'F' + (i+1) + ' ' + f.nome + ' (pontos)'; }), FASES.map(function(f, i){ return 'F' + (i+1) + ' estrelas'; }), ['Fases concluídas','Total de pontos','Nível','Inscrição','Última atividade','Concluído em','Código do certificado','Recorde Risco Ninja']);
+  var cab = ['Nome','Matrícula','Setor','Turno','Função'].concat(FASES.map(function(f, i){ return 'F' + (i+1) + ' ' + f.nome + ' (pontos)'; }), FASES.map(function(f, i){ return 'F' + (i+1) + ' estrelas'; }), ['Fases concluídas','Total de pontos','Nível','Inscrição','Última atividade','Concluído em','Código do certificado','Recorde Risco Ninja','Recorde Descarte em Movimento']);
   var linhas = [cab.map(q).join(';')];
   lista.sort(function(a, b){ return total(b) - total(a); }).forEach(function(p){
     linhas.push([p.nome, p.matricula, p.setor, p.turno, p.funcao].concat(
       FASES.map(function(f){ var r = p.fases[f.id]; return r ? r.best : ''; }),
       FASES.map(function(f){ var r = p.fases[f.id]; return r ? r.stars : ''; }),
-      [concluidas(p), total(p), nivel(total(p)).n.nome, dataBR(p.criado), dataBR(p.ultima), p.concluido ? dataBR(p.concluido) : '', p.concluido ? codigoCert(p) : '', (p.ninja && p.ninja.best) || '']).map(q).join(';'));
+      [concluidas(p), total(p), nivel(total(p)).n.nome, dataBR(p.criado), dataBR(p.ultima), p.concluido ? dataBR(p.concluido) : '', p.concluido ? codigoCert(p) : '', (p.ninja && p.ninja.best) || '', (p.mov && p.mov.best) || '']).map(q).join(';'));
   });
   baixar('hospital-seguro-participacao-' + new Date().toISOString().slice(0,10) + '.csv', '﻿' + linhas.join('\r\n'), 'text/csv;charset=utf-8');
 }
@@ -2081,7 +2290,7 @@ var ACT = {
   mapa: telaMapa,
   ranking: function(){ telaRanking(''); },
   painel: telaPainel,
-  arcade: telaArcade,
+  arcade: function(d){ telaArcade(d.id); },
   fase: function(d){ var p = atual(); if (!p) { telaInscricao(); return; } var i = +d.i; if (!liberada(p, i)) return; iniciarFase(i); },
   sair: function(){ if (confirm('Sair da fase? O progresso desta tentativa será perdido.')) { RUN = null; telaMapa(); } },
   csv: exportarCSV,

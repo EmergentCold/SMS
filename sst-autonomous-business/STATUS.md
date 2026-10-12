@@ -32,7 +32,7 @@ desenvolvimento (contêiner Linux, Python 3.13, **sem acesso de rede às APIs ex
 | Painel JavaScript: funções e cliente da API | `cd web && npm test` (4 testes) |
 | Painel JavaScript no navegador (login, KPIs, funil, filtro, aprovação, kill switch, registro de resposta) | `npm run e2e` (Playwright/Chromium) |
 
-Resultado: **101 testes Python aprovados** (`python3 -m pytest -q`), **4 testes JavaScript aprovados**
+Resultado: **104 testes Python aprovados** (`python3 -m pytest -q`), **4 testes JavaScript aprovados**
 (`node --test`) e **teste ponta a ponta no Chromium aprovado**.
 
 ## Implementado, mas não verificado contra o serviço real (sem credencial/rede neste ambiente)
@@ -56,11 +56,35 @@ Resultado: **101 testes Python aprovados** (`python3 -m pytest -q`), **4 testes 
 | Relatório Power BI (`powerplatform/power-bi/`) | consultas M, medidas DAX e tema prontos; montar no Power BI Desktop |
 | Conector personalizado (`powerplatform/custom-connector/apiDefinition.swagger.json`) | importar; exige licença Premium e API publicada por HTTPS |
 
+## Ensaio completo (2026-10-12)
+
+Executado de ponta a ponta neste ambiente, com o agente rodando sozinho em segundo plano:
+
+| Etapa | Resultado |
+|---|---|
+| Instalador (9 etapas, modo `-SimParaTudo`, clone real do repositório) | concluído; `.env` com tokens, ponte no "OneDrive", testes 103/103 no projeto instalado, tarefas agendadas registradas com usuário `DOMINIO\usuario`, pasta da Área de Trabalho detectada com alerta de arquivo `ASO_*` e **não** copiada sem confirmação |
+| `-Remover` | remove as duas tarefas agendadas |
+| Fluxo 7 (importar leads) via pasta do OneDrive | 2 importados, 1 rejeitado por falta de origem |
+| Comando sem token da ponte | recusado |
+| Rotinas pelo painel (qualificar, prospectar) | 2 leads qualificados e autorizados; 2 mensagens aguardando aprovação |
+| Fluxo 3 (aprovações) | 2 arquivos em `aprovacoes/`; aprovar e rejeitar processados; **nenhum e-mail saiu** (envio externo desligado) |
+| Fluxo 4 (resposta do Outlook) | intenção INTERESSE, follow-ups cancelados, lead → RESPONDEU |
+| Fluxo 6 (botão de pausa) | kill switch ligado/desligado refletido no `painel.json` |
+| Painel JavaScript no navegador (cópia instalada) | aprovado |
+| Logs | 0 alertas; tokens não aparecem nos logs |
+| Encerramento (SIGTERM) | agendador e API encerrados; trava liberada |
+
+Latência observada da ponte: até ~60 s por comando (ciclo de 1 minuto), mais o tempo de sincronização do OneDrive.
+
+Bugs encontrados e corrigidos pelo ensaio: função `Python` do instalador sombreava `python.exe`; testes liam o
+`.env` real e gravavam na pasta do OneDrive; comando `api` lia o token antes de carregar o `.env` (a tarefa
+agendada da API não subiria); ponte podia ler arquivo ainda em sincronização; erro inesperado repetia a cada minuto.
+
 ## Instalador do Windows
 
-`instalar/instalar_windows.ps1`: sintaxe validada com PowerShell 7.4 e funções de `.env`/token/Python testadas
-neste ambiente Linux; **não executado em um Windows real** (winget, tarefas agendadas e OneDrive dependem do
-seu computador). O configurador de identidade tem teste automatizado.
+`instalar/instalar_windows.ps1`: ensaiado de ponta a ponta com PowerShell 7.4 (ver acima). **Ainda não executado
+em um Windows real**: `winget`, Agendador de Tarefas, `icacls`, `pythonw.exe` e a sincronização real do OneDrive
+só existem no seu computador.
 
 ## Somente interface (adaptador específico não implementado)
 Provedor B2B licenciado, CRM externo, agenda Google/Microsoft (os convites `.ics` locais funcionam),

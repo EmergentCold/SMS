@@ -212,3 +212,16 @@ def test_unsubscribed_lead_never_reopens(app):
     for target in (pipeline.QUALIFICADO, pipeline.CONTATADO, pipeline.PESQUISADO):
         with pytest.raises(pipeline.TransitionError):
             pipeline.transition(app, lead_id, target, evidence_type="score", evidence_ref=99)
+
+
+def test_new_domain_warmup_limits_first_contacts(sending):
+    sending.settings.outreach["limits"]["max_first_contacts_per_day"] = 15
+    sending.settings.outreach["limits"]["warmup"] = {"schedule": [[14, 2], [28, 10]]}
+    for i in range(4):
+        make_lead(sending, name=f"W{i}", website=f"https://w{i}-aquece.test", email=f"contato@w{i}-aquece.test")
+    result = sender.run_outreach(sending)
+    assert result["envios"].get("ENVIADA") == 2 and result["envios"].get("PRONTA") == 2
+    reason = sending.db.scalar("SELECT error FROM messages WHERE status='PRONTA' LIMIT 1")
+    assert "aquecimento do domínio" in reason
+    clock.set(datetime(2026, 10, 13, 10, 0, tzinfo=TZ) + timedelta(days=30))  # terça, fim do aquecimento
+    assert sender.first_contact_cap(sending) == (15, "")

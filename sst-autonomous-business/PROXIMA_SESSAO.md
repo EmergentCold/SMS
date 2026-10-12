@@ -26,6 +26,10 @@ escolheu: **operar a partir do PC** e **e-mail de domínio próprio**.
 2. Conferir: `python -m src.main status` e `python -m src.main integrations --offline`.
    Esperado: agendador ativo (tarefa "SST Agent"), `identidade_remetente` ok, ponte no OneDrive criada.
 
+### 1b. Domínio e e-mail
+Se o domínio ainda não estiver pronto, seguir `knowledge/dominio_e_email.md` com o proprietário (Registro.br +
+Microsoft 365 Business Basic **no tenant dele**, SPF/DKIM/DMARC). O aquecimento de envios já está configurado.
+
 ### 2. Identidade e oferta (com o proprietário)
 1. `python instalar\configurar_identidade.py --nome "..." --marca "..." --email contato@dominio --telefone "..." --horas-semana N --contratos-max N`
 2. Registro profissional: só preencher `owner.registration_number` e `registration_verified: true` se o

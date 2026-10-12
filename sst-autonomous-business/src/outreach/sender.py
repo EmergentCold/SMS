@@ -112,8 +112,9 @@ def _rate_limit_reason(app, msg, contact) -> str | None:
     if msg["kind"] == "first_contact":
         firsts = db.scalar("SELECT COUNT(*) FROM messages WHERE direction='OUT' AND status='ENVIADA' "
                            "AND kind='first_contact' AND sent_at >= ?", (day_start,))
-        if firsts >= int(limits.get("max_first_contacts_per_day", 15)):
-            return "limite diário de primeiros contatos atingido"
+        cap, warmup_note = first_contact_cap(app)
+        if firsts >= cap:
+            return f"limite diário de primeiros contatos atingido ({cap}{warmup_note})"
         domain = (contact["email"] or "").split("@")[-1]
         cooldown = iso(current - timedelta(days=int(limits.get("domain_cooldown_days", 30))))
         recent = db.scalar("SELECT COUNT(*) FROM messages m JOIN contacts c ON c.id = m.contact_id "
@@ -129,6 +130,19 @@ def _rate_limit_reason(app, msg, contact) -> str | None:
         if per_company >= int(limits.get("max_contacts_per_company", 1)):
             return "empresa já recebeu contato inicial por outro canal"
     return None
+
+
+def first_contact_cap(app) -> tuple[int, str]:
+    """Limite diário de primeiros contatos, com aquecimento do domínio a partir do 1º envio."""
+    limits = app.settings.outreach.get("limits", {})
+    cap = int(limits.get("max_first_contacts_per_day", 15))
+    first = app.db.scalar("SELECT MIN(sent_at) FROM messages WHERE direction='OUT' AND status='ENVIADA' "
+                          "AND kind='first_contact'")
+    days = (now() - parse_dt(first)).days if first else 0
+    for until_day, max_per_day in limits.get("warmup", {}).get("schedule", []):
+        if days < int(until_day):
+            return min(cap, int(max_per_day)), f"; aquecimento do domínio, dia {days + 1}"
+    return cap, ""
 
 
 def _lead_state_reason(app, msg, lead) -> str | None:

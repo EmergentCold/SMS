@@ -20,7 +20,20 @@
     "max_messages_per_hour": 10,
     "domain_cooldown_days": 30,
     "max_contacts_per_company": 1,
-    "min_score_for_contact": 60
+    "min_score_for_contact": 60,
+    "warmup": {
+      "_comment": "Aquecimento de domínio novo: dias desde o 1º contato enviado → máximo de primeiros contatos/dia. Depois, vale max_first_contacts_per_day.",
+      "schedule": [
+        [
+          14,
+          5
+        ],
+        [
+          28,
+          10
+        ]
+      ]
+    }
   },
   "business_hours": {
     "weekdays": [

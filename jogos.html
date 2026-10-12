@@ -43,6 +43,9 @@
   .menu .btn{ padding:20px 14px; font-size:18px; flex-direction:column; }
   .menu .btn span{ font-size:32px; }
   .menu .btn small{ font-weight:500; font-size:13px; opacity:.85; }
+  .logo-bar{ background:#fff; border-radius:16px; padding:14px 18px; margin-bottom:12px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .logo-bar img{ display:inline-block; width:100%; max-width:320px; height:auto; }
+  .credito{ display:flex; gap:14px; align-items:flex-start; margin-top:14px; border-left:5px solid var(--gold); }
   .quem{ display:flex; align-items:center; gap:12px; }
   .av{ width:48px; height:48px; border-radius:50%; background:var(--gold); color:var(--navy); font-weight:900; display:flex; align-items:center; justify-content:center; font-size:18px; flex:none; }
   /* forms */
@@ -172,7 +175,6 @@
   #toast.on{ opacity:1; }
   #confetti{ position:fixed; inset:0; pointer-events:none; z-index:70; }
   .foot{ text-align:center; font-size:12px; color:var(--soft); padding:8px 10px 30px; line-height:1.5; }
-  #cert{ display:none; }
   @media (max-width:560px){
     main{ padding:10px; }
     .hero h1{ font-size:24px; }
@@ -181,15 +183,8 @@
     .brand small{ display:none; }
     .hud .score{ font-size:18px; }
   }
-  @media print{
-    body{ background:#fff; }
-    body > *:not(#cert){ display:none !important; }
-    #cert{ display:block !important; }
-    @page{ size:A4 landscape; margin:8mm; }
-  }
   .certview{ max-width:900px; margin:14px auto 0; min-height:120px; display:flex; align-items:center; justify-content:center; color:var(--soft); }
   .certview img{ width:100%; height:auto; border-radius:6px; box-shadow:0 6px 24px rgba(26,37,64,.22); }
-  #cert img{ width:100%; height:auto; display:block; }
 </style>
 </head>
 <body>
@@ -201,7 +196,6 @@
 <div id="modal" class="modal hidden"><div class="mbox" id="mbox"></div></div>
 <div id="toast"></div>
 <canvas id="confetti"></canvas>
-<div id="cert"></div>
 <script>
 (function(){
 'use strict';
@@ -925,7 +919,7 @@ function heroSvg(){
 function telaInicio(){
   clearAll();
   var p = atual();
-  var h = '<div class="hero"><div class="txt"><h1>Galpão Seguro 🦺</h1><p>Jogos de segurança do trabalho para o armazém: trânsito de empilhadeiras, paleteiras, porta-paletes, picking, reversa, docas e caminho seguro. Encontre condições e comportamentos inseguros, passe de fase e acumule pontos!</p></div>' + heroSvg() + '</div>';
+  var h = '<div class="logo-bar"><img src="' + LOGO + '" alt="Emergent Cold LatAm"></div><div class="hero"><div class="txt"><h1>Galpão Seguro 🦺</h1><p>Jogos de segurança do trabalho para o armazém: trânsito de empilhadeiras, paleteiras, porta-paletes, picking, reversa, docas e caminho seguro. Encontre condições e comportamentos inseguros, passe de fase e acumule pontos!</p></div>' + heroSvg() + '</div>';
   if (p){
     h += '<div class="card quem"><div class="av">' + esc(iniciais(p.nome)) + '</div><div style="flex:1"><b>' + esc(p.nome) + '</b><div class="muted">Matrícula ' + esc(p.matricula) + ' · ' + fmt(total(p)) + ' pontos · ' + nivel(total(p)).n.ic + ' ' + nivel(total(p)).n.nome + '</div></div><button class="btn sm ghost" data-act="trocar">Trocar</button></div>';
   }
@@ -941,6 +935,7 @@ function telaInicio(){
        '<div>❓ <b>Quiz:</b> perguntas rápidas com explicação de cada resposta.</div>' +
        '<div>🚶 <b>Labirinto:</b> chegue ao posto de trabalho pelo caminho seguro, sem ser atingido.</div>' +
        '</div><p class="muted" style="margin:12px 0 0;font-size:14px"><span class="tag c">CONDIÇÃO INSEGURA</span> = falha no ambiente ou equipamento (ex.: óleo no piso). <span class="tag b">COMPORTAMENTO INSEGURO</span> = atitude da pessoa (ex.: correr, usar celular dirigindo).</p></div>';
+  h += '<div class="card credito"><div class="av" style="background:var(--navy);color:#fff">LT</div><div><div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Criação e conteúdo</div><b style="font-size:17px">Luan Tavarez</b><div class="muted">Técnico em Segurança do Trabalho</div><div style="font-size:14px;margin-top:6px;line-height:1.45">Programa Galpão Seguro, desenvolvido para conscientizar as equipes do armazém sobre condições e comportamentos inseguros na operação: trânsito de empilhadeiras, paleteiras, porta-paletes, picking, logística reversa, docas e caminho seguro.</div></div></div>';
   h += '<div class="foot">Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador. Use o Painel SST para exportar.</div>';
   app.innerHTML = h; scrollTo(0,0);
 }
@@ -1407,8 +1402,9 @@ function emitirCert(p){
   save(); return true;
 }
 function gerarCertificado(p, cb){
-  var W = 1754, H = 1240, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
-  var x = cv.getContext('2d'), serif = 'Georgia, "Times New Roman", serif', sans = '"Segoe UI", Roboto, Arial, Helvetica, sans-serif';
+  var W = 1754, H = 1240, S = 1.5, cv = document.createElement('canvas'); cv.width = W*S; cv.height = H*S;
+  var x = cv.getContext('2d'); x.scale(S, S);
+  var serif = 'Georgia, "Times New Roman", serif', sans = '"Segoe UI", Roboto, Arial, Helvetica, sans-serif';
   var img = new Image();
   img.onload = function(){ desenhar(true); }; img.onerror = function(){ desenhar(false); };
   img.src = LOGO;
@@ -1442,22 +1438,46 @@ function gerarCertificado(p, cb){
     var dt = new Date(p.cert ? p.cert.data : Date.now());
     centro('Concluído em ' + dt.toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' }), y + 26, 'bold 30px ' + sans, C_NAVY);
     // selo
-    var sx = W/2, sy = 1052;
+    var sx = W/2, sy = 1040;
     x.fillStyle = C_GOLD; x.beginPath(); for (var i = 0; i < 24; i++){ var a = i * Math.PI / 12, rr = i % 2 ? 84 : 94; x.lineTo(sx + rr*Math.cos(a), sy + rr*Math.sin(a)); } x.closePath(); x.fill();
     x.fillStyle = C_NAVY; x.beginPath(); x.arc(sx, sy, 72, 0, Math.PI*2); x.fill();
     x.strokeStyle = C_GOLD; x.lineWidth = 3; x.beginPath(); x.arc(sx, sy, 62, 0, Math.PI*2); x.stroke();
     centro('★', sy - 18, 'bold 30px ' + sans, C_GOLD);
     centro('GALPÃO', sy + 14, 'bold 21px ' + sans, '#fff');
     centro('SEGURO', sy + 38, 'bold 21px ' + sans, '#fff');
-    // assinaturas
-    x.fillStyle = '#1f2937'; x.fillRect(240, 1080, 460, 2); x.fillRect(W - 700, 1080, 460, 2);
-    x.font = '25px ' + sans; x.fillStyle = '#5b6b7f'; x.textAlign = 'center';
-    x.fillText('Colaborador(a)', 470, 1118); x.fillText('Segurança do Trabalho', W - 470, 1118);
-    x.font = '19px ' + sans; x.fillStyle = '#8a97a8';
-    x.textAlign = 'left'; x.fillText('Emergent Cold LatAm · Segurança e Saúde do Trabalho', 92, 1162);
-    x.textAlign = 'right'; x.fillText('Código: ' + (p.cert ? p.cert.codigo : '—'), W - 92, 1162);
-    cb(cv.toDataURL('image/png'));
+    // rodapé
+    x.font = '20px ' + sans; x.fillStyle = '#8a97a8';
+    x.textAlign = 'left'; x.fillText('Emergent Cold LatAm · Segurança e Saúde do Trabalho', 92, 1136);
+    x.fillStyle = '#5b6b7f'; x.fillText('Programa criado por Luan Tavarez — Técnico em Segurança do Trabalho', 92, 1164);
+    x.fillStyle = '#8a97a8'; x.textAlign = 'right'; x.fillText('Código: ' + (p.cert ? p.cert.codigo : '—'), W - 92, 1164);
+    cb(cv);
   }
+}
+function pdfDoCanvas(cv){
+  var jpg = atob(cv.toDataURL('image/jpeg', 0.92).split(',')[1]);
+  var pw = 841.89, ph = 595.28, out = '%PDF-1.4\n%\xE2\xE3\xCF\xD3\n', offs = [];
+  var cont = 'q ' + pw + ' 0 0 ' + ph + ' 0 0 cm /Im0 Do Q';
+  var objs = [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pw + ' ' + ph + '] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>',
+    '<< /Type /XObject /Subtype /Image /Width ' + cv.width + ' /Height ' + cv.height + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpg.length + ' >>\nstream\n' + jpg + '\nendstream',
+    '<< /Length ' + cont.length + ' >>\nstream\n' + cont + '\nendstream',
+    '<< /Title (Certificado Galpao Seguro) /Author (Emergent Cold LatAm) /Creator (Galpao Seguro - Luan Tavarez) >>'
+  ];
+  objs.forEach(function(o, i){ offs.push(out.length); out += (i + 1) + ' 0 obj\n' + o + '\nendobj\n'; });
+  var xref = out.length;
+  out += 'xref\n0 ' + (objs.length + 1) + '\n0000000000 65535 f \n';
+  offs.forEach(function(o){ out += ('0000000000' + o).slice(-10) + ' 00000 n \n'; });
+  out += 'trailer\n<< /Size ' + (objs.length + 1) + ' /Root 1 0 R /Info 6 0 R >>\nstartxref\n' + xref + '\n%%EOF';
+  var bytes = new Uint8Array(out.length);
+  for (var i = 0; i < out.length; i++) bytes[i] = out.charCodeAt(i) & 255;
+  return new Blob([bytes], { type:'application/pdf' });
+}
+function baixarBlob(blob, nome){
+  var url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = nome; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
 }
 function telaCertificado(id){
   clearAll();
@@ -1468,25 +1488,24 @@ function telaCertificado(id){
   app.innerHTML = '<div class="card" style="text-align:center"><div style="font-size:52px">🎓</div><h1>' + (meu ? 'Parabéns, ' + prim + '!' : 'Certificado de ' + esc(p.nome)) + '</h1>' +
     '<p class="muted" style="margin:0">' + (meu ? 'Você concluiu todas as fases do Galpão Seguro. Este certificado é seu!' : 'Concluiu todas as fases do Galpão Seguro.') + '</p>' +
     '<div class="certview" id="certView">Gerando certificado…</div>' +
-    '<div class="row" style="justify-content:center;margin-top:16px"><button class="btn ok" id="cDown" disabled>⬇️ Baixar certificado</button><button class="btn" id="cPrint" disabled>🖨️ Imprimir / salvar PDF</button><button class="btn gold" id="cShare" hidden>📤 Compartilhar</button></div>' +
+    '<div class="row" style="justify-content:center;margin-top:16px"><button class="btn ok" id="cPdf" disabled>📄 Baixar certificado em PDF</button><button class="btn" id="cImg" disabled>🖼️ Baixar imagem</button><button class="btn gold" id="cShare" hidden>📤 Compartilhar</button></div>' +
+    '<p class="muted" style="font-size:13px;margin:10px 0 0">Funciona no celular, tablet e notebook. Se o download não começar (ex.: link aberto dentro do WhatsApp), abra o jogo no Chrome ou Safari, ou use “Compartilhar”.</p>' +
     '<div class="row" style="justify-content:center;margin-top:10px">' + (meu ? '<button class="btn ghost" data-act="mapa">🗺️ Mapa de fases</button><button class="btn ghost" data-act="ranking">🏆 Ranking</button>' : '<button class="btn ghost" data-act="painel">📋 Voltar ao Painel SST</button>') + '</div></div>';
   scrollTo(0,0);
-  gerarCertificado(p, function(url){
+  gerarCertificado(p, function(cv){
     var v = document.getElementById('certView'); if (!v) return;
-    v.innerHTML = '<img alt="Certificado de ' + esc(p.nome) + '" src="' + url + '">';
-    var nomeArq = 'certificado-galpao-seguro-' + p.nome.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') + '.png';
-    var bD = document.getElementById('cDown'), bP = document.getElementById('cPrint'), bS = document.getElementById('cShare');
-    bD.disabled = bP.disabled = false;
-    bD.onclick = function(){ var a = document.createElement('a'); a.href = url; a.download = nomeArq; document.body.appendChild(a); a.click(); a.remove(); };
-    bP.onclick = function(){ document.getElementById('cert').innerHTML = '<img src="' + url + '" alt="">'; setTimeout(function(){ window.print(); }, 150); };
+    v.innerHTML = '<img alt="Certificado de ' + esc(p.nome) + '" src="' + cv.toDataURL('image/jpeg', 0.9) + '">';
+    var base = 'certificado-galpao-seguro-' + p.nome.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    var pdf = pdfDoCanvas(cv);
+    var bP = document.getElementById('cPdf'), bI = document.getElementById('cImg'), bS = document.getElementById('cShare');
+    bP.disabled = bI.disabled = false;
+    bP.onclick = function(){ baixarBlob(pdf, base + '.pdf'); toast('Certificado em PDF baixado.'); };
+    bI.onclick = function(){ cv.toBlob(function(b){ baixarBlob(b, base + '.png'); }, 'image/png'); };
     try {
-      if (navigator.canShare && window.fetch){
-        fetch(url).then(function(r){ return r.blob(); }).then(function(bl){
-          var file = new File([bl], nomeArq, { type:'image/png' });
-          if (!navigator.canShare({ files:[file] })) return;
-          bS.hidden = false;
-          bS.onclick = function(){ navigator.share({ files:[file], title:'Certificado Galpão Seguro', text:'Concluí o Galpão Seguro — Jogos de Segurança do Trabalho!' }).catch(function(){}); };
-        }).catch(function(){});
+      var file = new File([pdf], base + '.pdf', { type:'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files:[file] })){
+        bS.hidden = false;
+        bS.onclick = function(){ navigator.share({ files:[file], title:'Certificado Galpão Seguro', text:'Concluí o Galpão Seguro — Jogos de Segurança do Trabalho!' }).catch(function(){}); };
       }
     } catch (e) {}
   });

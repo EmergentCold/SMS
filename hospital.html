@@ -246,16 +246,6 @@
   .certwrap img{ width:100%; height:auto; display:block; border-radius:8px; }
   #cert img{ width:100%; height:auto; display:block; }
   .tag.k{ background:var(--ok); }
-  .arc-banner{ display:flex; align-items:center; gap:14px; width:100%; border:0; border-radius:18px; padding:16px 18px; margin-bottom:12px; color:#fff; text-align:left; background:linear-gradient(120deg,#04241a 0%,#0f5132 55%,var(--vermelho) 140%); box-shadow:var(--sh); position:relative; overflow:hidden; }
-  .arc-banner:hover{ filter:brightness(1.07); }
-  .arc-titulo{ font:800 15px "Barlow",Arial,sans-serif; color:var(--soft); text-transform:uppercase; letter-spacing:.06em; margin:4px 2px 8px; }
-  .arc-duo{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:12px; margin-bottom:12px; } .arc-duo .arc-banner{ margin:0; height:100%; }
-  .arc-banner.b2{ background:linear-gradient(120deg,#1f2937 0%,#374151 50%,var(--verde) 140%); }
-  .arcade a{ color:var(--verde2); font-weight:700; }
-  .arc-banner .ai{ font-size:42px; flex:none; filter:drop-shadow(0 0 10px #fde047); }
-  .arc-banner .at{ flex:1; } .arc-banner small{ display:block; font-weight:800; letter-spacing:.08em; font-size:11px; color:#fde047; }
-  .arc-banner b{ display:block; font:800 26px "Barlow",Arial,sans-serif; } .arc-banner .at span{ display:block; opacity:.9; font-size:14px; }
-  .arc-banner .ag{ flex:none; background:#fff; color:var(--verde3); font:800 17px "Barlow",Arial,sans-serif; border-radius:12px; padding:10px 16px; }
   .nj{ position:relative; border-radius:16px; overflow:hidden; box-shadow:var(--sh); background:#04241a; }
   .nj canvas{ display:block; width:100%; touch-action:none; user-select:none; -webkit-user-select:none; cursor:crosshair; }
   .nj-pausa{ position:absolute; top:8px; right:8px; width:40px; height:40px; border:0; border-radius:10px; background:rgba(255,255,255,.18); color:#fff; font-size:18px; }
@@ -264,12 +254,6 @@
   .nj-res .grid4{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:6px 0 10px; }
   .nj-res .grid4 > div{ background:#f6f8f7; border-radius:12px; padding:10px; text-align:center; } .nj-res .grid4 b{ display:block; font:800 26px "Barlow",Arial,sans-serif; color:var(--verde2); } .nj-res .grid4 small{ color:var(--soft); }
   .nj-res h3{ margin:14px 0 4px; }
-  .arcade{ text-align:center; } .arcade .big{ font-size:56px; } .arcade h1{ font-size:34px; color:var(--verde2); } .arcade p{ max-width:620px; margin:0 auto 10px; line-height:1.5; }
-  .arcade ul{ text-align:left; max-width:560px; margin:10px auto 14px; line-height:1.6; }
-  .arc-regras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; max-width:720px; margin:12px auto 0; text-align:left; }
-  .arc-regras > div{ border-radius:12px; padding:10px 12px; } .arc-regras b{ display:block; } .arc-regras small{ color:var(--soft); }
-  .arc-regras .r{ background:var(--badbg); border-left:5px solid var(--vermelho); } .arc-regras .p{ background:var(--okbg); border-left:5px solid var(--verde); }
-  @media (max-width:560px){ .arc-banner b{ font-size:22px; } .arc-banner .at span{ font-size:13px; } .arc-banner .ag{ padding:8px 10px; font-size:15px; } }
 </style>
 </head>
 <body>
@@ -1093,10 +1077,10 @@ var ITENS = {
    ============================================================ */
 var FASES = [
   { id:'f1', nome:'UTI e Internação', hora:'07:00', ic:'🛏️', cor:'#00983A',
-    resumo:'Passagem de plantão: agulhas, ampolas, caixa de perfurocortante e acidente com material biológico.',
+    resumo:'Passagem de plantão: agulhas, ampolas, caixa de perfurocortante e acidente com material biológico. Jogo: 🗑️ Descarte em Movimento.',
     etapas:[
       { tipo:'cena', cena:'uti' },
-      { tipo:'descarte', lixeiras:['perfuro','laranja','infect','comum'], itens:['agulha','scalp','lanceta','ampola','ampolaQ','gaze','luva','toalha'] },
+      { tipo:'mov', tempo:60, meta:250, lixeiras:['perfuro','laranja','infect','comum'], itens:['agulha','scalp','lanceta','ampola','ampolaQ','gaze','luva','equipo','toalha','resto'] },
       { tipo:'ordem', titulo:'Acidente com agulha usada', contexto:'Durante a medicação, um colega se furou com uma agulha usada no paciente. Coloque as ações na ordem correta.',
         passos:[
           { t:'Lavar o local imediatamente com água e sabão, sem espremer nem esfregar', e:'Espremer ou fazer cortes aumenta a lesão. Em mucosas (olhos, boca), lavar com água ou soro fisiológico.' },
@@ -1114,9 +1098,10 @@ var FASES = [
       ] }
     ] },
   { id:'f2', nome:'Centro Cirúrgico', hora:'10:30', ic:'🩺', cor:'#00703A',
-    resumo:'Limpeza da sala entre cirurgias: bisturis e agulhas esquecidos na mesa e embaixo da maca.',
+    resumo:'Limpeza da sala entre cirurgias: bisturis e agulhas esquecidos na mesa e embaixo da maca. Jogo: ⚡ Risco Ninja.',
     etapas:[
       { tipo:'cena', cena:'cc' },
+      { tipo:'ninja', tempo:60, meta:300, riscos:['bisturi','sutura','agulha','ampola','poca','fio','cilindro'], protecoes:['caixaPerf','placa','oculos','mascara','gel','extintor'] },
       { tipo:'ordem', titulo:'Liberação e limpeza da sala cirúrgica', contexto:'A cirurgia terminou. Coloque na ordem o jeito seguro de liberar e limpar a sala.',
         passos:[
           { t:'A equipe cirúrgica descarta lâminas, agulhas e outros perfurocortantes na caixa antes de sair', e:'Quem usa o perfurocortante é responsável por descartá-lo (NR-32).' },
@@ -1143,10 +1128,10 @@ var FASES = [
       ] }
     ] },
   { id:'f3', nome:'Farmácia', hora:'13:00', ic:'💊', cor:'#E1251B',
-    resumo:'Recebimento e dispensação: medicamento quebrado ou extraviado vai para a caixa laranja.',
+    resumo:'Recebimento e dispensação: medicamento quebrado ou extraviado vai para a caixa laranja. Jogo: 🗑️ Descarte em Movimento.',
     etapas:[
       { tipo:'cena', cena:'farmacia' },
-      { tipo:'descarte', lixeiras:['laranja','papel','plast','comum','dados'], itens:['frascoQ','vencido','extraviado','papelao','bula','bolha','receita','toalha'] },
+      { tipo:'mov', tempo:60, meta:250, lixeiras:['laranja','papel','plast','comum','dados'], itens:['frascoQ','vencido','extraviado','ampola','ampolaQ','papelao','bula','bolha','copo','receita','toalha'] },
       { tipo:'ordem', titulo:'Medicamento chegou quebrado', contexto:'Ao abrir a caixa do fornecedor, um frasco de medicamento está quebrado. Coloque na ordem.',
         passos:[
           { t:'Parar, avisar quem está perto e não pegar os cacos com as mãos', e:'Cacos cortam e o líquido pode ser irritante ou tóxico.' },
@@ -1164,9 +1149,10 @@ var FASES = [
       ] }
     ] },
   { id:'f4', nome:'Almoxarifado', hora:'15:00', ic:'📦', cor:'#4a4a4a',
-    resumo:'Produtos químicos, estantes e peso. Derramamento? Kit de derramamento nível I.',
+    resumo:'Produtos químicos, estantes e peso. Derramamento? Kit de derramamento nível I. Jogo: ⚡ Risco Ninja.',
     etapas:[
       { tipo:'cena', cena:'almox' },
+      { tipo:'ninja', tempo:60, meta:300, riscos:['quimico','poca','fio','benjamim','cilindro','pilha','frasco'], protecoes:['kit','extintor','oculos','mascara','placa','gel'] },
       { tipo:'ordem', titulo:'Derramamento químico — kit nível I', contexto:'Um galão de produto de limpeza caiu e vazou no almoxarifado. Use o kit de derramamento nível I: coloque as ações na ordem.',
         passos:[
           { t:'Avisar as pessoas próximas, isolar e sinalizar a área', e:'Primeiro proteger as pessoas: ninguém pisa no produto.' },
@@ -1193,10 +1179,10 @@ var FASES = [
       ] }
     ] },
   { id:'f5', nome:'Administrativo', hora:'17:00', ic:'🗂️', cor:'#B81C14',
-    resumo:'Dados sensíveis dos pacientes, papel e plástico no lugar certo, ergonomia e elétrica.',
+    resumo:'Dados sensíveis dos pacientes, papel e plástico no lugar certo, ergonomia e elétrica. Jogo: 🗑️ Descarte em Movimento.',
     etapas:[
       { tipo:'cena', cena:'adm' },
-      { tipo:'descarte', lixeiras:['dados','papel','plast','comum'], itens:['relatorio','pulseira','guia','rascunho','papelao','copo','pet','guardanapo'] },
+      { tipo:'mov', tempo:60, meta:250, lixeiras:['dados','papel','plast','comum'], itens:['relatorio','pulseira','guia','receita','etiqueta','rascunho','papelao','copo','pet','guardanapo','resto'] },
       { tipo:'cartas', itens:[
         { ic:'🔒', t:'Bloquear a tela do computador (Windows + L) antes de ir ao café.', ok:true, e:'Correto! Tela aberta expõe dados de pacientes.' },
         { ic:'📑', t:'Rasgar ao meio o relatório de pacientes e jogar na lixeira de papel.', ok:false, e:'Rasgado ainda dá para ler. Documento de paciente vai inteiro para a lixeira de dados sensíveis.' },
@@ -1213,7 +1199,7 @@ var FASES = [
       ] }
     ] },
   { id:'f6', nome:'Ronda Final do Plantão', hora:'19:00', ic:'🏆', cor:'#b7800b',
-    resumo:'Jogos de habilidade (Risco Ninja e Descarte em Movimento) e perguntas de todos os setores contra o relógio.',
+    resumo:'Desafio final com tudo misturado: ⚡ Risco Ninja, 🗑️ Descarte em Movimento e perguntas de todos os setores contra o relógio.',
     etapas:[
       { tipo:'ninja', tempo:60, meta:400 },
       { tipo:'mov', tempo:60, meta:300 },
@@ -1269,9 +1255,6 @@ function telaInicio(){
   if (p){
     h += '<div class="card quem"><div class="av">' + esc(iniciais(p.nome)) + '</div><div style="flex:1"><b>' + esc(p.nome) + '</b><div class="muted">Matrícula ' + esc(p.matricula) + ' · ' + fmt(total(p)) + ' pontos · ' + nivel(total(p)).n.ic + ' ' + nivel(total(p)).n.nome + '</div></div><button class="btn sm ghost" data-act="trocar">Trocar</button></div>';
   }
-  h += '<div class="arc-titulo">🕹️ Arcade · jogos de habilidade</div><div class="arc-duo">' +
-       '<button class="arc-banner" data-act="arcade" data-id="ninja"><span class="ai">⚡</span><span class="at"><small>CORTE OS RISCOS</small><b>Risco Ninja</b><span>Deslize para cortar os riscos que voam pela tela — e não corte as proteções!</span></span><span class="ag">Jogar ▶</span></button>' +
-       '<button class="arc-banner b2" data-act="arcade" data-id="mov"><span class="ai">🗑️</span><span class="at"><small>NOVO · ARRASTE E SOLTE</small><b>Descarte em Movimento</b><span>Os resíduos caem: arraste cada um para a lixeira certa antes que chegue embaixo!</span></span><span class="ag">Jogar ▶</span></button></div>';
   h += '<div class="menu">';
   h += '<button class="btn ok" data-act="jogar"><span>▶️</span>' + (p ? 'Continuar plantão' : 'Começar plantão') + '<small>' + (p ? 'Ir para a rotina do dia' : 'Inscreva-se e comece') + '</small></button>';
   h += '<button class="btn" data-act="inscricao"><span>📝</span>Inscrição<small>Cadastrar ou escolher colaborador</small></button>';
@@ -1283,6 +1266,7 @@ function telaInicio(){
        '<div><div class="ci" style="background:var(--badbg)">🗑️</div><b>Descarte Certo</b>Cada resíduo no seu lugar: perfurocortante, caixa laranja, infectante, comum, reciclável e dados sensíveis.</div>' +
        '<div><div class="ci" style="background:#eef0ef">🔢</div><b>Passo a Passo</b>Monte a sequência correta: acidente com agulha, limpeza da sala cirúrgica, medicamento quebrado e kit de derramamento.</div>' +
        '<div><div class="ci" style="background:var(--warnbg)">❓</div><b>Seguro ou Inseguro? e Quiz</b>Situações do dia a dia e perguntas com a explicação de cada resposta.</div>' +
+       '<div><div class="ci" style="background:#e8f5ec">🕹️</div><b>Jogos de habilidade nas fases</b>⚡ <b>Risco Ninja</b>: deslize para cortar os riscos sem cortar as proteções. 🗑️ <b>Descarte em Movimento</b>: arraste cada resíduo que cai para a lixeira certa.</div>' +
        '</div><div class="defs"><div class="dc"><span class="tag c">CONDIÇÃO INSEGURA</span> falha no ambiente ou equipamento. Ex.: caixa de perfurocortante cheia demais.</div><div class="db"><span class="tag b">COMPORTAMENTO INSEGURO</span> atitude da pessoa. Ex.: reencapar agulha.</div></div></div>';
   h += '<div class="card"><h2>🗑️ Onde descartar no hospital</h2><div class="lixleg">' + Object.keys(LIX).map(function(k){ return '<div><span class="li">' + iconeLix(k) + '</span><div><b>' + LIX[k].n + '</b><small>' + LIX[k].s + '</small></div></div>'; }).join('') + '</div>' +
        '<p class="muted" style="margin:10px 0 0;font-size:14px">🧪 Derramamento de produto químico: use o <b>kit de derramamento nível I</b> (bolsa com barreiras, mantas, EPIs e saco para resíduo) para fazer a contenção.</p></div>';
@@ -1380,8 +1364,8 @@ function intro(et, go){
     descarte: ['🗑️','Descarte Certo', et.aleatorio ? 'Descarte relâmpago: itens de todos os setores. Você tem ' + et.tempo + ' segundos por item!' : 'Cada resíduo no seu lugar. Leia o item e toque na lixeira ou caixa correta.', ['Cada acerto vale <b>+50</b>.'].concat(et.tempo ? ['Responda rápido: bônus de até <b>+25</b> por item!'] : ['Leia a explicação para aprender o porquê.'])],
     ordem: ['🔢','Passo a Passo', '<b>' + (et.titulo || '') + '</b> — ' + (et.contexto || ''), ['Toque nos passos <b>na ordem correta</b>, um de cada vez.','De primeira: <b>+50</b> por passo. Depois de um erro: <b>+25</b>; depois de dois: <b>+10</b> (e mostramos o passo certo).','No final, revise o procedimento completo.']],
     cartas: ['👍','Seguro ou Inseguro?','Leia cada situação e decida se ela é segura ou insegura.',['Cada acerto vale <b>+50</b> pontos.','Leia a explicação para aprender o porquê.']],
-    ninja: ['⚡','Risco Ninja','Jogo de habilidade! Os itens voam pela tela: <b>deslize o dedo (ou arraste o mouse) para CORTAR os riscos</b> e <b>NÃO corte as proteções</b>.',['🔪 Corte: agulha solta, ampola quebrada, bisturi esquecido, piso molhado sem placa, prontuário esquecido…','🛡️ Não corte: caixa de perfurocortante, caixa laranja, extintor, kit de derramamento, álcool gel, EPIs…','3 vidas ❤️: perde uma ao cortar uma proteção ou ao deixar um risco cair.','Cada risco: <b>+10</b>. Corte 3 ou mais num só movimento para fazer <b>COMBO</b>. Meta: <b>' + (et.meta || 400) + '</b> pontos em ' + (et.tempo || 60) + ' segundos.']],
-    mov: ['🗑️','Descarte em Movimento','Jogo de habilidade! Os resíduos caem do alto: <b>segure e arraste cada um até a lixeira certa</b> antes que chegue embaixo.',['Se você não arrastar, o resíduo cai na lixeira que estiver abaixo dele.','3 vidas ❤️: perde uma a cada resíduo na lixeira errada.','Cada acerto: <b>+10</b>. Acertos seguidos dão bônus de <b>sequência 🔥</b>. Meta: <b>' + (et.meta || 300) + '</b> pontos em ' + (et.tempo || 60) + ' segundos.']],
+    ninja: ['⚡','Risco Ninja','Jogo de habilidade! Os itens voam pela tela: <b>deslize o dedo (ou arraste o mouse) para CORTAR os riscos</b> e <b>NÃO corte as proteções</b>.',['🔪 Corte os riscos: ' + NJ.risco.filter(function(i){ return !et.riscos || et.riscos.indexOf(i.k) >= 0; }).map(function(i){ return i.n; }).join(', ') + '.','🛡️ Não corte as proteções: ' + NJ.protecao.filter(function(i){ return !et.protecoes || et.protecoes.indexOf(i.k) >= 0; }).map(function(i){ return i.n; }).join(', ') + '.','3 vidas ❤️: perde uma ao cortar uma proteção ou ao deixar um risco cair.','Cada risco: <b>+10</b>. Corte 3 ou mais num só movimento para fazer <b>COMBO</b>. Meta: <b>' + (et.meta || 400) + '</b> pontos em ' + (et.tempo || 60) + ' segundos.']],
+    mov: ['🗑️','Descarte em Movimento','Jogo de habilidade! Os resíduos caem do alto: <b>segure e arraste cada um até a lixeira certa</b> antes que chegue embaixo.',['Lixeiras desta fase: ' + (et.lixeiras || MOV_LIX).map(function(k){ return '<b>' + LIX[k].n + '</b>'; }).join(', ') + '.','Se você não arrastar, o resíduo cai na lixeira que estiver abaixo dele.','3 vidas ❤️: perde uma a cada resíduo na lixeira errada.','Cada acerto: <b>+10</b>. Acertos seguidos dão bônus de <b>sequência 🔥</b>. Meta: <b>' + (et.meta || 300) + '</b> pontos em ' + (et.tempo || 60) + ' segundos.']],
     quiz: ['❓', et.aleatorio ? 'Desafio Final' : 'Quiz', et.aleatorio ? 'Perguntas de todos os setores. Você tem ' + (et.tempo||20) + ' segundos por pergunta.' : 'Responda às perguntas sobre o setor.',['Cada acerto vale <b>+100</b> pontos.'].concat(et.tempo ? ['Responda rápido: bônus de até <b>+50</b> por pergunta!'] : [])]
   }[et.tipo];
   stage.innerHTML = '<div class="card intro"><div class="hora">🕒 ' + RUN.f.hora + ' · ' + RUN.f.nome + '</div><div class="big">' + I[0] + '</div><h2>' + I[1] + '</h2><p>' + I[2] + '</p><ul>' + I[3].map(function(l){ return '<li>' + l + '</li>'; }).join('') + '</ul><button class="btn ok big" id="goEt" style="max-width:360px">Começar ▶</button></div>';
@@ -1626,6 +1610,7 @@ var NJ = {
     { k:'lanche', n:'Lanche ao lado do leito', e:'Comer na área assistencial é proibido pela NR-32: risco de contaminação.', svg:function(){ return '<ellipse cx="50" cy="40" rx="36" ry="16" fill="#e7b46a" stroke="#a16207" stroke-width="2"/><rect x="14" y="46" width="72" height="8" rx="4" fill="#4ade80"/><rect x="16" y="54" width="68" height="7" rx="3" fill="#dc2626"/><ellipse cx="50" cy="66" rx="36" ry="10" fill="#e7b46a" stroke="#a16207" stroke-width="2"/><path d="M38,32 l2,-2 M52,30 l2,-2 M64,33 l2,-2" stroke="#fff7" stroke-width="2"/>'; } },
     { k:'prontuario', n:'Prontuário esquecido', e:'Dados de paciente expostos são vazamento de dados (LGPD). Guarde ou use a lixeira de dados sensíveis.', svg:function(){ return njEscala(ICO.relatorio, 1, 0, 10); } },
     { k:'benjamim', n:'Benjamim sobrecarregado', e:'Vários aparelhos num só benjamim esquentam a fiação e podem causar incêndio.', svg:function(){ return njEscala(tomada(0, 0, { benjamim:true }), 1.3, 50, 34); } },
+    { k:'pilha', n:'Pilha de caixas torta', e:'Pilha alta e desalinhada desaba sobre quem passa. Alinhe as caixas e respeite a altura máxima.', svg:function(){ return '<g transform="rotate(10 50 60)">' + caixote(24, 96, 52, 26) + caixote(30, 70, 46, 24) + caixote(20, 46, 50, 22) + '</g>'; } },
     { k:'cilindro', n:'Cilindro de O₂ solto', e:'Cilindro sem corrente pode cair, romper a válvula e virar um projétil.', svg:function(){ return '<g transform="rotate(-62 50 50)">' + njEscala(cilindro(0, 0, {}), 0.62, 50, 88) + '</g>'; } }
   ],
   protecao: [
@@ -1656,6 +1641,7 @@ SND.corte = function(){ beep(1200, .06, 'triangle', .05); setTimeout(function(){
 /* motor do jogo: box = onde desenhar; op = { tempo, vidas }; fim(resultado) */
 function rodarNinja(box, op, fim){
   var IMG = njCarregar(), tempoTotal = op.tempo || 60, vidas = op.vidas || 3;
+  var RISCOS = op.riscos ? NJ.risco.filter(function(i){ return op.riscos.indexOf(i.k) >= 0; }) : NJ.risco, PROTS = op.protecoes ? NJ.protecao.filter(function(i){ return op.protecoes.indexOf(i.k) >= 0; }) : NJ.protecao;
   box.innerHTML = '<div class="nj"><canvas></canvas><button class="nj-pausa" title="Pausar">⏸</button><div class="nj-msg"></div></div>';
   var wrap = box.querySelector('.nj'), cv = box.querySelector('canvas'), ctx = cv.getContext('2d'), msg = box.querySelector('.nj-msg'), btP = box.querySelector('.nj-pausa');
   var W = 0, H = 0, R = 40, G = 1000, objs = [], metades = [], parts = [], pops = [], rastro = [], vivo = true, pausado = false, raf = 0;
@@ -1672,7 +1658,7 @@ function rodarNinja(box, op, fim){
   function lancar(){
     var dif = Math.min(1, Math.max(0, t) / tempoTotal), n = 1 + (Math.random() < 0.35 + dif * 0.4 ? 1 : 0) + (Math.random() < dif * 0.45 ? 1 : 0);
     for (var i = 0; i < n; i++){
-      var prot = Math.random() < 0.26 + dif * 0.08, lista = prot ? NJ.protecao : NJ.risco, it = lista[Math.floor(Math.random() * lista.length)];
+      var prot = Math.random() < 0.26 + dif * 0.08, lista = prot ? PROTS : RISCOS, it = lista[Math.floor(Math.random() * lista.length)];
       var x0 = rnd(W * 0.12, W * 0.88), alt = rnd(H * 0.5, H * 0.86), vy = -Math.sqrt(2 * G * alt), tVoo = 2 * -vy / G;
       var alvo = rnd(W * 0.2, W * 0.8), vx = (alvo - x0) / tVoo;
       objs.push({ it:it, prot:prot, x:x0, y:H + R, vx:vx, vy:vy * rnd(1, 1.04), rot:rnd(0, 6.28), vr:rnd(-3, 3), cut:false });
@@ -1828,7 +1814,7 @@ function resumoNinja(r){
 ETAPAS.ninja = function(et, done){
   var meta = et.meta || 400;
   stage.innerHTML = '<div id="njBox"></div><div id="njFim"></div>';
-  rodarNinja(document.getElementById('njBox'), { tempo:et.tempo || 60, vidas:3 }, function(r){
+  rodarNinja(document.getElementById('njBox'), { tempo:et.tempo || 60, vidas:3, riscos:et.riscos, protecoes:et.protecoes }, function(r){
     hud(r.pts);
     var el = document.getElementById('njFim'); if (!el) return;
     el.innerHTML = '<div class="card resumo"><h2>' + (r.motivo === 'vidas' ? '💔 Acabaram as vidas' : '⏰ Tempo esgotado!') + '</h2><p class="muted" style="margin-top:-6px">Pontos da etapa: <b>' + fmt(r.pts) + '</b> (meta: ' + meta + ')</p>' + resumoNinja(r) + '<button class="btn ok big" id="njOk" style="margin-top:10px">Próxima etapa ▶</button></div>';
@@ -1853,7 +1839,8 @@ function movCarregar(){
   return MOV_IMG;
 }
 function rodarMov(box, op, fim){
-  var IMG = movCarregar(), tempoTotal = op.tempo || 60, vidas = op.vidas || 3, chaves = Object.keys(ITENS);
+  var IMG = movCarregar(), tempoTotal = op.tempo || 60, vidas = op.vidas || 3, LXS = op.lixeiras || MOV_LIX;
+  var chaves = (op.itens || Object.keys(ITENS)).filter(function(k){ return ITENS[k] && LXS.indexOf(ITENS[k].l) >= 0; });
   box.innerHTML = '<div class="nj mov"><canvas></canvas><button class="nj-pausa" title="Pausar">⏸</button><div class="nj-msg"></div></div>';
   var wrap = box.querySelector('.nj'), cv = box.querySelector('canvas'), ctx = cv.getContext('2d'), msg = box.querySelector('.nj-msg'), btP = box.querySelector('.nj-pausa');
   var W = 0, H = 0, R = 34, BH = 90, BW = 0, objs = [], parts = [], pops = [], brilho = {}, vivo = true, pausado = false, raf = 0, preso = null;
@@ -1861,12 +1848,12 @@ function rodarMov(box, op, fim){
   function medir(){
     var w = wrap.clientWidth, h = w < 640 ? Math.min(Math.max(innerHeight - 190, 460), w * 1.6) : Math.min(w * 0.6, 640), dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = w; H = h; cv.style.height = h + 'px'; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    R = Math.max(26, Math.min(44, Math.min(W, H) / 11)); BH = Math.max(86, Math.min(128, H * 0.19)); BW = W / MOV_LIX.length;
+    R = Math.max(26, Math.min(44, Math.min(W, H) / 11)); BH = Math.max(86, Math.min(128, H * 0.19)); BW = W / LXS.length;
   }
   medir();
   function rnd(a, b){ return a + Math.random() * (b - a); }
   function topoLix(){ return H - BH; }
-  function lixEm(x){ return MOV_LIX[Math.max(0, Math.min(MOV_LIX.length - 1, Math.floor(x / BW)))]; }
+  function lixEm(x){ return LXS[Math.max(0, Math.min(LXS.length - 1, Math.floor(x / BW)))]; }
   function lancar(){
     var dif = Math.min(1, Math.max(0, t) / tempoTotal), k;
     do { k = chaves[Math.floor(Math.random() * chaves.length)]; } while (k === ultimaK && chaves.length > 1);
@@ -1878,7 +1865,7 @@ function rodarMov(box, op, fim){
   function aviso(html, cls){ msg.innerHTML = html; msg.className = 'nj-msg on ' + (cls || ''); clearTimeout(aviso.tm); aviso.tm = setTimeout(function(){ msg.className = 'nj-msg'; }, 2300); }
   function avaliar(o, k){
     o.fim = true;
-    var ok = k === o.it.l, i = MOV_LIX.indexOf(k), cx = (i + 0.5) * BW;
+    var ok = k === o.it.l, i = LXS.indexOf(k), cx = (i + 0.5) * BW;
     brilho[k] = { ok:ok, v:0.6 };
     for (var n = 0; n < 14; n++) parts.push({ x:cx, y:topoLix(), vx:rnd(-180, 180), vy:rnd(-340, -80), vida:rnd(0.4, 0.8), cor:ok ? ['#22c55e','#fde047','#fff'][n % 3] : '#E1251B', r:rnd(2, 5) });
     log.push({ k:o.k, ok:ok, foi:k });
@@ -1916,12 +1903,12 @@ function rodarMov(box, op, fim){
   function rs(){ medir(); }
   document.addEventListener('visibilitychange', vis); window.addEventListener('resize', rs);
   CLEAN.push(function(){ vivo = false; cancelAnimationFrame(raf); document.removeEventListener('visibilitychange', vis); window.removeEventListener('resize', rs); });
-  if (DEBUG) window.__MOV = { objs:function(){ return objs; }, rect:function(){ return cv.getBoundingClientRect(); }, BW:function(){ return BW; }, topo:function(){ return topoLix(); }, lix:MOV_LIX };
+  if (DEBUG) window.__MOV = { objs:function(){ return objs; }, rect:function(){ return cv.getBoundingClientRect(); }, BW:function(){ return BW; }, topo:function(){ return topoLix(); }, lix:LXS };
 
   function desenhaLixeiras(){
     var ty = topoLix(), hov = preso ? lixEm(preso.x) : null;
     ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.fillRect(0, ty, W, BH);
-    MOV_LIX.forEach(function(k, i){
+    LXS.forEach(function(k, i){
       var x = i * BW, L = LIX[k], br = brilho[k], m = 4;
       ctx.save();
       if (br && br.v > 0 && !br.ok) ctx.translate(rnd(-4, 4), 0);
@@ -1966,7 +1953,7 @@ function rodarMov(box, op, fim){
     if (tremer > 0) ctx.translate(rnd(-6, 6) * tremer * 3, rnd(-6, 6) * tremer * 3);
     var g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0f5132'); g.addColorStop(1, '#04241a'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.setLineDash([6, 8]); ctx.lineWidth = 1;
-    for (var i = 1; i < MOV_LIX.length; i++){ ctx.beginPath(); ctx.moveTo(i * BW, 70); ctx.lineTo(i * BW, topoLix()); ctx.stroke(); }
+    for (var i = 1; i < LXS.length; i++){ ctx.beginPath(); ctx.moveTo(i * BW, 70); ctx.lineTo(i * BW, topoLix()); ctx.stroke(); }
     ctx.setLineDash([]);
     desenhaLixeiras();
     objs.forEach(function(o){
@@ -2021,7 +2008,7 @@ function resumoMov(r){
 ETAPAS.mov = function(et, done){
   var meta = et.meta || 300;
   stage.innerHTML = '<div id="njBox"></div><div id="njFim"></div>';
-  rodarMov(document.getElementById('njBox'), { tempo:et.tempo || 60, vidas:3 }, function(r){
+  rodarMov(document.getElementById('njBox'), { tempo:et.tempo || 60, vidas:3, lixeiras:et.lixeiras, itens:et.itens }, function(r){
     hud(r.pts);
     var el = document.getElementById('njFim'); if (!el) return;
     el.innerHTML = '<div class="card resumo"><h2>' + (r.motivo === 'vidas' ? '💔 Acabaram as vidas' : '⏰ Tempo esgotado!') + '</h2><p class="muted" style="margin-top:-6px">Pontos da etapa: <b>' + fmt(r.pts) + '</b> (meta: ' + meta + ')</p>' + resumoMov(r) + '<button class="btn ok big" id="njOk" style="margin-top:10px">Próxima etapa ▶</button></div>';
@@ -2029,46 +2016,6 @@ ETAPAS.mov = function(et, done){
     el.scrollIntoView({ behavior:'smooth' });
   });
 };
-
-/* modo arcade (tela inicial): Risco Ninja e Descarte em Movimento */
-var ARC = {
-  ninja: { nome:'Risco Ninja', ic:'⚡', campo:'ninja', tempo:75, rodar:function(b, o, f){ rodarNinja(b, o, f); }, resumo:function(r){ return resumoNinja(r); }, sub:'Corte os riscos · poupe as proteções',
-    texto:'Os itens voam pela tela. <b>Deslize o dedo (ou arraste o mouse) para CORTAR os riscos</b> e <b>NÃO corte as proteções</b>!',
-    regras:function(){ return '<div class="arc-regras"><div class="r"><b>🔪 Corte os riscos</b><small>' + NJ.risco.slice(0, 6).map(function(i){ return i.n; }).join(' · ') + '…</small></div><div class="p"><b>🛡️ Poupe as proteções</b><small>' + NJ.protecao.slice(0, 6).map(function(i){ return i.n; }).join(' · ') + '…</small></div></div>' +
-      '<ul><li>3 vidas ❤️: perde uma ao cortar uma proteção ou ao deixar um risco cair.</li><li>Corte 3 ou mais riscos num só movimento para fazer <b>COMBO</b>.</li><li>75 segundos, cada vez mais rápido!</li></ul>'; } },
-  mov: { nome:'Descarte em Movimento', ic:'🗑️', campo:'mov', tempo:75, rodar:function(b, o, f){ rodarMov(b, o, f); }, resumo:function(r){ return resumoMov(r); }, sub:'Arraste cada resíduo para a lixeira certa',
-    texto:'Os resíduos caem do alto. <b>Segure e arraste cada um até a lixeira certa</b> antes que chegue embaixo — se você não arrastar, ele cai na lixeira que estiver abaixo dele!',
-    regras:function(){ return '<div class="lixleg" style="max-width:760px;margin:12px auto 0;text-align:left">' + MOV_LIX.map(function(k){ return '<div><span class="li">' + iconeLix(k) + '</span><div><b>' + LIX[k].n + '</b><small>' + LIX[k].s + '</small></div></div>'; }).join('') + '</div>' +
-      '<ul><li>3 vidas ❤️: perde uma a cada resíduo na lixeira errada.</li><li>Acertos seguidos dão bônus de <b>sequência 🔥</b>.</li><li>75 segundos, caindo cada vez mais rápido!</li></ul>'; } }
-};
-function telaArcade(jogo){
-  clearAll();
-  var J = ARC[jogo] || ARC.ninja; jogo = ARC[jogo] ? jogo : 'ninja';
-  var p = atual(); if (!p) { toast('Faça a inscrição para salvar seu recorde.'); telaInscricao(); return; }
-  var c = J.campo, top = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).filter(function(q){ return q[c] && q[c].best; }).sort(function(a, b){ return b[c].best - a[c].best; }).slice(0, 5);
-  var outro = jogo === 'ninja' ? 'mov' : 'ninja';
-  var h = '<div class="card arcade"><div class="big">' + J.ic + '</div><h1>' + J.nome + '</h1><p>' + J.texto + '</p>' + J.regras() +
-    '<div class="row" style="justify-content:center"><button class="btn ok big" id="arcGo" style="max-width:340px">▶ Jogar</button></div>' +
-    '<p class="muted" style="margin:12px 0 0">Seu recorde: <b>' + fmt((p[c] && p[c].best) || 0) + '</b> pontos · <a href="#" data-act="arcade" data-id="' + outro + '">Experimente também o ' + ARC[outro].ic + ' ' + ARC[outro].nome + '</a></p></div>';
-  if (top.length) h += '<div class="card"><h2>🏆 Top 5 — ' + J.nome + '</h2>' + top.map(function(q, i){ return '<div class="jg" style="cursor:default"><div class="av">' + esc(iniciais(q.nome)) + '</div><div><div class="n">' + ['🥇','🥈','🥉','4º','5º'][i] + ' ' + esc(q.nome) + '</div><div class="s">' + esc(q.setor || '') + '</div></div><div class="p">' + fmt(q[c].best) + '</div></div>'; }).join('') + '</div>';
-  app.innerHTML = h; scrollTo(0,0);
-  document.getElementById('arcGo').onclick = function(){
-    clearAll(); SND.click();
-    app.innerHTML = '<div class="hud"><button class="btn sm ghost" data-act="arcade" data-id="' + jogo + '">✕ Sair</button><div class="t"><b>' + J.ic + ' ' + J.nome + '</b><small>' + J.sub + '</small></div></div><div id="njBox"></div><div id="njFim"></div>';
-    scrollTo(0,0);
-    J.rodar(document.getElementById('njBox'), { tempo:J.tempo, vidas:3 }, function(r){
-      var q = DB.players[p.id]; if (!q) return;
-      var ant = (q[c] && q[c].best) || 0, rec = r.pts > ant;
-      q[c] = { best:Math.max(ant, r.pts), jogos:((q[c] && q[c].jogos) || 0) + 1, ultima:hoje() }; save();
-      if (rec && r.pts > 0) confete();
-      var el = document.getElementById('njFim'); if (!el) return;
-      el.innerHTML = '<div class="card resumo"><h2>' + (rec && r.pts > 0 ? '🎉 Novo recorde: ' : '⭐ ') + fmt(r.pts) + ' pontos</h2><p class="muted" style="margin-top:-6px">Seu recorde: <b>' + fmt(q[c].best) + '</b> · Partidas: ' + q[c].jogos + '</p>' + J.resumo(r) +
-        '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn ok" id="arcAgain">🔁 Jogar de novo</button><button class="btn" data-act="arcade" data-id="' + jogo + '">🏆 Ranking</button><button class="btn red" data-act="arcade" data-id="' + outro + '">' + ARC[outro].ic + ' ' + ARC[outro].nome + '</button><button class="btn ghost" data-act="inicio">🏠 Início</button></div></div>';
-      document.getElementById('arcAgain').onclick = function(){ telaArcade(jogo); setTimeout(function(){ var b = document.getElementById('arcGo'); if (b) b.click(); }, 0); };
-      el.scrollIntoView({ behavior:'smooth' });
-    });
-  };
-}
 
 /* ---------- FIM DA FASE ---------- */
 function finalizarFase(){
@@ -2174,13 +2121,13 @@ function exportarCSV(){
   var lista = Object.keys(DB.players).map(function(k){ return DB.players[k]; });
   if (!lista.length) { toast('Nenhum funcionário inscrito.'); return; }
   var q = function(v){ v = String(v == null ? '' : v); if (/^[=+\-@]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
-  var cab = ['Nome','Matrícula','Setor','Turno','Função'].concat(FASES.map(function(f, i){ return 'F' + (i+1) + ' ' + f.nome + ' (pontos)'; }), FASES.map(function(f, i){ return 'F' + (i+1) + ' estrelas'; }), ['Fases concluídas','Total de pontos','Nível','Inscrição','Última atividade','Concluído em','Código do certificado','Recorde Risco Ninja','Recorde Descarte em Movimento']);
+  var cab = ['Nome','Matrícula','Setor','Turno','Função'].concat(FASES.map(function(f, i){ return 'F' + (i+1) + ' ' + f.nome + ' (pontos)'; }), FASES.map(function(f, i){ return 'F' + (i+1) + ' estrelas'; }), ['Fases concluídas','Total de pontos','Nível','Inscrição','Última atividade','Concluído em','Código do certificado']);
   var linhas = [cab.map(q).join(';')];
   lista.sort(function(a, b){ return total(b) - total(a); }).forEach(function(p){
     linhas.push([p.nome, p.matricula, p.setor, p.turno, p.funcao].concat(
       FASES.map(function(f){ var r = p.fases[f.id]; return r ? r.best : ''; }),
       FASES.map(function(f){ var r = p.fases[f.id]; return r ? r.stars : ''; }),
-      [concluidas(p), total(p), nivel(total(p)).n.nome, dataBR(p.criado), dataBR(p.ultima), p.concluido ? dataBR(p.concluido) : '', p.concluido ? codigoCert(p) : '', (p.ninja && p.ninja.best) || '', (p.mov && p.mov.best) || '']).map(q).join(';'));
+      [concluidas(p), total(p), nivel(total(p)).n.nome, dataBR(p.criado), dataBR(p.ultima), p.concluido ? dataBR(p.concluido) : '', p.concluido ? codigoCert(p) : '']).map(q).join(';'));
   });
   baixar('hospital-seguro-participacao-' + new Date().toISOString().slice(0,10) + '.csv', '﻿' + linhas.join('\r\n'), 'text/csv;charset=utf-8');
 }
@@ -2290,7 +2237,6 @@ var ACT = {
   mapa: telaMapa,
   ranking: function(){ telaRanking(''); },
   painel: telaPainel,
-  arcade: function(d){ telaArcade(d.id); },
   fase: function(d){ var p = atual(); if (!p) { telaInscricao(); return; } var i = +d.i; if (!liberada(p, i)) return; iniciarFase(i); },
   sair: function(){ if (confirm('Sair da fase? O progresso desta tentativa será perdido.')) { RUN = null; telaMapa(); } },
   csv: exportarCSV,

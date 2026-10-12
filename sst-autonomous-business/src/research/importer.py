@@ -18,21 +18,31 @@ REQUIRED = {"name"}
 
 
 def import_csv(app, path: Path, *, default_source_kind: str = "csv_proprietario") -> dict:
-    stats = {"linhas": 0, "empresas_novas": 0, "duplicadas": 0, "contatos": 0, "rejeitadas": 0, "erros": []}
     with open(path, encoding="utf-8-sig", newline="") as fh:
         reader = csv.DictReader(fh)
         missing = REQUIRED - set(reader.fieldnames or [])
         if missing:
             raise ValueError(f"CSV sem colunas obrigatórias: {sorted(missing)}")
-        for n, row in enumerate(reader, start=2):
-            stats["linhas"] += 1
-            row = {k: (v or "").strip() for k, v in row.items() if k}
-            try:
-                _import_row(app, row, default_source_kind, stats)
-            except ValueError as exc:
-                stats["rejeitadas"] += 1
-                stats["erros"].append(f"linha {n}: {exc}")
-    app.db.audit("importacao_csv", details={"arquivo": path.name, **{k: v for k, v in stats.items() if k != 'erros'}})
+        return import_rows(app, list(reader), source_kind=default_source_kind, origin=path.name, first_line=2)
+
+
+def import_rows(app, rows: list[dict], *, source_kind: str = "csv_proprietario", origin: str = "api",
+                first_line: int = 1) -> dict:
+    """Importa linhas já lidas (CSV, API REST ou ponte Power Automate). Mesmas regras de rastreabilidade."""
+    stats = {"linhas": 0, "empresas_novas": 0, "duplicadas": 0, "contatos": 0, "rejeitadas": 0, "erros": []}
+    for n, row in enumerate(rows, start=first_line):
+        stats["linhas"] += 1
+        if not isinstance(row, dict):
+            stats["rejeitadas"] += 1
+            stats["erros"].append(f"linha {n}: formato inválido")
+            continue
+        row = {str(k): str(v if v is not None else "").strip() for k, v in row.items() if k}
+        try:
+            _import_row(app, row, source_kind, stats)
+        except ValueError as exc:
+            stats["rejeitadas"] += 1
+            stats["erros"].append(f"linha {n}: {exc}")
+    app.db.audit("importacao_leads", details={"origem": origin, **{k: v for k, v in stats.items() if k != 'erros'}})
     return stats
 
 

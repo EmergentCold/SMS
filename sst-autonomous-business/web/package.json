@@ -1,0 +1,13 @@
+{
+  "name": "sst-agent-painel",
+  "private": true,
+  "type": "module",
+  "description": "Painel web (JavaScript puro) do SST Agent. Sem dependências de execução.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "e2e": "node tests/e2e.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}

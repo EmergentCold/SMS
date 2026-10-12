@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel SST Agent</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Painel SST Agent</h1>
+      <p class="muted" id="generated">—</p>
+    </div>
+    <div class="chips" id="chips" aria-live="polite"></div>
+    <div class="actions">
+      <button type="button" id="btn-refresh">Atualizar</button>
+      <button type="button" id="btn-kill" class="danger">Pausar envios</button>
+      <button type="button" id="btn-logout" class="ghost">Sair</button>
+    </div>
+  </header>
+
+  <main id="main" hidden>
+    <p class="banner" id="banner" hidden></p>
+
+    <section aria-labelledby="h-kpis">
+      <h2 id="h-kpis" class="visually-hidden">Indicadores</h2>
+      <div class="kpis" id="kpis"></div>
+    </section>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="h-pipeline">
+        <h2 id="h-pipeline">Pipeline</h2>
+        <ol class="bars" id="pipeline"></ol>
+      </section>
+
+      <section class="card" aria-labelledby="h-revenue">
+        <h2 id="h-revenue">Receita <span class="muted small">(categorias não se somam)</span></h2>
+        <dl class="revenue" id="revenue"></dl>
+      </section>
+    </div>
+
+    <section class="card" aria-labelledby="h-approvals">
+      <h2 id="h-approvals">Aprovações pendentes <span class="count" id="approvals-count">0</span></h2>
+      <ul class="approvals" id="approvals"></ul>
+    </section>
+
+    <section class="card" aria-labelledby="h-leads">
+      <div class="card-head">
+        <h2 id="h-leads">Leads</h2>
+        <label>Estado
+          <select id="lead-filter"><option value="">Todos</option></select>
+        </label>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Empresa</th><th>Segmento</th><th>Cidade</th><th class="num">Pontos</th><th>Estado</th><th>Próxima ação</th></tr></thead>
+          <tbody id="leads"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="h-messages">
+        <h2 id="h-messages">Mensagens recentes</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Lead</th><th>Tipo</th><th>Situação</th><th>Quando</th></tr></thead>
+            <tbody id="messages"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="h-inbound">
+        <h2 id="h-inbound">Registrar resposta recebida</h2>
+        <form id="inbound-form" class="form">
+          <label>Remetente <input name="from" type="email" required placeholder="contato@empresa.com.br"></label>
+          <label>Assunto <input name="subject" type="text"></label>
+          <label>Mensagem <textarea name="body" rows="4" required></textarea></label>
+          <button type="submit">Registrar</button>
+        </form>
+        <p class="muted small" id="inbound-result"></p>
+      </section>
+    </div>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="h-jobs">
+        <h2 id="h-jobs">Rotinas</h2>
+        <div class="jobs" id="jobs"></div>
+        <pre class="output" id="job-output" hidden></pre>
+      </section>
+      <section class="card" aria-labelledby="h-integrations">
+        <h2 id="h-integrations">Integrações pendentes</h2>
+        <ul class="plain" id="integrations"></ul>
+      </section>
+    </div>
+  </main>
+
+  <dialog id="login">
+    <form method="dialog" id="login-form" class="form">
+      <h2>Entrar</h2>
+      <p class="muted small">Informe o token da API (variável SST_API_TOKEN). Ele fica só nesta aba.</p>
+      <label>Token <input id="token" type="password" autocomplete="off" required minlength="24"></label>
+      <p class="error" id="login-error" role="alert"></p>
+      <button type="submit">Entrar</button>
+    </form>
+  </dialog>
+</body>
+</html>

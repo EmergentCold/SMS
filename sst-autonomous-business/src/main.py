@@ -20,27 +20,8 @@ def _print(data) -> None:
 
 
 def cmd_status(app, args) -> None:
-    from .compliance import permissions
-    from .scheduler import Scheduler
-
-    db = app.db
-    paused, why = permissions.is_paused(app)
-    lock = db.one("SELECT owner, heartbeat_at FROM scheduler_lock WHERE id=1")
-    _print({
-        "banco": str(app.settings.db_path),
-        "envio_externo_habilitado": app.settings.external_sending_enabled,
-        "kill_switch": {"ativo": paused, "motivo": why},
-        "identidade_configurada": app.settings.owner_identity_configured(),
-        "agendador": dict(lock) if lock else "parado",
-        "leads_por_estado": {r["status"]: r["n"] for r in db.all("SELECT status, COUNT(*) n FROM leads GROUP BY status")},
-        "mensagens_por_estado": {r["status"]: r["n"] for r in db.all(
-            "SELECT status, COUNT(*) n FROM messages WHERE direction='OUT' GROUP BY status")},
-        "aprovacoes_pendentes": db.scalar("SELECT COUNT(*) FROM approvals WHERE status='PENDENTE'"),
-        "integracoes_pendentes": [dict(r) for r in db.all("SELECT name, reason, action_needed FROM pending_integrations")],
-        "ultimos_jobs": [dict(r) for r in db.all("SELECT job_name, scheduled_for, status FROM job_runs "
-                                                 "ORDER BY id DESC LIMIT 8")],
-        "proximos_jobs": Scheduler(app, jobs={}).upcoming(),
-    })
+    from .status import status_payload
+    _print(status_payload(app))
 
 
 def cmd_integrations(app, args) -> None:
@@ -213,6 +194,31 @@ def cmd_backup(app, args) -> None:
     _print({"backup": str(app.db.backup(app.settings.data_dir / "backups", keep))})
 
 
+def cmd_api(_app, args) -> None:
+    from .api.server import serve
+    serve(lambda: build_app())
+
+
+def cmd_powerbi(app, args) -> None:
+    from .powerplatform import export
+    _print(export.export_all(app))
+
+
+def cmd_bridge(app, args) -> None:
+    from .powerplatform import bridge
+    _print(bridge.process_inbox(app))
+
+
+def cmd_openapi(_app, args) -> None:
+    from .api.openapi import build_spec
+    spec = json.dumps(build_spec(host=args.host), ensure_ascii=False, indent=2)
+    if args.output:
+        Path(args.output).write_text(spec + "\n", encoding="utf-8")
+        print(f"especificação gravada em {args.output}")
+    else:
+        print(spec)
+
+
 def cmd_simulate(_app, args) -> None:
     from . import simulation
     _print(simulation.run())
@@ -297,6 +303,11 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("stop", help="pede ao agendador para encerrar")
     sub.add_parser("backup", help="backup do banco")
     sub.add_parser("simulate", help="simulação ponta a ponta sem envio externo")
+    sub.add_parser("api", help="inicia a API REST + painel JavaScript (exige SST_API_TOKEN)")
+    sub.add_parser("powerbi-export", help="exporta CSVs e painel.json para Power BI/Power Apps")
+    sub.add_parser("bridge", help="processa comandos do Power Automate na pasta inbox/")
+    s = sub.add_parser("openapi", help="gera a especificação do conector personalizado")
+    s.add_argument("--host"); s.add_argument("--output")
     return p
 
 
@@ -306,14 +317,18 @@ HANDLERS = {
     "messages": cmd_messages, "inbound": cmd_inbound, "proposal": cmd_proposal, "meeting": cmd_meeting,
     "contract": cmd_contract, "finance": cmd_finance, "report": cmd_report, "kill-switch": cmd_kill,
     "lgpd": cmd_lgpd, "job": cmd_job, "daemon": cmd_daemon, "run-once": cmd_run_once, "stop": cmd_stop,
-    "backup": cmd_backup, "simulate": cmd_simulate,
+    "backup": cmd_backup, "simulate": cmd_simulate, "powerbi-export": cmd_powerbi, "bridge": cmd_bridge,
 }
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.cmd == "simulate":
-        cmd_simulate(None, args)
+    if args.cmd in ("simulate", "api", "openapi"):
+        try:
+            {"simulate": cmd_simulate, "api": cmd_api, "openapi": cmd_openapi}[args.cmd](None, args)
+        except RuntimeError as exc:
+            print(f"erro: {exc}", file=sys.stderr)
+            return 2
         return 0
     app = build_app()
     try:

@@ -1,0 +1,904 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SST Agent",
+    "version": "0.2.0",
+    "description": "Agente comercial de consultoria em SST: leads, aprovações, respostas, kill switch e indicadores. Todas as ações respeitam os níveis de autonomia do agente."
+  },
+  "host": "sst.seudominio.com.br",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-API-Key"
+    }
+  },
+  "security": [
+    {
+      "api_key": []
+    }
+  ],
+  "paths": {
+    "/api/painel": {
+      "get": {
+        "operationId": "ObterPainel",
+        "summary": "Painel",
+        "description": "KPIs, pipeline, aprovações pendentes e leads.",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Painel"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    },
+    "/api/leads": {
+      "get": {
+        "operationId": "ListarLeads",
+        "summary": "Listar leads",
+        "description": "Leads ordenados por pontuação.",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Filtrar por estado",
+            "x-ms-summary": "Estado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Lead"
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    },
+    "/api/leads/import": {
+      "post": {
+        "operationId": "ImportarLeads",
+        "summary": "Importar leads",
+        "description": "Importa leads com origem rastreável (mesmas regras do CSV).",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Importacao"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultadoImportacao"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    },
+    "/api/approvals": {
+      "get": {
+        "operationId": "ListarAprovacoes",
+        "summary": "Listar aprovações",
+        "description": "Pendências do proprietário (padrão: PENDENTE).",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Filtrar por estado",
+            "x-ms-summary": "Estado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Aprovacao"
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    },
+    "/api/approvals/{approval_id}/decision": {
+      "post": {
+        "operationId": "DecidirAprovacao",
+        "summary": "Aprovar ou rejeitar",
+        "description": "Registra a decisão do proprietário.",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [
+          {
+            "name": "approval_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID da aprovação",
+            "x-ms-summary": "ID da aprovação"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Decisao"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultadoDecisao"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    },
+    "/api/messages": {
+      "get": {
+        "operationId": "ListarMensagens",
+        "summary": "Listar mensagens",
+        "description": "Últimas mensagens.",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Filtrar por estado",
+            "x-ms-summary": "Estado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Mensagem"
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    },
+    "/api/inbound": {
+      "post": {
+        "operationId": "RegistrarResposta",
+        "summary": "Registrar resposta recebida",
+        "description": "Envia ao agente um e-mail recebido (ex.: gatilho do Outlook).",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Inbound"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultadoInbound"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    },
+    "/api/kill-switch": {
+      "post": {
+        "operationId": "KillSwitch",
+        "summary": "Pausar/retomar envios",
+        "description": "Liga ou desliga o interruptor de emergência dos envios externos.",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/KillSwitch"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultadoKillSwitch"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{name}": {
+      "post": {
+        "operationId": "ExecutarRotina",
+        "summary": "Executar rotina",
+        "description": "qualify, outreach, followups, daily_report, weekly_report, powerbi_export ou recover.",
+        "tags": [
+          "Agente"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "qualify",
+              "outreach",
+              "followups",
+              "daily_report",
+              "weekly_report",
+              "powerbi_export",
+              "recover"
+            ],
+            "x-ms-summary": "Rotina"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          },
+          "401": {
+            "description": "Token inválido",
+            "schema": {
+              "$ref": "#/definitions/Erro"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Lead": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "ID do lead"
+        },
+        "empresa": {
+          "type": "string",
+          "description": "Empresa"
+        },
+        "segmento": {
+          "type": "string",
+          "description": "Segmento"
+        },
+        "cidade": {
+          "type": "string",
+          "description": "Cidade"
+        },
+        "pontuacao": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Pontuação 0-100"
+        },
+        "prioridade": {
+          "type": "string",
+          "description": "Prioridade"
+        },
+        "status": {
+          "type": "string",
+          "description": "Estado no pipeline"
+        },
+        "status_rotulo": {
+          "type": "string",
+          "description": "Estado (rótulo)"
+        },
+        "proxima_acao": {
+          "type": "string",
+          "description": "Próxima ação"
+        },
+        "atualizado_em": {
+          "type": "string",
+          "description": "Atualizado em",
+          "format": "date-time"
+        }
+      }
+    },
+    "Aprovacao": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "ID da aprovação"
+        },
+        "action": {
+          "type": "string",
+          "description": "Ação"
+        },
+        "level": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Nível de autonomia"
+        },
+        "subject_type": {
+          "type": "string",
+          "description": "Tipo do assunto"
+        },
+        "subject_id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "ID do assunto"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Resumo"
+        },
+        "status": {
+          "type": "string",
+          "description": "Situação"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Criado em",
+          "format": "date-time"
+        }
+      }
+    },
+    "Decisao": {
+      "type": "object",
+      "required": [
+        "approve"
+      ],
+      "properties": {
+        "approve": {
+          "type": "boolean",
+          "description": "true aprova, false rejeita",
+          "x-ms-summary": "Aprovar?"
+        },
+        "note": {
+          "type": "string",
+          "description": "Observação",
+          "x-ms-summary": "Observação"
+        },
+        "by": {
+          "type": "string",
+          "description": "Quem decidiu (e-mail)",
+          "x-ms-summary": "Decidido por"
+        }
+      }
+    },
+    "ResultadoDecisao": {
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "ID"
+        },
+        "status": {
+          "type": "string",
+          "description": "APROVADO ou REJEITADO"
+        }
+      }
+    },
+    "KillSwitch": {
+      "type": "object",
+      "required": [
+        "on"
+      ],
+      "properties": {
+        "on": {
+          "type": "boolean",
+          "description": "true pausa os envios externos",
+          "x-ms-summary": "Pausar envios?"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Motivo",
+          "x-ms-summary": "Motivo"
+        },
+        "by": {
+          "type": "string",
+          "description": "Quem acionou",
+          "x-ms-summary": "Acionado por"
+        }
+      }
+    },
+    "ResultadoKillSwitch": {
+      "type": "object",
+      "properties": {
+        "envios_pausados": {
+          "type": "boolean"
+        },
+        "motivo": {
+          "type": "string",
+          "description": "Motivo"
+        }
+      }
+    },
+    "Inbound": {
+      "type": "object",
+      "required": [
+        "from",
+        "body"
+      ],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "E-mail do remetente",
+          "x-ms-summary": "Remetente"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Assunto",
+          "x-ms-summary": "Assunto"
+        },
+        "body": {
+          "type": "string",
+          "description": "Corpo em texto",
+          "x-ms-summary": "Corpo"
+        },
+        "message_id": {
+          "type": "string",
+          "description": "Internet Message-ID",
+          "x-ms-summary": "ID da mensagem"
+        },
+        "in_reply_to": {
+          "type": "string",
+          "description": "In-Reply-To",
+          "x-ms-summary": "Em resposta a"
+        }
+      }
+    },
+    "ResultadoInbound": {
+      "type": "object",
+      "properties": {
+        "message_id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "ID interno"
+        },
+        "intent": {
+          "type": "string",
+          "description": "Intenção detectada"
+        },
+        "lead_id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Lead"
+        },
+        "acoes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string",
+          "description": "duplicada, se repetida"
+        }
+      }
+    },
+    "Importacao": {
+      "type": "object",
+      "required": [
+        "rows"
+      ],
+      "properties": {
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Empresa"
+              },
+              "website": {
+                "type": "string",
+                "description": "Site oficial"
+              },
+              "segment": {
+                "type": "string",
+                "description": "Segmento (config/services.json)"
+              },
+              "city": {
+                "type": "string",
+                "description": "Cidade"
+              },
+              "state": {
+                "type": "string",
+                "description": "UF"
+              },
+              "cnpj": {
+                "type": "string",
+                "description": "CNPJ"
+              },
+              "contact_email": {
+                "type": "string",
+                "description": "E-mail comercial"
+              },
+              "contact_type": {
+                "type": "string",
+                "description": "generic_corporate, named_professional, inbound_request, referral_authorized"
+              },
+              "source_url": {
+                "type": "string",
+                "description": "URL de origem (obrigatório se não houver descrição)"
+              },
+              "source_description": {
+                "type": "string",
+                "description": "Descrição da origem"
+              },
+              "legal_basis": {
+                "type": "string",
+                "description": "legitimo_interesse | consentimento"
+              },
+              "facts": {
+                "type": "string",
+                "description": "Fatos 'tag: afirmação' separados por |"
+              }
+            }
+          }
+        },
+        "by": {
+          "type": "string",
+          "description": "Quem importou"
+        }
+      }
+    },
+    "ResultadoImportacao": {
+      "type": "object",
+      "properties": {
+        "linhas": {
+          "type": "integer",
+          "format": "int32",
+          "description": ""
+        },
+        "empresas_novas": {
+          "type": "integer",
+          "format": "int32",
+          "description": ""
+        },
+        "duplicadas": {
+          "type": "integer",
+          "format": "int32",
+          "description": ""
+        },
+        "contatos": {
+          "type": "integer",
+          "format": "int32",
+          "description": ""
+        },
+        "rejeitadas": {
+          "type": "integer",
+          "format": "int32",
+          "description": ""
+        },
+        "erros": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Mensagem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "ID"
+        },
+        "lead_id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Lead"
+        },
+        "direction": {
+          "type": "string",
+          "description": "OUT/IN"
+        },
+        "kind": {
+          "type": "string",
+          "description": "Tipo"
+        },
+        "status": {
+          "type": "string",
+          "description": "Situação"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Assunto"
+        },
+        "error": {
+          "type": "string",
+          "description": "Motivo/erro"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Criada em"
+        },
+        "sent_at": {
+          "type": "string",
+          "description": "Enviada em"
+        }
+      }
+    },
+    "Painel": {
+      "type": "object",
+      "properties": {
+        "gerado_em": {
+          "type": "string",
+          "description": "Gerado em"
+        },
+        "envio_externo_habilitado": {
+          "type": "boolean"
+        },
+        "kill_switch": {
+          "type": "object",
+          "properties": {
+            "ativo": {
+              "type": "boolean"
+            },
+            "motivo": {
+              "type": "string",
+              "description": ""
+            }
+          }
+        },
+        "identidade_configurada": {
+          "type": "boolean"
+        },
+        "kpis": {
+          "type": "object",
+          "description": "Indicadores (chaves 'secao.indicador')"
+        },
+        "resumo": {
+          "type": "object",
+          "properties": {
+            "leads_qualificados": {
+              "type": "number"
+            },
+            "mensagens_enviadas": {
+              "type": "number"
+            },
+            "taxa_resposta_pct": {
+              "type": "number"
+            },
+            "respostas_positivas": {
+              "type": "number"
+            },
+            "descadastros": {
+              "type": "number"
+            },
+            "reunioes": {
+              "type": "number"
+            },
+            "propostas_enviadas": {
+              "type": "number"
+            },
+            "contratos": {
+              "type": "number"
+            },
+            "receita_potencial": {
+              "type": "number"
+            },
+            "receita_propostas": {
+              "type": "number"
+            },
+            "receita_contratada": {
+              "type": "number"
+            },
+            "receita_recebida": {
+              "type": "number"
+            },
+            "mrr": {
+              "type": "number"
+            }
+          }
+        },
+        "pipeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "description": ""
+              },
+              "rotulo": {
+                "type": "string",
+                "description": ""
+              },
+              "quantidade": {
+                "type": "integer",
+                "format": "int32",
+                "description": ""
+              }
+            }
+          }
+        },
+        "aprovacoes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Aprovacao"
+          }
+        },
+        "leads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Lead"
+          }
+        },
+        "mensagens_incertas": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Mensagens interrompidas durante o envio"
+        }
+      }
+    },
+    "Erro": {
+      "type": "object",
+      "properties": {
+        "erro": {
+          "type": "string",
+          "description": "Descrição do erro"
+        }
+      }
+    }
+  }
+}

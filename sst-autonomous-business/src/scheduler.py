@@ -97,6 +97,14 @@ def job_table(app) -> dict[str, Callable[[], object]]:
     def research():
         return {"descoberta": discovery.run(app), "enriquecimento": discovery.enrich_pending(app)}
 
+    def powerbi_export():
+        from .powerplatform import export
+        return export.export_all(app)
+
+    def powerplatform_inbox():
+        from .powerplatform import bridge
+        return bridge.process_inbox(app)
+
     def backup():
         keep = int(app.settings.business.get("retention", {}).get("backups_keep", 14))
         return str(app.db.backup(app.settings.data_dir / "backups", keep))
@@ -115,6 +123,8 @@ def job_table(app) -> dict[str, Callable[[], object]]:
         "daily_report": lambda: [str(p) for p in reports.build(app, "diario")],
         "weekly_report": lambda: [str(p) for p in reports.build(app, "semanal")],
         "backup": backup,
+        "powerbi_export": powerbi_export,
+        "powerplatform_inbox": powerplatform_inbox,
         "retention": lambda: lgpd.apply_retention(app),
     }
 

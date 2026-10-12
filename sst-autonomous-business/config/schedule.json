@@ -12,6 +12,8 @@
     {"name": "daily_report",     "cron": "30 18 * * 1-5",     "command": "daily_report"},
     {"name": "weekly_report",    "cron": "0 17 * * 5",        "command": "weekly_report"},
     {"name": "backup",           "cron": "0 23 * * *",        "command": "backup"},
-    {"name": "retention",        "cron": "0 3 * * 0",         "command": "retention"}
+    {"name": "retention",        "cron": "0 3 * * 0",         "command": "retention"},
+    {"name": "powerbi_export",   "cron": "5 * * * *",         "command": "powerbi_export"},
+    {"name": "powerplatform_inbox", "cron": "* * * * *",     "command": "powerplatform_inbox"}
   ]
 }

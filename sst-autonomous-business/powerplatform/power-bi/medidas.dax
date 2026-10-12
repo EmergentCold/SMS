@@ -1,0 +1,116 @@
+// =====================================================================================
+// SST Agent — tabela de calendário e medidas DAX
+// Modelagem → Nova tabela (Calendario) e Modelagem → Nova medida (cada bloco abaixo).
+// Sugestão: crie uma tabela "_Medidas" (Inserir dados → tabela vazia) e guarde as medidas nela.
+// =====================================================================================
+
+// ---------------------------------------------------------------- Nova tabela: Calendario
+Calendario =
+ADDCOLUMNS (
+    CALENDAR ( DATE ( 2026, 1, 1 ), DATE ( YEAR ( TODAY () ) + 1, 12, 31 ) ),
+    "Ano", YEAR ( [Date] ),
+    "MesNum", MONTH ( [Date] ),
+    "Mes", FORMAT ( [Date], "mmm/yyyy" ),
+    "AnoMes", YEAR ( [Date] ) * 100 + MONTH ( [Date] ),
+    "Semana", WEEKNUM ( [Date], 2 ),
+    "DiaUtil", IF ( WEEKDAY ( [Date], 2 ) <= 5, "Útil", "Fim de semana" )
+)
+
+// ---------------------------------------------------------------- Prospecção
+Empresas Pesquisadas = COUNTROWS ( dim_empresa )
+
+Leads = COUNTROWS ( fato_lead )
+
+Leads Qualificados =
+CALCULATE ( COUNTROWS ( fato_lead ), NOT fato_lead[status] IN { "PESQUISADO" } )
+
+Pontuação Média = AVERAGE ( fato_lead[pontuacao] )
+
+Leads Prioridade Alta =
+CALCULATE ( COUNTROWS ( fato_lead ), fato_lead[prioridade] = "alta" )
+
+// ---------------------------------------------------------------- Contato
+Mensagens Enviadas =
+CALCULATE ( COUNTROWS ( fato_mensagens ), fato_mensagens[direcao] = "OUT", fato_mensagens[status] = "ENVIADA" )
+
+Primeiros Contatos =
+CALCULATE ( COUNTROWS ( fato_mensagens ), fato_mensagens[tipo] = "first_contact", fato_mensagens[status] = "ENVIADA" )
+
+Leads Contatados =
+CALCULATE ( DISTINCTCOUNT ( fato_mensagens[lead_id] ), fato_mensagens[tipo] = "first_contact", fato_mensagens[status] = "ENVIADA" )
+
+Devoluções =
+CALCULATE ( COUNTROWS ( fato_mensagens ), fato_mensagens[direcao] = "IN", fato_mensagens[intencao] = "ENDERECO_INVALIDO" )
+
+Taxa de Entrega =
+VAR Tentativas =
+    CALCULATE ( COUNTROWS ( fato_mensagens ), fato_mensagens[direcao] = "OUT",
+        fato_mensagens[status] IN { "ENVIADA", "FALHOU", "INCERTA" } )
+RETURN DIVIDE ( [Mensagens Enviadas] - [Devoluções], Tentativas )
+
+Leads que Responderam =
+CALCULATE ( DISTINCTCOUNT ( fato_mensagens[lead_id] ), fato_mensagens[direcao] = "IN",
+    fato_mensagens[intencao] <> "ENDERECO_INVALIDO", NOT ISBLANK ( fato_mensagens[lead_id] ) )
+
+Taxa de Resposta = DIVIDE ( [Leads que Responderam], [Leads Contatados] )
+
+Respostas Positivas =
+CALCULATE ( COUNTROWS ( fato_mensagens ), fato_mensagens[direcao] = "IN",
+    fato_mensagens[intencao] IN { "INTERESSE", "PERGUNTA" } )
+
+Descadastros =
+CALCULATE ( COUNTROWS ( fato_mensagens ), fato_mensagens[direcao] = "IN", fato_mensagens[intencao] = "DESCADASTRO" )
+
+Taxa de Descadastro = DIVIDE ( [Descadastros], [Mensagens Enviadas] )
+
+Mensagens Incertas =
+CALCULATE ( COUNTROWS ( fato_mensagens ), fato_mensagens[status] = "INCERTA" )
+
+// ---------------------------------------------------------------- Vendas
+Reuniões =
+CALCULATE ( COUNTROWS ( fato_reunioes ), fato_reunioes[status] IN { "CONFIRMADA", "REALIZADA" } )
+
+Propostas Enviadas =
+CALCULATE ( COUNTROWS ( fato_propostas ), fato_propostas[status] IN { "ENVIADA", "ACEITA", "RECUSADA", "EXPIRADA" } )
+
+Propostas com Preço Pendente =
+CALCULATE ( COUNTROWS ( fato_propostas ), fato_propostas[status] = "PRECO_PENDENTE" )
+
+Contratos Fechados = COUNTROWS ( fato_contratos )
+
+Conversão = DIVIDE ( [Contratos Fechados], [Leads Contatados] )
+
+Dias Médios até a Venda =
+AVERAGEX (
+    FILTER ( fato_lead, NOT ISBLANK ( fato_lead[ganho_em] ) && NOT ISBLANK ( fato_lead[primeiro_contato_em] ) ),
+    DATEDIFF ( fato_lead[primeiro_contato_em], fato_lead[ganho_em], DAY )
+)
+
+Aprovações Pendentes =
+CALCULATE ( COUNTROWS ( aprovacoes ), aprovacoes[status] = "PENDENTE" )
+
+// ---------------------------------------------------------------- Receita (NUNCA somar categorias)
+// 1. Potencial: depende de preço aprovado; use o valor de kpis.csv ou do painel JS (não recalculado aqui).
+Receita 2 - Propostas Emitidas =
+CALCULATE ( SUM ( fato_propostas[preco_final] ), fato_propostas[status] IN { "ENVIADA", "ACEITA" } )
+
+Receita 3 - Contratada = SUM ( fato_contratos[valor_total] )
+
+Receita 4 - Recebida =
+CALCULATE ( SUM ( fato_financeiro[valor] ), fato_financeiro[tipo] = "RECEITA", fato_financeiro[status] = "REALIZADO" )
+
+A Receber =
+CALCULATE ( SUM ( fato_financeiro[valor] ), fato_financeiro[tipo] = "RECEITA", fato_financeiro[status] = "PREVISTO" )
+
+MRR =
+CALCULATE ( SUM ( fato_contratos[valor_mensal] ), fato_contratos[status] = "ATIVO", fato_contratos[recorrente] = 1 )
+
+// ---------------------------------------------------------------- Custos e margem
+Despesas Realizadas =
+CALCULATE ( SUM ( fato_financeiro[valor] ), fato_financeiro[tipo] = "DESPESA", fato_financeiro[status] = "REALIZADO" )
+
+Custo Ferramentas = SUM ( custos_ferramentas[custo_estimado] )
+
+Margem Realizada = [Receita 4 - Recebida] - [Despesas Realizadas] - [Custo Ferramentas]
+
+Margem Estimada sobre Contratado = [Receita 3 - Contratada] - [Despesas Realizadas] - [Custo Ferramentas]

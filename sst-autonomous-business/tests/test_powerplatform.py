@@ -122,3 +122,29 @@ def test_snapshot_has_simple_keys_for_power_fx(app):
     snap = export.snapshot(app)
     assert all("." not in key for key in snap["resumo"])
     assert snap["resumo"]["contratos"] == 0
+
+
+def test_powerbi_queries_and_measures_match_exported_columns(app):
+    """Evita que o relatório quebre: colunas citadas em consultas.pq e medidas.dax existem nos CSVs."""
+    import re
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent / "powerplatform" / "power-bi"
+    queries = (root / "consultas.pq").read_text(encoding="utf-8")
+    exported = {name: export.table_rows(app, name)[0] for name in export.TABLES}
+    blocks = re.split(r"// Nome: (\w+)", queries)
+    checked = 0
+    for name, body in zip(blocks[1::2], blocks[2::2]):
+        if name not in exported:
+            continue
+        typed = re.findall(r'\{"(\w+)", (?:Int64\.Type|type \w+)\}', body)
+        assert typed, name
+        assert set(typed) == set(exported[name]), (name, set(typed) ^ set(exported[name]))
+        checked += 1
+    assert checked == len(exported)
+    added = {"fato_lead": {"data_criacao", "ordem_funil"}, "fato_mensagens": {"dia"}, "fato_propostas": {"dia"},
+             "fato_financeiro": {"dia"}, "fato_reunioes": {"dia"}, "fato_pipeline_eventos": {"dia"}}
+    dax = (root / "medidas.dax").read_text(encoding="utf-8")
+    for table, column in re.findall(r"\b(\w+)\[(\w+)\]", dax):
+        if table in exported:
+            assert column in set(exported[table]) | added.get(table, set()), (table, column)
+    json.loads((root / "tema-sst.json").read_text(encoding="utf-8"))

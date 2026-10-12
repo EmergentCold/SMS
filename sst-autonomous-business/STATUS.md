@@ -1,4 +1,4 @@
-# Relatório de implantação — versão 0.1 (2026-10-11)
+# Relatório de implantação — versão 0.2 (2026-10-12)
 
 Situação real do sistema após a primeira etapa. Nada aqui é estimado: cada item foi executado no ambiente de
 desenvolvimento (contêiner Linux, Python 3.13, **sem acesso de rede às APIs externas** e sem Docker daemon).
@@ -26,7 +26,14 @@ desenvolvimento (contêiner Linux, Python 3.13, **sem acesso de rede às APIs ex
 | Daemon: inicia, mantém heartbeat, encerra com SIGTERM liberando a trava | execução manual |
 | Simulação ponta a ponta sem rede (pesquisa → qualificação → aprovação → envio simulado → follow-up → resposta → descadastro → reunião → proposta → contrato → recebimento → kill switch → relatório) | `python -m src.main simulate` |
 
-Resultado da suíte: **79 testes, 79 aprovados** (`python3 -m pytest -q`).
+| API REST com token (stdlib), painel JavaScript e especificação OpenAPI 2.0 (9 operações) | `tests/test_api.py` |
+| Exportação Power BI (11 tabelas + KPIs + painel.json) sem dados pessoais; consultas M e medidas DAX conferidas contra as colunas reais | `tests/test_powerplatform.py` |
+| Ponte por arquivos para Power Automate (aprovações, kill switch, respostas, importação, rotinas), idempotente e com token opcional | `tests/test_powerplatform.py` |
+| Painel JavaScript: funções e cliente da API | `cd web && npm test` (4 testes) |
+| Painel JavaScript no navegador (login, KPIs, funil, filtro, aprovação, kill switch, registro de resposta) | `npm run e2e` (Playwright/Chromium) |
+
+Resultado: **100 testes Python aprovados** (`python3 -m pytest -q`), **4 testes JavaScript aprovados**
+(`node --test`) e **teste ponta a ponta no Chromium aprovado**.
 
 ## Implementado, mas não verificado contra o serviço real (sem credencial/rede neste ambiente)
 
@@ -39,6 +46,15 @@ Resultado da suíte: **79 testes, 79 aprovados** (`python3 -m pytest -q`).
 | Leitura de sites oficiais (robots.txt) | rede liberada; testado apenas por código, não contra sites reais |
 | Anthropic (sugestão de respostas, opcional) | `ANTHROPIC_API_KEY` + `AI_MODEL` |
 | Docker / docker-compose | arquivos prontos; build não executado (daemon Docker indisponível aqui) |
+
+## Power Platform — preparado, não executado (exige o seu tenant Microsoft 365)
+
+| Artefato | Situação |
+|---|---|
+| 7 fluxos do Power Automate (`powerplatform/power-automate/FLUXOS.md`) | passo a passo com expressões; montar no seu ambiente |
+| App do Power Apps (`powerplatform/power-apps/APP.md`) | fórmulas Power Fx por controle; montar no Power Apps Studio |
+| Relatório Power BI (`powerplatform/power-bi/`) | consultas M, medidas DAX e tema prontos; montar no Power BI Desktop |
+| Conector personalizado (`powerplatform/custom-connector/apiDefinition.swagger.json`) | importar; exige licença Premium e API publicada por HTTPS |
 
 ## Somente interface (adaptador específico não implementado)
 Provedor B2B licenciado, CRM externo, agenda Google/Microsoft (os convites `.ics` locais funcionam),

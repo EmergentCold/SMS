@@ -5,6 +5,8 @@ Idioma do produto e da documentação: português do Brasil.
 
 ## Comandos
 - Testes: `python3 -m pytest -q` (rodar sempre antes de commitar).
+- JavaScript: `cd web && npm test` (node --test) e `npm run e2e` (Playwright, sobe a API com banco temporário).
+- API + painel: `SST_API_TOKEN=... python3 -m src.main api`; conector: `python3 -m src.main openapi --output ...`.
 - Simulação sem envio externo: `python3 -m src.main simulate`.
 - Estado: `python3 -m src.main status`; integrações: `python3 -m src.main integrations --offline`.
 
@@ -30,6 +32,10 @@ Idioma do produto e da documentação: português do Brasil.
 - `src/proposals/` propostas a partir de catálogo + preços aprovados
 - `src/analytics/` indicadores e relatórios · `src/scheduler.py` agendador persistente
 - `src/integrations/` adaptadores substituíveis (SMTP, IMAP, busca, CNPJ, B2B, CRM, agenda, IA)
+- `src/api/` API REST (stdlib) + OpenAPI 2.0 · `src/powerplatform/` exportação Power BI e ponte de arquivos
+- `web/` painel JavaScript puro (sem build) · `powerplatform/` guias de Power Automate, Power Apps e Power BI
+- Comandos da ponte e da API passam por `src/powerplatform/bridge.py::execute` (mesmas regras do agente).
+- Ao mudar colunas exportadas, atualize `powerplatform/power-bi/consultas.pq` (há teste que confere).
 
 ## Convenções
 - Stdlib apenas em produção. Datas via `settings.iso()`/`now()` (America/Sao_Paulo); testes congelam `clock`.

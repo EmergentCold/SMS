@@ -16,6 +16,7 @@ COPY knowledge ./knowledge
 COPY templates ./templates
 COPY workflows ./workflows
 COPY src ./src
+COPY web ./web
 COPY tests ./tests
 RUN mkdir -p data reports && chown -R sst:sst /app
 

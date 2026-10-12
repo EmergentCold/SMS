@@ -1,0 +1,18 @@
+{
+  "name": "SST Agent",
+  "dataColors": ["#1F6FEB", "#1A7F37", "#9A6700", "#8250DF", "#C62828", "#0E8A8A", "#BF5700", "#57606A"],
+  "background": "#FFFFFF",
+  "foreground": "#1C2430",
+  "tableAccent": "#1F6FEB",
+  "good": "#1A7F37",
+  "neutral": "#9A6700",
+  "bad": "#C62828",
+  "maximum": "#1F6FEB",
+  "center": "#DDE1E7",
+  "minimum": "#F5F6F8",
+  "textClasses": {
+    "title": {"fontFace": "Segoe UI Semibold", "fontSize": 14, "color": "#1C2430"},
+    "label": {"fontFace": "Segoe UI", "fontSize": 10, "color": "#5D6878"},
+    "callout": {"fontFace": "Segoe UI Semibold", "fontSize": 26, "color": "#1C2430"}
+  }
+}

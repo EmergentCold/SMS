@@ -12,3 +12,22 @@ services:
       - ./templates:/app/templates:ro
     restart: unless-stopped
     stop_grace_period: 60s        # SIGTERM: termina o job atual e libera a trava
+
+  # API REST + painel JavaScript (opcional). Publique só por túnel HTTPS; a porta fica presa ao localhost.
+  sst-api:
+    build: .
+    container_name: sst-api
+    command: ["python", "-m", "src.main", "api"]
+    env_file: .env
+    environment:
+      TZ: America/Sao_Paulo
+      SST_API_HOST: 0.0.0.0
+    ports:
+      - "127.0.0.1:8765:8765"
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+      - ./config:/app/config:ro
+      - ./templates:/app/templates:ro
+    restart: unless-stopped
+    profiles: ["api"]

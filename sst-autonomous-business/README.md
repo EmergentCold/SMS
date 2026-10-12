@@ -113,6 +113,31 @@ python3 -m src.main lgpd suppress-domain empresa.com.br
 python3 -m src.main lgpd retention
 ```
 
+## Power Apps, Power Automate, Power BI e JavaScript
+
+O motor é Python; o Microsoft Power Platform e o painel web são a camada de operação.
+Guia completo: [`powerplatform/README.md`](powerplatform/README.md).
+
+| Camada | O que faz | Como iniciar |
+|---|---|---|
+| **Painel JavaScript** (`web/`) | KPIs, funil, receita em 4 categorias, aprovar/rejeitar, pausar envios, leads, registrar respostas, rodar rotinas | `SST_API_TOKEN=<24+ caracteres> python3 -m src.main api` → http://127.0.0.1:8765 |
+| **Power BI** | Relatório gerencial a partir dos CSVs exportados (modelo estrela, sem dados pessoais) | `python3 -m src.main powerbi-export` + [`powerplatform/power-bi/MODELO.md`](powerplatform/power-bi/MODELO.md) |
+| **Power Automate** | Aprovações no Teams/Outlook, respostas do Outlook → agente, alertas, botão de pausa no celular, importação de leads do Excel | [`powerplatform/power-automate/FLUXOS.md`](powerplatform/power-automate/FLUXOS.md) |
+| **Power Apps** | App de celular para decidir aprovações, pausar envios e consultar leads | [`powerplatform/power-apps/APP.md`](powerplatform/power-apps/APP.md) |
+| **Conector personalizado** (Premium) | 9 operações da API para Power Apps/Automate | [`powerplatform/custom-connector/`](powerplatform/custom-connector/) |
+
+- **Modo A (licença padrão do Microsoft 365):** ponte por arquivos numa pasta do OneDrive/SharePoint
+  (`POWERPLATFORM_DIR`): o agente exporta `export/*.csv` e `painel.json`, cria `aprovacoes/aprovacao-<id>.json`
+  e processa comandos de `inbox/*.json` a cada minuto (`python3 -m src.main bridge` para rodar já).
+- **Modo B (Premium):** conector personalizado → API REST publicada por túnel HTTPS.
+- Todas as ações vindas do Power Platform ou do painel passam pelas mesmas regras: níveis de autonomia,
+  aprovações, kill switch, supressão e portão de envio. Ações `human_only` nunca são executadas.
+
+```bash
+cd web && npm test                 # testes do JavaScript (node --test)
+npm i -D playwright && npx playwright install chromium && npm run e2e   # teste no navegador
+```
+
 ## Níveis de autonomia (`config/autonomy.json`)
 
 | Nível | Comportamento | Exemplos |
@@ -155,7 +180,9 @@ config/      parâmetros editáveis (negócio, serviços, preços, contato, auto
 knowledge/   perfil, catálogo, playbook, conformidade, fontes oficiais
 workflows/   procedimentos operacionais de cada etapa
 templates/   modelos aprovados (contato, follow-up, resposta, reunião, proposta)
-src/         aplicação (research, crm, outreach, proposals, compliance, analytics, integrations)
+src/         aplicação (research, crm, outreach, proposals, compliance, analytics, integrations, api, powerplatform)
+web/         painel JavaScript (sem build) servido pela API
+powerplatform/ guias e artefatos de Power BI, Power Automate, Power Apps e conector personalizado
 tests/       testes automatizados (pytest)
 examples/    modelo de CSV para importação
 data/        banco, logs, backups, propostas (fora do Git)

@@ -42,11 +42,24 @@ class FakeChannel:
         return SendResult(provider_message_id=f"<fake-{len(self.sent)}@test>")
 
 
+ISOLATED_VARS = ("EXTERNAL_SENDING_ENABLED", "KILL_SWITCH", "SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM",
+                 "IMAP_HOST", "IMAP_USER", "IMAP_PASSWORD", "BRAVE_SEARCH_API_KEY", "ANTHROPIC_API_KEY", "AI_MODEL",
+                 "CNPJ_LOOKUP_ENABLED", "SST_DB_PATH", "SST_DATA_DIR", "SST_REPORTS_DIR", "POWERPLATFORM_DIR",
+                 "SST_BRIDGE_TOKEN", "SST_API_TOKEN", "SST_API_HOST", "SST_API_PORT", "SST_API_PUBLIC_HOST",
+                 "SST_API_CORS_ORIGIN")
+
+
+@pytest.fixture(autouse=True)
+def isolate_environment(monkeypatch):
+    """Os testes nunca leem o .env real nem tocam a pasta do OneDrive/tokens do proprietário."""
+    import src.settings as settings_module
+    monkeypatch.setattr(settings_module, "load_dotenv", lambda path: None)
+    for var in ISOLATED_VARS:
+        monkeypatch.delenv(var, raising=False)
+
+
 @pytest.fixture
 def app(tmp_path, monkeypatch):
-    for var in ("EXTERNAL_SENDING_ENABLED", "KILL_SWITCH", "SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM",
-                "BRAVE_SEARCH_API_KEY", "ANTHROPIC_API_KEY", "AI_MODEL", "CNPJ_LOOKUP_ENABLED", "SST_DB_PATH"):
-        monkeypatch.delenv(var, raising=False)
     monkeypatch.setenv("SST_REPORTS_DIR", str(tmp_path / "reports"))
     application = build_app(ROOT, db_path=tmp_path / "test.db", data_dir=tmp_path / "data")
     application.settings.business["owner"]["name"] = "Fulano de Teste"

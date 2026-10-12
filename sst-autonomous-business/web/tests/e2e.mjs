@@ -18,6 +18,7 @@ const port = String(20000 + Math.floor(Math.random() * 20000));
 const env = {
   ...process.env, SST_DATA_DIR: tmp, SST_DB_PATH: path.join(tmp, "e2e.db"), SST_REPORTS_DIR: path.join(tmp, "reports"),
   SST_API_TOKEN: token, SST_API_PORT: port, EXTERNAL_SENDING_ENABLED: "false", PYTHONUNBUFFERED: "1",
+  POWERPLATFORM_DIR: path.join(tmp, "powerplatform"), SST_BRIDGE_TOKEN: "", KILL_SWITCH: "false",
 };
 
 // Dados de teste (domínios .test): 2 leads e 1 aprovação pendente.

@@ -48,6 +48,9 @@
   .alerta-amigo b.t{ display:block; font-size:17px; color:var(--navy); }
   .alerta-amigo.mini{ padding:9px 12px; font-size:14px; margin-top:10px; }
   .alerta-amigo.mini .mg{ font-size:24px; }
+  .lnk{ background:none; border:0; color:var(--soft); font-size:12px; text-decoration:underline; padding:8px; margin-top:4px; }
+  .sst-tabs{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .sst-tabs .btn.on{ background:var(--gold); color:var(--navy); }
   .logo-bar{ background:#fff; border-radius:16px; padding:14px 18px; margin-bottom:12px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.08); }
   .logo-bar img{ display:inline-block; width:100%; max-width:320px; height:auto; }
   .credito{ display:flex; gap:14px; align-items:flex-start; margin-top:14px; border-left:5px solid var(--gold); }
@@ -936,10 +939,13 @@ function telaInicio(){
   }
   h += alertaAmigo() + '<div style="height:14px"></div>';
   h += '<div class="menu">';
-  h += '<button class="btn ok" data-act="jogar"><span>▶️</span>' + (p ? 'Continuar jogando' : 'Jogar') + '<small>' + (p ? 'Ir para o mapa de fases' : 'Inscreva-se e comece') + '</small></button>';
-  h += '<button class="btn" data-act="inscricao"><span>📝</span>Inscrição<small>Cadastrar ou escolher funcionário</small></button>';
-  h += '<button class="btn gold" data-act="ranking"><span>🏆</span>Ranking<small>Quem mais pontuou</small></button>';
-  h += '<button class="btn ghost" data-act="painel"><span>📋</span>Painel SST<small>Participação, exportar e certificados</small></button>';
+  if (p){
+    h += '<button class="btn ok" data-act="jogar"><span>▶️</span>Continuar jogando<small>Ir para o mapa de fases</small></button>';
+    h += '<button class="btn" data-act="trocar"><span>🔄</span>Não é você?<small>Entrar com outra matrícula</small></button>';
+  } else {
+    h += '<button class="btn ok" data-act="inscricao"><span>📝</span>Cadastrar e jogar<small>Primeira vez? Comece aqui</small></button>';
+    h += '<button class="btn" data-act="entrarMat"><span>🔑</span>Já tenho cadastro<small>Entrar com a matrícula</small></button>';
+  }
   h += '</div>';
   h += '<div class="card" style="margin-top:14px"><h2>Como funciona</h2><div class="grid2">' +
        '<div>🔍 <b>Caça aos Riscos:</b> toque nos perigos da cena e diga se é <span class="tag c">CONDIÇÃO</span> ou <span class="tag b">COMPORTAMENTO</span> inseguro.</div>' +
@@ -948,31 +954,31 @@ function telaInicio(){
        '<div>🚶 <b>Labirinto:</b> chegue ao posto de trabalho pelo caminho seguro, sem ser atingido.</div>' +
        '</div><p class="muted" style="margin:12px 0 0;font-size:14px"><span class="tag c">CONDIÇÃO INSEGURA</span> = falha no ambiente ou equipamento (ex.: óleo no piso). <span class="tag b">COMPORTAMENTO INSEGURO</span> = atitude da pessoa (ex.: correr, usar celular dirigindo).</p></div>';
   h += '<div class="card credito"><div class="av" style="background:var(--navy);color:#fff">LT</div><div><div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Criação e conteúdo</div><b style="font-size:17px">Luan Tavarez</b><div class="muted">Técnico em Segurança do Trabalho</div><div style="font-size:14px;margin-top:6px;line-height:1.45">Programa Galpão Seguro, desenvolvido para conscientizar as equipes do armazém sobre condições e comportamentos inseguros na operação: trânsito de empilhadeiras, paleteiras, porta-paletes, picking, logística reversa, docas e caminho seguro.</div></div></div>';
-  h += '<div class="foot">Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador. Use o Painel SST para exportar.</div>';
+  h += '<div class="foot">Os dados de inscrição e pontuação ficam salvos somente neste aparelho/navegador.<br><button class="lnk" data-act="sst">🔒 Área do SST</button></div>';
   app.innerHTML = h; scrollTo(0,0);
 }
 
 var SETORES = ['Recebimento','Armazenagem','Picking / Separação','Expedição','Docas / Carregamento','Logística Reversa','Inventário','Manutenção','Administrativo','Liderança','Terceiro / Temporário','Outro'];
-function telaInscricao(){
+function telaInscricao(foco){
   clearAll();
-  var lista = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).sort(function(a,b){ return a.nome.localeCompare(b.nome); });
-  var h = '<div class="grid2"><div class="card"><h2>📝 Nova inscrição</h2><form id="fIns" autocomplete="off">' +
+  var h = '<div class="grid2"><div class="card"><h2>📝 Cadastro</h2><form id="fIns" autocomplete="off">' +
     '<label class="f">Nome completo *<input name="nome" required maxlength="80" placeholder="Ex.: Maria da Silva"></label>' +
     '<label class="f">Matrícula *<input name="matricula" required maxlength="20" placeholder="Ex.: 12345"></label>' +
     '<label class="f">Setor<select name="setor"><option value="">Selecione…</option>' + SETORES.map(function(s){ return '<option>' + s + '</option>'; }).join('') + '</select></label>' +
     '<label class="f">Turno<select name="turno"><option value="">Selecione…</option><option>1º turno</option><option>2º turno</option><option>3º turno</option><option>Comercial</option></select></label>' +
     '<label class="f">Função<input name="funcao" maxlength="50" placeholder="Ex.: Operador de empilhadeira"></label>' +
     '<button class="btn ok big" type="submit">✅ Inscrever e jogar</button></form></div>';
-  h += '<div class="card"><h2>👥 Já sou inscrito</h2>' + (lista.length ? '<label class="f">Buscar<input id="busca" placeholder="Nome ou matrícula"></label><div class="lista-j" id="listaJ"></div>' : '<p class="muted">Nenhum funcionário inscrito neste aparelho ainda.</p>') + '</div></div>';
+  h += '<div class="card" id="cardEntrar"><h2>🔑 Já tenho cadastro</h2><p class="muted" style="margin-top:-4px">Digite a sua matrícula para continuar de onde parou.</p><form id="fEnt" autocomplete="off">' +
+    '<label class="f">Matrícula<input name="mat" required maxlength="20" placeholder="Ex.: 12345"></label>' +
+    '<button class="btn big" type="submit">▶ Entrar e jogar</button></form></div></div>';
   app.innerHTML = h; scrollTo(0,0);
-  function renderLista(q){
-    q = (q || '').toLowerCase().trim();
-    var el = document.getElementById('listaJ'); if (!el) return;
-    var f = lista.filter(function(p){ return !q || p.nome.toLowerCase().indexOf(q) >= 0 || String(p.matricula).toLowerCase().indexOf(q) >= 0; });
-    el.innerHTML = f.map(function(p){ return '<button class="jg" data-act="entrar" data-id="' + esc(p.id) + '"><div class="av">' + esc(iniciais(p.nome)) + '</div><div><div class="n">' + esc(p.nome) + '</div><div class="s">Mat. ' + esc(p.matricula) + (p.setor ? ' · ' + esc(p.setor) : '') + '</div></div><div class="p">' + fmt(total(p)) + ' pts</div></button>'; }).join('') || '<p class="muted">Nenhum resultado.</p>';
-  }
-  renderLista('');
-  var b = document.getElementById('busca'); if (b) b.addEventListener('input', function(){ renderLista(b.value); });
+  if (foco){ var ce = document.getElementById('cardEntrar'); ce.scrollIntoView({ block:'start' }); ce.querySelector('input').focus(); }
+  document.getElementById('fEnt').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var mat = String(new FormData(ev.target).get('mat')).trim().toUpperCase(), p = DB.players[mat];
+    if (!p) { toast('Matrícula não encontrada neste aparelho. Faça o cadastro.'); SND.bad(); return; }
+    DB.atual = mat; save(); SND.ok(); toast('Bem-vindo(a) de volta, ' + p.nome.split(' ')[0] + '!'); telaMapa();
+  });
   document.getElementById('fIns').addEventListener('submit', function(ev){
     ev.preventDefault();
     var fd = new FormData(ev.target), nome = String(fd.get('nome')).trim().replace(/\s+/g,' '), mat = String(fd.get('matricula')).trim().toUpperCase();
@@ -980,7 +986,7 @@ function telaInscricao(){
     if (!mat) { toast('Informe a matrícula.'); return; }
     var id = mat, ex = DB.players[id];
     if (ex && ex.nome.toLowerCase() !== nome.toLowerCase()){
-      if (!confirm('A matrícula ' + mat + ' já está inscrita para "' + ex.nome + '". Deseja entrar como ' + ex.nome + '?')) return;
+      toast('Esta matrícula já tem cadastro. Use “Já tenho cadastro” para entrar.'); SND.bad(); return;
     } else if (!ex){
       DB.players[id] = { id:id, nome:nome, matricula:mat, setor:String(fd.get('setor')||''), turno:String(fd.get('turno')||''), funcao:String(fd.get('funcao')||'').trim(), criado:hoje(), fases:{} };
     }
@@ -1318,6 +1324,32 @@ function finalizarFase(){
   }, 1600));
 }
 
+/* ---------- ÁREA DO SST (PIN) ---------- */
+var SST_OK = false;
+function hashPin(p){ var h = 5381, t = 'galpao-seguro:' + p; for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) >>> 0; return 'h' + h.toString(36); }
+function sstGate(cb){
+  if (SST_OK) { cb(); return; }
+  var novo = !DB.pin;
+  modal('<h3>🔒 Área do SST</h3><p class="muted" style="margin:0 0 10px">' + (novo ? 'Primeiro acesso neste aparelho: crie um PIN (4 a 8 números) para proteger o ranking, o painel e as exportações.' : 'Digite o PIN do SST para acessar o ranking, o painel e as exportações.') + '</p>' +
+    '<form id="fPin" autocomplete="off"><label class="f">PIN<input name="p1" type="password" inputmode="numeric" maxlength="8" required></label>' +
+    (novo ? '<label class="f">Repita o PIN<input name="p2" type="password" inputmode="numeric" maxlength="8" required></label>' : '') +
+    '<div class="opts"><button class="btn ok" type="submit">' + (novo ? 'Criar PIN e entrar' : 'Entrar') + '</button><button class="btn ghost" type="button" id="pinX">Cancelar</button></div></form>' +
+    (novo ? '' : '<p class="muted" style="font-size:12px;margin:12px 0 0">O PIN fica salvo só neste aparelho. Se esquecer, procure quem configurou o tablet.</p>'));
+  MB.querySelector('input').focus();
+  document.getElementById('pinX').onclick = closeModal;
+  document.getElementById('fPin').onsubmit = function(ev){
+    ev.preventDefault();
+    var fd = new FormData(ev.target), p1 = String(fd.get('p1')), p2 = String(fd.get('p2') || '');
+    if (!/^[0-9]{4,8}$/.test(p1)) { toast('O PIN deve ter de 4 a 8 números.'); return; }
+    if (novo){ if (p1 !== p2) { toast('Os PINs não conferem.'); return; } DB.pin = hashPin(p1); save(); }
+    else if (hashPin(p1) !== DB.pin) { toast('PIN incorreto.'); SND.bad(); ev.target.reset(); return; }
+    SST_OK = true; closeModal(); SND.ok(); cb();
+  };
+}
+function sstTabs(on){
+  return '<div class="sst-tabs"><b style="margin-right:4px">🔒 Área do SST</b><button class="btn sm' + (on === 'painel' ? ' on' : '') + '" data-act="painel">📋 Painel</button><button class="btn sm' + (on === 'ranking' ? ' on' : '') + '" data-act="ranking">🏆 Ranking</button><button class="btn sm ghost" data-act="sstSair">Sair da área do SST</button></div>';
+}
+
 /* ---------- RANKING ---------- */
 function telaRanking(filtro){
   clearAll();
@@ -1325,7 +1357,7 @@ function telaRanking(filtro){
   var lista = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).filter(function(p){ return !filtro || p.setor === filtro || p.turno === filtro; })
     .sort(function(a, b){ return total(b) - total(a) || estrelasTot(b) - estrelasTot(a) || a.nome.localeCompare(b.nome); });
   var opts = SETORES.concat(['1º turno','2º turno','3º turno','Comercial']);
-  var h = '<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">🏆 Ranking</h2><select id="filt" style="padding:10px;border-radius:10px;border:2px solid var(--line);font-size:15px"><option value="">Todos os setores e turnos</option>' + opts.map(function(o){ return '<option' + (o === filtro ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select></div>';
+  var h = sstTabs('ranking') + '<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">🏆 Ranking</h2><select id="filt" style="padding:10px;border-radius:10px;border:2px solid var(--line);font-size:15px"><option value="">Todos os setores e turnos</option>' + opts.map(function(o){ return '<option' + (o === filtro ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select></div>';
   if (!lista.length) h += '<p class="muted">Ninguém pontuou ainda. Que tal ser o primeiro?</p>';
   else {
     var top = lista.slice(0, 3), ord = [1, 0, 2];
@@ -1344,11 +1376,11 @@ function telaPainel(){
   clearAll();
   var lista = Object.keys(DB.players).map(function(k){ return DB.players[k]; }).sort(function(a, b){ return a.nome.localeCompare(b.nome); });
   var tot = lista.length, conc = lista.filter(function(p){ return concluidas(p) === FASES.length; }).length;
-  var h = '<div class="card"><h2>📋 Painel SST</h2><div class="grid2" style="margin-bottom:12px">' +
+  var h = sstTabs('painel') + '<div class="card"><h2>📋 Painel SST</h2><div class="grid2" style="margin-bottom:12px">' +
     '<div class="card" style="background:#f6f8fb;margin:0"><div class="muted">Inscritos</div><div class="pts">' + tot + '</div></div>' +
     '<div class="card" style="background:#f6f8fb;margin:0"><div class="muted">Concluíram todas as fases</div><div class="pts">' + conc + '</div></div>' +
     '<div class="card" style="background:#f6f8fb;margin:0"><div class="muted">Média de pontos</div><div class="pts">' + (tot ? fmt(lista.reduce(function(s, p){ return s + total(p); }, 0) / tot) : 0) + '</div></div></div>' +
-    '<div class="row" style="margin-bottom:12px"><button class="btn ok" data-act="csv">⬇️ Exportar planilha (CSV)</button><button class="btn" data-act="backup">💾 Salvar backup</button><label class="btn ghost" style="cursor:pointer">📂 Importar backup<input type="file" id="impBk" accept=".json,application/json" hidden></label><button class="btn bad" data-act="zerar">🗑️ Apagar tudo</button></div>' +
+    '<div class="row" style="margin-bottom:12px"><button class="btn ok" data-act="csv">⬇️ Exportar planilha (CSV)</button><button class="btn" data-act="backup">💾 Salvar backup</button><label class="btn ghost" style="cursor:pointer">📂 Importar backup<input type="file" id="impBk" accept=".json,application/json" hidden></label><button class="btn ghost" data-act="trocarPin">🔑 Trocar PIN</button><button class="btn bad" data-act="zerar">🗑️ Apagar tudo</button></div>' +
     '<p class="muted" style="font-size:14px;margin-top:0">Os dados ficam somente neste aparelho. Para juntar resultados de vários tablets/computadores, salve o backup em cada um e importe aqui (o maior recorde de cada fase é mantido).</p>';
   if (tot){
     h += '<div class="tabwrap"><table><thead><tr><th>Nome</th><th>Matrícula</th><th>Setor / Turno</th>' + FASES.map(function(f, i){ return '<th class="num" title="' + f.nome + '">F' + (i+1) + '</th>'; }).join('') + '<th class="num">Total</th><th>Última atividade</th><th></th></tr></thead><tbody>';
@@ -1502,7 +1534,7 @@ function telaCertificado(id){
     '<div class="certview" id="certView">Gerando certificado…</div>' +
     '<div class="row" style="justify-content:center;margin-top:16px"><button class="btn ok" id="cPdf" disabled>📄 Baixar certificado em PDF</button><button class="btn" id="cImg" disabled>🖼️ Baixar imagem</button><button class="btn gold" id="cShare" hidden>📤 Compartilhar</button></div>' +
     '<p class="muted" style="font-size:13px;margin:10px 0 0">Funciona no celular, tablet e notebook. Se o download não começar (ex.: link aberto dentro do WhatsApp), abra o jogo no Chrome ou Safari, ou use “Compartilhar”.</p>' +
-    '<div class="row" style="justify-content:center;margin-top:10px">' + (meu ? '<button class="btn ghost" data-act="mapa">🗺️ Mapa de fases</button><button class="btn ghost" data-act="ranking">🏆 Ranking</button>' : '<button class="btn ghost" data-act="painel">📋 Voltar ao Painel SST</button>') + '</div></div>';
+    '<div class="row" style="justify-content:center;margin-top:10px">' + (meu ? '<button class="btn ghost" data-act="mapa">🗺️ Mapa de fases</button>' : '<button class="btn ghost" data-act="painel">📋 Voltar ao Painel SST</button>') + '</div></div>';
   scrollTo(0,0);
   gerarCertificado(p, function(cv){
     var v = document.getElementById('certView'); if (!v) return;
@@ -1527,22 +1559,25 @@ function telaCertificado(id){
    AÇÕES
    ============================================================ */
 var ACT = {
-  inicio: function(){ if (RUN && !confirm('Sair da fase? O progresso desta tentativa será perdido.')) return; RUN = null; telaInicio(); },
+  inicio: function(){ if (RUN && !confirm('Sair da fase? O progresso desta tentativa será perdido.')) return; RUN = null; SST_OK = false; telaInicio(); },
   som: function(){ DB.som = !DB.som; save(); updSom(); if (DB.som) SND.ok(); },
   jogar: function(){ atual() ? telaMapa() : telaInscricao(); },
-  inscricao: telaInscricao,
-  trocar: function(){ DB.atual = null; save(); telaInscricao(); },
-  entrar: function(d){ DB.atual = d.id; save(); SND.ok(); telaMapa(); },
+  inscricao: function(){ telaInscricao(false); },
+  entrarMat: function(){ telaInscricao(true); },
+  trocar: function(){ DB.atual = null; save(); telaInscricao(true); },
   mapa: telaMapa,
-  ranking: function(){ telaRanking(''); },
-  painel: telaPainel,
+  ranking: function(){ sstGate(function(){ telaRanking(''); }); },
+  painel: function(){ sstGate(telaPainel); },
+  sst: function(){ sstGate(telaPainel); },
+  sstSair: function(){ SST_OK = false; toast('Você saiu da área do SST.'); telaInicio(); },
+  trocarPin: function(){ if (!SST_OK) return; if (confirm('Criar um novo PIN para a área do SST?')) { DB.pin = null; save(); SST_OK = false; sstGate(telaPainel); } },
   fase: function(d){ var p = atual(); if (!p) { telaInscricao(); return; } var i = +d.i; if (!liberada(p, i)) return; iniciarFase(i); },
   sair: function(){ if (confirm('Sair da fase? O progresso desta tentativa será perdido.')) { RUN = null; telaMapa(); } },
-  csv: exportarCSV,
-  backup: function(){ baixar('galpao-seguro-backup-' + new Date().toISOString().slice(0,10) + '.json', JSON.stringify({ app:'galpao-seguro', versao:1, exportado:hoje(), players:DB.players }, null, 1), 'application/json'); },
-  zerar: function(){ if (confirm('Apagar TODOS os inscritos e pontuações deste aparelho? Esta ação não pode ser desfeita.') && confirm('Tem certeza? Recomendamos salvar um backup antes.')) { DB = { players:{}, atual:null, som:DB.som }; save(); telaPainel(); } },
-  excluir: function(d){ var p = DB.players[d.id]; if (p && confirm('Excluir ' + p.nome + ' e toda a sua pontuação?')) { delete DB.players[d.id]; if (DB.atual === d.id) DB.atual = null; save(); telaPainel(); } },
-  certificado: function(d){ telaCertificado(d.id); }
+  csv: function(){ if (SST_OK) exportarCSV(); },
+  backup: function(){ if (!SST_OK) return; baixar('galpao-seguro-backup-' + new Date().toISOString().slice(0,10) + '.json', JSON.stringify({ app:'galpao-seguro', versao:1, exportado:hoje(), players:DB.players }, null, 1), 'application/json'); },
+  zerar: function(){ if (!SST_OK) return; if (confirm('Apagar TODOS os inscritos e pontuações deste aparelho? Esta ação não pode ser desfeita.') && confirm('Tem certeza? Recomendamos salvar um backup antes.')) { DB = { players:{}, atual:null, som:DB.som, pin:DB.pin }; save(); telaPainel(); } },
+  excluir: function(d){ if (!SST_OK) return; var p = DB.players[d.id]; if (p && confirm('Excluir ' + p.nome + ' e toda a sua pontuação?')) { delete DB.players[d.id]; if (DB.atual === d.id) DB.atual = null; save(); telaPainel(); } },
+  certificado: function(d){ if (d.id === DB.atual || SST_OK) telaCertificado(d.id); else sstGate(function(){ telaCertificado(d.id); }); }
 };
 document.addEventListener('click', function(ev){
   var b = ev.target.closest('[data-act]'); if (!b) return;

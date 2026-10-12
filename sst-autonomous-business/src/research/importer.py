@@ -1,13 +1,16 @@
 """Importação de leads levantados pelo proprietário ou por fonte autorizada (CSV).
 
 Colunas: name, website, segment, city, state, cnpj, contact_email, contact_type, contact_name, contact_role,
-source_url, source_description, legal_basis, facts, hypotheses, size_estimate, size_source, size_confidence.
+source_url, source_description, legal_basis, facts, hypotheses, size_estimate, size_source, size_confidence,
+contact_source_url (página do site oficial onde o contato foi publicado; se vazio, vale source_url).
+Aceita o CSV salvo pelo Excel em português (separador ";" e codificação Windows-1252).
 `facts` e `hypotheses`: itens separados por " | "; fato no formato "tag: afirmação".
 Toda linha precisa de source_url ou source_description (rastreabilidade).
 """
 from __future__ import annotations
 
 import csv
+import io
 from pathlib import Path
 
 from ..compliance import lgpd
@@ -17,13 +20,22 @@ from . import dedupe
 REQUIRED = {"name"}
 
 
+def _read_text(path: Path) -> str:
+    raw = path.read_bytes()
+    try:
+        return raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return raw.decode("cp1252")  # "CSV (separado por vírgulas)" do Excel no Windows em português
+
+
 def import_csv(app, path: Path, *, default_source_kind: str = "csv_proprietario") -> dict:
-    with open(path, encoding="utf-8-sig", newline="") as fh:
-        reader = csv.DictReader(fh)
-        missing = REQUIRED - set(reader.fieldnames or [])
-        if missing:
-            raise ValueError(f"CSV sem colunas obrigatórias: {sorted(missing)}")
-        return import_rows(app, list(reader), source_kind=default_source_kind, origin=path.name, first_line=2)
+    text = _read_text(path)
+    header = text.split("\n", 1)[0]
+    reader = csv.DictReader(io.StringIO(text, newline=""), delimiter=";" if header.count(";") > header.count(",") else ",")
+    missing = REQUIRED - set(reader.fieldnames or [])
+    if missing:
+        raise ValueError(f"CSV sem colunas obrigatórias: {sorted(missing)}")
+    return import_rows(app, list(reader), source_kind=default_source_kind, origin=path.name, first_line=2)
 
 
 def import_rows(app, rows: list[dict], *, source_kind: str = "csv_proprietario", origin: str = "api",
@@ -76,9 +88,12 @@ def _import_row(app, row: dict, source_kind: str, stats: dict) -> None:
         if basis not in lgpd.LEGAL_BASES:
             raise ValueError(f"base legal inválida: {basis}")
         note = lgpd.LEGAL_BASES[basis]
+        contact_url = row.get("contact_source_url") or None
+        contact_source = (lgpd.register_source(app, source_kind, f"página de contato: {contact_url}", url=contact_url)
+                          if contact_url else source_id)
         if repository.add_contact(app, company_id, email=email, name=row.get("contact_name") or None,
-                                  role=row.get("contact_role") or None, contact_type=ctype, source_id=source_id,
-                                  source_url=row.get("source_url") or None, legal_basis=basis,
+                                  role=row.get("contact_role") or None, contact_type=ctype, source_id=contact_source,
+                                  source_url=contact_url or row.get("source_url") or None, legal_basis=basis,
                                   legal_basis_note=note):
             stats["contatos"] += 1
 

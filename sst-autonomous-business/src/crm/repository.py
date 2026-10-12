@@ -21,7 +21,8 @@ class UpsertResult:
 
 
 def find_company(app, *, cnpj: str | None = None, domain: str | None = None,
-                 email: str | None = None, phone: str | None = None) -> tuple[int, str] | None:
+                 email: str | None = None, phone: str | None = None, name: str | None = None,
+                 city: str | None = None) -> tuple[int, str] | None:
     db = app.db
     cnpj = dedupe.normalize_cnpj(cnpj)
     if cnpj:
@@ -40,6 +41,13 @@ def find_company(app, *, cnpj: str | None = None, domain: str | None = None,
         row = db.one("SELECT company_id FROM contacts WHERE phone=?", (suppression.normalize_phone(phone),))
         if row:
             return int(row["company_id"]), "telefone"
+    key = dedupe.normalize_name(name)
+    if key and city:
+        # Último recurso (lista reimportada sem site/CNPJ): mesmo nome normalizado na mesma cidade, sem ambiguidade.
+        same = [int(r["id"]) for r in db.all("SELECT id, name FROM companies WHERE lower(city)=lower(?)", (city.strip(),))
+                if dedupe.normalize_name(r["name"]) == key]
+        if len(same) == 1:
+            return same[0], "nome_cidade"
     return None
 
 
@@ -59,7 +67,8 @@ def upsert_company(app, *, name: str, website: str | None = None, cnpj: str | No
     cnpj_norm = dedupe.normalize_cnpj(cnpj)
     if cnpj and not cnpj_norm:
         app.log.warning("CNPJ inválido descartado para %s", name)
-    match = find_company(app, cnpj=cnpj_norm, domain=domain, email=contact_email, phone=contact_phone)
+    match = find_company(app, cnpj=cnpj_norm, domain=domain, email=contact_email, phone=contact_phone, name=name,
+                         city=city)
     with db.transaction():
         if match:
             company_id, how = match

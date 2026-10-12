@@ -99,6 +99,23 @@ def test_csv_import_requires_traceable_source(app, tmp_path):
     assert row["url"] == "https://a-empresa.test/contato"
 
 
+def test_csv_from_excel_and_contact_added_on_reimport(app, tmp_path):
+    first = tmp_path / "pesquisa.csv"
+    first.write_text("name,segment,city,source_url,facts\n"
+                     "Transportes Ação,transportadora,Guarulhos,https://noticia.test/a,expansao: nova unidade\n",
+                     encoding="utf-8")
+    assert importer.import_csv(app, first)["empresas_novas"] == 1
+    excel = tmp_path / "pesquisa_excel.csv"  # Excel pt-BR: ";" e Windows-1252
+    excel.write_bytes(("name;segment;city;source_url;contact_email;contact_type;contact_source_url;facts\r\n"
+                       "Transportes Ação;transportadora;Guarulhos;https://noticia.test/a;contato@acao.test;"
+                       "generic_corporate;https://acao.test/contato;expansao: nova unidade\r\n").encode("cp1252"))
+    stats = importer.import_csv(app, excel)
+    assert stats["duplicadas"] == 1 and stats["contatos"] == 1 and not stats["erros"]
+    row = app.db.one("SELECT ds.url FROM contacts c JOIN data_sources ds ON ds.id = c.source_id")
+    assert row["url"] == "https://acao.test/contato"
+    assert app.db.one("SELECT COUNT(*) AS n FROM evidence")["n"] == 1
+
+
 def test_out_of_area_leads_get_only_remote_services(app):
     far = compute_score(app.settings, ScoreInput(segment="centro_distribuicao", size="media", demand_facts=1,
                                                  best_channel="generic_corporate", city="Ribeirão Preto", state="SP"))

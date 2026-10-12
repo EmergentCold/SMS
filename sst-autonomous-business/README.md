@@ -30,6 +30,15 @@ API/painel) como tarefa agendada que inicia com o Windows; oferece copiar a past
 O envio externo continua desligado: nenhum e-mail sai até você configurar o SMTP e habilitar
 `EXTERNAL_SENDING_ENABLED`.
 
+## Contatos das empresas sem ajuda do Claude no PC
+
+1. Abra a planilha de empresas no Excel (CSV com `;`). Para cada linha, clique em `pesquisar_no_google`, abra o
+   **site oficial** e copie só o canal comercial genérico publicado (contato@, comercial@).
+2. Preencha `contact_email` e, em `contact_source_url`, a página onde o e-mail aparece. Deixe vazio se não achar.
+3. Salve como **CSV** (o importador aceita `;`/`,` e UTF-8 ou Windows-1252) e importe de novo:
+   `python -m src.main leads import data\imports\empresas_preencher_contatos.csv`. Empresas já cadastradas são
+   reconhecidas pelo site, CNPJ, e-mail ou nome + cidade; só os contatos novos entram.
+
 ## Início rápido
 
 ```bash
